@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import blackboard.data.course.Course;
 import blackboard.data.course.CourseMembership;
+import blackboard.data.gradebook.Lineitem;
 import blackboard.data.user.User;
 import blackboard.db.BbDatabase;
 import blackboard.db.ConnectionManager;
@@ -22,6 +23,7 @@ import blackboard.persist.Id;
 import blackboard.persist.KeyNotFoundException;
 import blackboard.persist.PersistenceException;
 import blackboard.persist.course.CourseMembershipDbLoader;
+import blackboard.persist.gradebook.LineitemDbPersister;
 import blackboard.platform.context.Context;
 import blackboard.platform.context.ContextManager;
 import blackboard.platform.context.ContextManagerFactory;
@@ -64,7 +66,7 @@ public class GradeLogistics {
 		    loadCourseMembership(fetchRoster(ctx), tablename);				
 		}
 
-	   public List<CourseMembership> fetchRoster(Context ctx)
+	   private List<CourseMembership> fetchRoster(Context ctx)
 	   {
 			    PersistenceService bpService = PersistenceServiceFactory.getInstance() ;
 			    BbPersistenceManager bpManager = bpService.getDbPersistenceManager();
@@ -178,6 +180,39 @@ public class GradeLogistics {
 			
 		}
 
+		public void makeLineItem(String labname, int pointsPossible, Context ctx)
+		{
+			
+			try
+			{
+					if (!checkLineItem(labname))
+					{
+			     	    Lineitem assignment = new Lineitem();
+			     	    assignment.setCourseId(ctx.getCourseId());
+			    	    assignment.setName(labname);
+			    	    assignment.setPointsPossible(pointsPossible);
+			    	    assignment.setType(labname);
+			    	    assignment.setIsAvailable(true);
+			    	    assignment.setDateAdded();
+			
+			    	    LineitemDbPersister linePersister = LineitemDbPersister.Default.getInstance();
+			    	    linePersister.persist(assignment);
+	         		} 
+            }
+        	  catch (Exception e) {
+        	    LOGGER.info( e.getMessage());
+         	    e.printStackTrace();
 
+        	  }
+
+			
+		}
+
+
+		private boolean checkLineItem(String labname) {
+			// TODO Auto-generated method stub
+			
+			return false;
+		}
 
 }

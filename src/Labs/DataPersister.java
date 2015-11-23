@@ -4,13 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import blackboard.data.course.CourseMembership;
 import blackboard.data.user.User;
 import blackboard.db.BbDatabase;
 import blackboard.db.ConnectionManager;
@@ -47,7 +43,7 @@ public class DataPersister {
         LOGGER.info("init - Courseid " + courseid);
     	sb = new StringBuilder();
 //Temporary code for debug
-    	GradeLogistics gl = new GradeLogistics();
+     	GradeLogistics gl = new GradeLogistics();
     	String tablename = "yccs_chemistrylab1";
     	gl.initGradeLogistics(tablename);
 
