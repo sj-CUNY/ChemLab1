@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schema name="yccs_chemlab1">
+  <table name="yccs_chemistrylab1">
+       <column name="pk1" data-type="id" nullable="false" identity="true" />
+ 	  <column name="UserId" data-type="varchar(30)" nullable="true" identity="true" />
+ 	  <column name="CourseId" data-type="varchar(30)" nullable="true" identity="true" />
+	  <column name="NumMetalRod" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="nmrGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="NumMetalWire" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="nmwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="QuadMetalRodMeasure" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="qmrwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="QuadMetalRodUnit" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="qmruGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="QuadMetalRodSigFig" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="qmrsGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="QuadVialMeasure" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="qvwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="QuadVialUnit" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="qvuGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="QuadVialSigFig" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="qvsGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="AnalyMetalRodMeasure" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="amrwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="AnalyMetalRodUnit" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amruGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="AnalyMetalRodSigFig" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amrsGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="AnalyMetalWireMeasureTrial1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="amww1Grade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="AnalyMetalWireUnitTrial1" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amwu1Grade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="AnalyMetalWireSigFigTrial1" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amws1Grade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="AnalyMetalWireMeasureTrial2" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="amww2Grade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="AnalyMetalWireUnitTrial2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amwu2Grade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="AnalyMetalWireSigFigTrial2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amws2Grade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="AnalyMetalWireMeasureTrial3" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="amww3Grade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="AnalyMetalWireUnitTrial3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amwu3Grade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="AnalyMetalWireSigFigTrial3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amws3Grade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="WeighingPaperMeasure" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="wpwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="WeighingPaperUnit" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="wpuGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="WeighingPaperSigFig" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="wpsGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="WeighingPaperNaClMeasure" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="wpncwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="WeighingPaperNaClUnit" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="wpncuGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="WeighingPaperNaClSigFig" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="wpncsGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="AverageMetalWireMeasure" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="amwwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="AverageMetalWireUnit" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amwuGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="AverageMetalWireSigFig" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amwsGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="NaClMeasure" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="ncwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="NaClUnit" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="ncuGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="NaClSigFig" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="ncsGrade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <primary-key name="yccs_chemistrylab1_ak1" comment="Unique primary key">
+       <columnref name="pk1" />
+      </primary-key>
+  </table>
+</schema>

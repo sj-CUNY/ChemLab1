@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.2
+Created-By: 1.7.0_02-b13 (Oracle Corporation)
+Blackboard-Version: 9.1.201410.160373
+Trusted-Library: true
+Permissions: all-permissions
+Class-Path: sac.jar commons-beanutils-1.8.0.jar
+
