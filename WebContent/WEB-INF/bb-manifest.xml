@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<manifest>
+ <plugin>
+ <name value="York college Lab 1 Debugging from blackboard"/>
+ <description value="Testing using blackboard frame"/>
+ <handle value="Lab Debug"/>
+ <version value="2.10.2"/>
+ <requires>
+ <bbversion value="9.1"/>
+ </requires>
+ <vendor>
+ <id value="YCDB"/>
+ <name value="York college Lab 1 Debugging from blackboard"/>
+ <url value="http://www.york.cuny.edu"/>
+ <description value="Blackboard Lab 1 Debug"/>
+ </vendor>
+ <http-actions>
+ <config value=""/>
+ <remove value=""/>
+ </http-actions>
+ <application-defs>
+ <application
+ handle="Lab Debug"
+ type="course_tool"
+ name="Lab 1 Debug">
+ <description lang="en_US">
+ </description>
+ <links>
+ <link>
+ <type value="course_tool"/>
+ <name value="Lab 1 Debug"/>
+ <url value="welcome.jsp"/>
+ <description value="Lab 1 Debug."/>
+ </link>
+ </links>
+ <ActionMenu>
+ <actionControlBar>
+ </actionControlBar>
+ </ActionMenu>
+ </application>
+</application-defs>
+ <permissions>
+ <permission type="persist" name="content" actions="persist" />
+ <permission type="persist" name="course" actions="create,modify,delete" />
+ <permission type="persist" name="coursemembership" actions="create,modify,delete"/>	             
+ <permission type="persist" name="Attempt" actions="load,persist,delete" />
+ <permission type="persist" name="Outcome" actions="load,persist,delete" />
+ <permission type="persist" name="OutcomeDefinition" actions="load,persist,delete" />
+ <permission type="persist" name="outcomedefinitioncategory" actions="load,persist,delete" />
+ <permission type="persist" name="Outcome" actions="create,modify,delete"/>
+ <permission type="persist" name="OutcomeDefinition" actions="create,modify,delete"/>	             
+ <permission type="persist" name="OutcomeDefinitionCategory" actions="create,modify"/>
+ <permission type="persist" name="OutcomeDefinitionScale" actions="create,delete,load,persist" />
+ <permission type="persist" name="OutcomeDefinitionScaleSymbol" actions="create,delete,load,persist" />      
+ <permission type="persist" name="user" actions="create,modify,delete" />
+ <permission type="persist" name="userrole" actions="create,modify,delete" />
+ <permission type="attribute" name="user.personalinfo" actions="get" />
+ <permission type="attribute" name="Group" actions="get"/>
+ <permission type="attribute" name="GroupMembership" actions="get"/>
+ <permission type="attribute" name="user.authinfo" actions="get" />
+ <permission type="java.lang.RuntimePermission" name="db.connection.bb_bb60" actions="connect,accept" />
+</permissions>
+</plugin>
+</manifest> 

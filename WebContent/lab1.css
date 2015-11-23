@@ -1,0 +1,13 @@
+fieldset {
+    width: 900px;
+}
+
+fieldset.fieldset
+{
+    width: 100%;
+}
+
+div
+{
+    font-size: 10pt;
+}
