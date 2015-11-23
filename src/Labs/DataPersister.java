@@ -113,28 +113,34 @@ public class DataPersister {
             }
             else
             {
-                
+
             	queryString.append("UPDATE yccs_chemistrylab1 SET ");
-                 for (int i=0; i < tokens.length; i++) {
-                	 String nextColumn = ""; 
-                	 for (int j=i+4; j <= rsMeta.getColumnCount(); ++j)
-                	 {	 
-                		 nextColumn = rsMeta.getColumnName(j);
-                		 if (nextColumn.contains("GRADE"))
-                		 {
-                			 continue;
+            	int count = 0; 
+            	String nextColumn = "";
+            	for (int j= 4; j <= rsMeta.getColumnCount(); ++j)
+                {	 
+                	 nextColumn = rsMeta.getColumnName(j);
+                	 if (nextColumn.contains("GRADE"))
+                	 {
+                		 continue;
                 			 
-                		 }
-                     	queryString.append(nextColumn + "= '?' ");
-                    	if (i< tokens.length-1)
-                    		queryString.append(",");
- 
                 	 }
+                     queryString.append(nextColumn + "= ? ");
+                     ++count;
+                    // if ( count < tokens.length-1)
+                    if ( count < 32)
+                                
+                     {
+                    	 queryString.append(",");
+                	 }
+            		else
+            			break;
                 }
+            	
                  //insert where PK1 matches. 
  	            queryString.append(" WHERE " + rsMeta.getColumnName(1) + " = " + rSet.getString(1));
 
-//                 queryString.append(" WHERE " + rsMeta.getColumnName(2) + "= '?' AND " + rsMeta.getColumnName(3) + "= '?'");
+//                 queryString.append(" WHERE " + rsMeta.getColumnName(2) + "= ? AND " + rsMeta.getColumnName(3) + "= ? ");
 	            LOGGER.info(queryString.toString());
 	
 				
@@ -145,7 +151,9 @@ public class DataPersister {
 	            LOGGER.info("Userid: " + userid);
 	            LOGGER.info("Courseid: " + courseid);
 
-	            for (int i=0; i < tokens.length; i++) 
+	            //for (int i=0; i < tokens.length; i++) 
+	          for (int i=0; i < 32; i++) 
+	            
 	            {
 	                LOGGER.info("index at " + (i+1) + " token " + tokens[i]);
 	                
