@@ -70,7 +70,8 @@ blackboard.persist.gradebook.LineitemDbPersister"
 	{
 		roleInstructor = true;
 		GradeLogistics gl = new GradeLogistics();
-		gl.makeLineItem("yccs_chemistrylab1", 100, ctx);
+		Id id = gl.makeLineItem("yccs_chemistrylab1", 100, ctx);
+		gl.addStudentAttempts(ctx, "yccs_chemistrylab1", id);
 	}
 %>
 	<p>

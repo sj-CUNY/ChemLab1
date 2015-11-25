@@ -53,8 +53,7 @@ public class DataPersister {
 	public boolean saveData (String indata) {
         boolean saveResult = true;
 		StringBuilder columns = new StringBuilder();
-        String[] tokens = indata.split(",");
-		StringBuffer queryString = new StringBuffer("");
+ 		StringBuffer queryString = new StringBuffer("");
         ConnectionManager cManager = null;
         Connection conn = null;
         StringBuffer debugString = new StringBuffer("");
@@ -66,7 +65,7 @@ public class DataPersister {
             ResultSet rSet = h.exists(conn, userid, courseid);
 			ResultSetMetaData rsMeta = rSet.getMetaData();
 			int columnCount = rsMeta.getColumnCount();
-            
+			String[] tokens = h.removeNull(indata);
             if (!(rSet.next()))
             {
             	//We should never hae to insert because the roster should be already uploaded. 
@@ -123,9 +122,7 @@ public class DataPersister {
                 	 }
                      queryString.append(nextColumn + "= ? ");
                      ++count;
-                    // if ( count < tokens.length-1)
-                    if ( count < 32)
-                                
+                     if ( count < tokens.length-1)
                      {
                     	 queryString.append(",");
                 	 }
@@ -141,28 +138,25 @@ public class DataPersister {
 	
 				
 	            PreparedStatement updateQuery = conn.prepareStatement(queryString.toString());
- 	            LOGGER.info("Input string: " + indata);
+ 	        /*    LOGGER.info("Input string: " + indata);
 	            LOGGER.info("Num columns: " + rsMeta.getColumnCount());
 	            LOGGER.info("Num data: " + tokens.length);
 	            LOGGER.info("Userid: " + userid);
 	            LOGGER.info("Courseid: " + courseid);
-
-	            //for (int i=0; i < tokens.length; i++) 
-	          for (int i=0; i < 32; i++) 
-	            
-	            {
-	                LOGGER.info("index at " + (i+1) + " token " + tokens[i]);
-	                
+ 	         */
+	          for (int i=0; i < tokens.length; i++) 
+	           {
+	         //       LOGGER.info("index at " + (i+1) + " token " + tokens[i]);   
 	                updateQuery.setString((i + 1), tokens[i]);
 
-	             }          
+	            }          
 	            /*updateQuery.setString(tokens.length+1, userid);
 	            debugString.append(userid+",");
 	            
 	            updateQuery.setString(tokens.length+2, courseid);
 	            debugString.append(courseid);
 	            */
-	            LOGGER.info(debugString.toString());
+	            //LOGGER.info(debugString.toString());
 	            int updateResult = updateQuery.executeUpdate();
 	            
 	            if(updateResult != 1){

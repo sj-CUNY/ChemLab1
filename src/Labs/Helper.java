@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,6 +81,29 @@ public class Helper {
 						 columns.append(",");
 	         }
 			return columns;
+		}
+
+ 
+
+		public String[] removeNull(String indata) 
+		{
+			// TODO Auto-generated method stub
+			String[] token = indata.split(",");
+			int count = 0;
+			for(int i=0; i< token.length; ++i)
+				if (token[i] != "null")
+					count++;
+			String[] token_out = new String[count];
+			int j = 0;
+			for(int i=0; i< count; ++i)
+			{
+				while (token[j] == "null")
+					++j;
+				
+				token_out[i] = token[j];
+				
+			}
+			return token_out;
 		}
 
 	

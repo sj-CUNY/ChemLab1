@@ -6,27 +6,30 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import blackboard.data.ValidationException;
 import blackboard.data.course.Course;
 import blackboard.data.course.CourseMembership;
 import blackboard.data.gradebook.Lineitem;
 import blackboard.data.gradebook.Lineitem.AssessmentLocation;
+import blackboard.data.gradebook.Score;
 import blackboard.data.user.User;
 import blackboard.db.BbDatabase;
 import blackboard.db.ConnectionManager;
 import blackboard.db.ConnectionNotAvailableException;
 import blackboard.persist.BbPersistenceManager;
-import blackboard.persist.DbLoaderFactory;
 import blackboard.persist.Id;
 import blackboard.persist.KeyNotFoundException;
 import blackboard.persist.PersistenceException;
 import blackboard.persist.course.CourseMembershipDbLoader;
 import blackboard.persist.gradebook.LineitemDbLoader;
 import blackboard.persist.gradebook.LineitemDbPersister;
+import blackboard.persist.gradebook.ScoreDbPersister;
 import blackboard.platform.context.Context;
 import blackboard.platform.context.ContextManager;
 import blackboard.platform.context.ContextManagerFactory;
@@ -183,10 +186,9 @@ public class GradeLogistics {
 			
 		}
 
-		public void makeLineItem(String labname, int pointsPossible, Context ctx)
+		public Id makeLineItem(String labname, int pointsPossible, Context ctx) throws KeyNotFoundException, PersistenceException
 		{
-			
-			try
+ 			try
 			{
 					if (!checkLineItem(labname, ctx.getCourseId()))
 					{
@@ -198,7 +200,6 @@ public class GradeLogistics {
 			    	    assignment.setIsAvailable(true);
 			    	    assignment.setDateAdded();
 			    	    assignment.setAssessmentId(labname, AssessmentLocation.EXTERNAL);
-			    	    assignment.setAttemptHandlerUrl ("index.jsp");
 			    	    LineitemDbPersister linePersister = LineitemDbPersister.Default.getInstance();
 			    	    linePersister.persist(assignment);
 			    	    LOGGER.info("LineItem id is " + assignment.getId());
@@ -210,24 +211,65 @@ public class GradeLogistics {
          	    e.printStackTrace();
 
         	  }
-
+			return getLineItem(labname, ctx.getCourseId()).getId();
 			
 		}
 
 
 		private boolean checkLineItem(String labname, Id courseId) throws KeyNotFoundException, PersistenceException {
-			PersistenceService bpService = PersistenceServiceFactory.getInstance() ;
-			// TODO Auto-generated method stub
-		    BbPersistenceManager bpManager = bpService.getDbPersistenceManager();
-
-			LineitemDbLoader loader = (LineitemDbLoader)bpManager;
-			List<Lineitem> lItems =  loader.loadByCourseId(courseId); 
-			for (int i=0; i<lItems.size(); ++i)
-			{
-				if (lItems.get(i).getAssessmentId().equals(labname))
+ 		
+			// check if a lineitem exists return true if lineitem exists else return false 
+			if (getLineItem(labname, courseId) != null)
 					return true;
-			}
+			
 			return false;
 		}
 
+		private Lineitem getLineItem(String labname, Id courseId) throws KeyNotFoundException, PersistenceException {
+			PersistenceService bpService = PersistenceServiceFactory.getInstance() ;
+		
+			// TODO Auto-generated met
+		    BbPersistenceManager bpManager = bpService.getDbPersistenceManager();
+		    Lineitem litem = null;
+ 			LineitemDbLoader loader = (LineitemDbLoader)bpManager.getLoader(LineitemDbLoader.TYPE);;
+			List<Lineitem> lItems =  loader.loadByCourseId(courseId); 
+			for (int i=0; i<lItems.size(); ++i)
+			{
+				litem = lItems.get(i);
+				if(litem.getAssessmentId().equals(labname))
+				 	break; 
+			}
+		 
+			return litem;
+		}
+		
+		public boolean addStudentAttempts(Context ctx, String labname, Id id) throws KeyNotFoundException, PersistenceException, ValidationException
+		{
+			/*
+    	    String url = "/webapps/YCDB-Lab 20Debug-BBLEARN/index.jsp?course_id="+ctx.getCourseId()+"&"+ctx.getUser().getId();
+     	    
+    	    l.setAttemptHandlerUrl (url);
+    	    */
+			PersistenceService bpService = PersistenceServiceFactory.getInstance() ;
+			
+			// TODO Auto-generated met
+		    BbPersistenceManager bpManager = bpService.getDbPersistenceManager();
+		
+			ScoreDbPersister sdb = (ScoreDbPersister) bpManager.getPersister( ScoreDbPersister.TYPE );
+			
+		    List<CourseMembership> crsMembership = fetchRoster(ctx);
+		    List<Score> scores = new ArrayList<Score>();
+		    for(int i=0; i < crsMembership.size(); ++i)
+		    {
+		    	Score s = new Score();
+		    	s.setLineitemId(id);
+		    	s.setAttemptId("/webapps/YCDB-Lab 20Debug-BBLEARN/index.jsp?course_id="+ctx.getCourse().getId().toExternalString()+"&user_id="+crsMembership.get(i).getUser().getId(), Score.AttemptLocation.EXTERNAL);
+		    	s.setDateAdded();
+		    	
+		    	scores.add(s);
+		    }
+		    sdb.persist(scores);
+		    
+    	    return true;
+		}
 }
