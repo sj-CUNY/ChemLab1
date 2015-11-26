@@ -5,7 +5,7 @@
  <name value="York college Lab 1 Debugging from blackboard"/>
  <description value="Testing using blackboard frame"/>
  <handle value="Lab Debug"/>
- <version value="2.10.27"/>
+ <version value="2.11.2"/>
  <requires>
  <bbversion value="9.1"/>
  </requires>
@@ -21,8 +21,7 @@
  </http-actions>
  <application-defs>
  <application
- handle="Lab Debug"
- type="course_tool"
+ can-allow-guest="true" is-course-tool="true" handle="Lab Debug"
  name="Lab 1 Debug">
  <description lang="en_US">
  </description>
@@ -32,6 +31,9 @@
  <name value="Lab 1 Debug"/>
  <url value="welcome.jsp"/>
  <description value="Lab 1 Debug."/>
+ <icons>
+<listitem value="images/icon.gif"/>
+</icons>
  </link>
  </links>
  <ActionMenu>
@@ -41,16 +43,14 @@
  </application>
 </application-defs>
  <permissions>
- <permission type="persist" name="content" actions="persist" />
+ <permission type="persist" name="content" actions="persist,create, modify, delete" />
+ <permission type="persist" name="content_link" actions="persist,create, modify, delete" />
  <permission type="persist" name="course" actions="create,modify,delete" />
  <permission type="persist" name="coursemembership" actions="create,modify,delete"/>	             
- <permission type="persist" name="Attempt" actions="load,persist,delete" />
- <permission type="persist" name="Outcome" actions="load,persist,delete" />
- <permission type="persist" name="OutcomeDefinition" actions="load,persist,delete" />
- <permission type="persist" name="outcomedefinitioncategory" actions="load,persist,delete" />
- <permission type="persist" name="Outcome" actions="create,modify,delete"/>
- <permission type="persist" name="OutcomeDefinition" actions="create,modify,delete"/>	             
- <permission type="persist" name="OutcomeDefinitionCategory" actions="create,modify"/>
+ <permission type="persist" name="Attempt" actions="create,load,persist,delete" />
+  <permission type="persist" name="Outcome" actions="create,modify,delete, load, persist"/>
+ <permission type="persist" name="OutcomeDefinition" actions="create,modify,delete, load, persist"/>	             
+ <permission type="persist" name="OutcomeDefinitionCategory" actions="create,modify, load persist"/>
  <permission type="persist" name="OutcomeDefinitionScale" actions="create,delete,load,persist" />
  <permission type="persist" name="OutcomeDefinitionScaleSymbol" actions="create,delete,load,persist" />      
  <permission type="persist" name="user" actions="create,modify,delete" />

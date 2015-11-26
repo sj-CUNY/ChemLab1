@@ -203,6 +203,8 @@ public class GradeLogistics {
 			Lineitem assignment = null;
  			try
 			{
+	    		 String url = "/webapps/YCDB-Lab 20Debug-BBLEARN/index.jsp?course_id="+ctx.getCourseId()+"&"+ctx.getUser().getId();
+
 					if (!checkLineItem(labname, ctx.getCourseId()))
 					{
 						LOGGER.info("No matching lineitem, create a new one");
@@ -214,6 +216,7 @@ public class GradeLogistics {
 			    	    assignment.setIsAvailable(true);
 			    	    assignment.setDateAdded();
 			    	    assignment.setAssessmentId(labname, AssessmentLocation.EXTERNAL);
+			    	    assignment.setAttemptHandlerUrl(url);
 			    	    LineitemDbPersister linePersister = LineitemDbPersister.Default.getInstance();
 			    	    linePersister.persist(assignment);
 			    	    LOGGER.info("LineItem id is " + assignment.getId());
@@ -250,14 +253,26 @@ public class GradeLogistics {
 			return false;
 		}
 
-		private Lineitem getLineItem(String labname, Id courseId) throws KeyNotFoundException, PersistenceException {
+		public Lineitem getLineItem(String labname, Id courseId)
+		{
 			PersistenceService bpService = PersistenceServiceFactory.getInstance() ;
 		
 			// TODO Auto-generated met
 		    BbPersistenceManager bpManager = bpService.getDbPersistenceManager();
-		    Lineitem litem = null;
- 			LineitemDbLoader loader = (LineitemDbLoader)bpManager.getLoader(LineitemDbLoader.TYPE);;
-			List<Lineitem> lItems =  loader.loadByCourseId(courseId);
+		    LineitemDbLoader loader = null;
+			try {
+				loader = (LineitemDbLoader)bpManager.getLoader(LineitemDbLoader.TYPE);
+			} catch (PersistenceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			};
+			List<Lineitem> lItems = null;
+			try {
+				lItems = loader.loadByCourseId(courseId);
+			} catch (PersistenceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			LOGGER.info("Number of line items " + lItems.size());
 			ListIterator<Lineitem> listIterator = lItems.listIterator();
 			Lineitem l = null;
@@ -285,8 +300,7 @@ public class GradeLogistics {
 			BbPersistenceManager bpManager = null;
 			ScoreDbPersister sdb = null;
 			List<CourseMembership> crsMembership ; 
-			List<Score> scores = new ArrayList<Score>();
-			   
+			    
 			 
 			bpService = PersistenceServiceFactory.getInstance() ;
 			
@@ -303,22 +317,31 @@ public class GradeLogistics {
 		    }
 		    
 		    crsMembership = fetchRoster(ctx);
+		    Score s = null;
+		    
 		    for(int i=0; i < crsMembership.size(); ++i)
 		    {
-		    	Score s = new Score();
-		    	s.setLineitemId(id);
 		    	CourseMembership cm = crsMembership.get(i);
+		    	    	
+		    	if (cm.getUserId() == ctx.getUser().getId())
+		    	{
+		    		s = new Score();
+			    	
+		    		s.setLineitemId(id);
 		    	//LOGGER.info("Course is " + cm.getCourseId());
 		    	//LOGGER.info("User id string is " + cm.getUserId().toExternalString());
-		    	
-		    	s.setAttemptId("/webapps/YCDB-Lab 20Debug-BBLEARN/index.jsp?course_id="+cm.getCourseId().toExternalString()+"&user_id="+cm.getUserId().toExternalString(), Score.AttemptLocation.EXTERNAL);
-		    	s.setDateAdded();
-		    	s.setCourseMembershipId(cm.getId());
-		    	scores.add(s);
+		       	   	s.setAttemptId(ctx.getRequestUrl(), Score.AttemptLocation.EXTERNAL );
+		    		//s.setAttemptId("/index.jsp?course_id="+cm.getCourseId().toExternalString()+"&user_id="+cm.getUserId().toExternalString(), Score.AttemptLocation.EXTERNAL);
+		    	 	s.setDateAdded();
+		    	 	s.setCourseMembershipId(cm.getId());
+		    	 	
+		    	 	break;
+		    	}
 		    }
 		    try 
 		    {
-		    	sdb.persist(scores);
+		    	if (s != null)
+		    		sdb.persist(s);
 		    }
 		    catch(PersistenceException pE)
 		    {
@@ -333,9 +356,5 @@ public class GradeLogistics {
     	    return ;
 		}
 
-		private Context getNewContext() {
-			  contextManager = ContextManagerFactory.getInstance();
-		   	  ctx = contextManager.getContext() ;
-		   	  return ctx;
-		}
+		 
 }
