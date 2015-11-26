@@ -1,6 +1,11 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="Labs.lab1Checks" %>
- 
+<%@ page import="blackboard.platform.context.Context" %>
+<%@ page import="blackboard.platform.context.ContextManager" %>
+<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
+<%@ page import="blackboard.data.user.User" %>
+
+
 <!DOCTYPE html>
 <%!
     int dataX = 12;
@@ -8,7 +13,8 @@
     String button = "";
     boolean initial = true;
     
-    lab1Checks checks = new lab1Checks(dataX, dataY);
+    lab1Checks checks = new lab1Checks(dataX, dataY, "yccs_chemistrylab1");
+    
     public void getData(HttpServletRequest request)
     {
         for (int i = 0; i < dataX; i++)

@@ -2,9 +2,9 @@ package Labs;
 
 public class lab1Checks extends inputChecks
 {
-    public lab1Checks(int x, int y)
+    public lab1Checks(int x, int y, String labname)
     {
-        super(x,y);
+        super(x,y, labname);
     }
 
     @Override

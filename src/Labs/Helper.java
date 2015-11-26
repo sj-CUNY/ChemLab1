@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,7 @@ public class Helper {
 	}
 	
 
-	public ResultSet exists(Connection conn, String userid, String courseid)
+	public ResultSet exists(Connection conn, String userid, String courseid, String labname)
 	    {
 			StringBuffer queryString = new StringBuffer("");
 			PreparedStatement selectQuery = null;
@@ -36,9 +37,9 @@ public class Helper {
 			 
 			queryString.append("SELECT * ");
 			queryString.append("FROM ");
-			queryString.append("yccs_chemistrylab1 ");
-			queryString.append("WHERE USERID = ? and COURSEID = ?");
-			LOGGER.info(queryString.toString());
+			queryString.append(labname);
+			queryString.append(" WHERE USERID = ? and COURSEID = ?");
+			//LOGGER.info(queryString.toString());
 			try
 			{
 				selectQuery = conn.prepareStatement(queryString.toString(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);			
@@ -80,6 +81,33 @@ public class Helper {
 						 columns.append(",");
 	         }
 			return columns;
+		}
+
+ 
+
+		public String[] removeNull(String indata) 
+		{
+			// TODO Auto-generated method stub
+			String[] token = indata.split(",");
+			int count = 0;
+			for(int i=0; i< token.length; ++i)
+			{
+				if (!token[i].contains("null"))
+						count++;
+			}
+			LOGGER.info("token valid count is " + count);
+			String[] token_out = new String[count];
+			int j = 0;
+			for(int i=0; i < count; ++i)
+			{
+				while (token[j].contains("null"))
+					++j;
+				
+				token_out[i] = token[j];
+				++j;
+				
+			}
+			return token_out;
 		}
 
 	

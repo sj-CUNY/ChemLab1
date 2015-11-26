@@ -4,13 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import blackboard.data.course.CourseMembership;
 import blackboard.data.user.User;
 import blackboard.db.BbDatabase;
 import blackboard.db.ConnectionManager;
@@ -31,25 +27,25 @@ public class DataPersister {
     String courseid;
     
 	StringBuffer queryString;
- 
+    String labname = null;
 	Labs labs;
 	
-   public DataPersister()
+   public DataPersister(String labname)
     {
     	contextManager = ContextManagerFactory.getInstance();
     	ctx = contextManager.getContext() ;
     	user = ctx.getUser() ;
-    	labs = new Labs(ctx);
+    	labs = new Labs(ctx, labname);
         userid = user.getId().toExternalString();
-        courseid = ctx.getCourse().getId().toExternalString();
+        courseid = ctx.getCourseId().toExternalString();
     	queryString = new StringBuffer("");
-        LOGGER.info("init - Userid " + userid);
-        LOGGER.info("init - Courseid " + courseid);
+        //LOGGER.info("init - Userid " + userid);
+        //LOGGER.info("init - Courseid " + courseid);
     	sb = new StringBuilder();
+    	this.labname = labname;
 //Temporary code for debug
-    	GradeLogistics gl = new GradeLogistics();
-    	String tablename = "yccs_chemistrylab1";
-    	gl.initGradeLogistics(tablename);
+     	GradeLogistics gl = new GradeLogistics();
+     	gl.initGradeLogistics(labname);
 
     }
 	 
@@ -57,8 +53,7 @@ public class DataPersister {
 	public boolean saveData (String indata) {
         boolean saveResult = true;
 		StringBuilder columns = new StringBuilder();
-        String[] tokens = indata.split(",");
-		StringBuffer queryString = new StringBuffer("");
+ 		StringBuffer queryString = new StringBuffer("");
         ConnectionManager cManager = null;
         Connection conn = null;
         StringBuffer debugString = new StringBuffer("");
@@ -67,26 +62,27 @@ public class DataPersister {
         	Helper h = new Helper();
             cManager = BbDatabase.getDefaultInstance().getConnectionManager();
             conn = cManager.getConnection();
-            ResultSet rSet = h.exists(conn, userid, courseid);
+            ResultSet rSet = h.exists(conn, userid, courseid, labname);
 			ResultSetMetaData rsMeta = rSet.getMetaData();
 			int columnCount = rsMeta.getColumnCount();
-            
+			String[] tokens = h.removeNull(indata);
+			
             if (!(rSet.next()))
             {
             	//We should never hae to insert because the roster should be already uploaded. 
-	            queryString.append("INSERT INTO yccs_chemistrylab1 ( ");
+	            queryString.append("INSERT INTO " +  labname  + " ( ");
 	            columns = h.buildColumnString(rsMeta);
 	           //Insert blank for PK1
 	            queryString.append(columns.toString() + " ) VALUES ( ");      
 	            String qmarks = h.qMarks(columnCount).toString() ; 
 	            
-	            LOGGER.info(qmarks);
+	  //          LOGGER.info(qmarks);
 	    			
 	            
 	
  	            queryString.append(qmarks);
 	            
-	            LOGGER.info(queryString.toString());
+	//            LOGGER.info(queryString.toString());
 	            
 				
 	            PreparedStatement insertQuery = conn.prepareStatement(queryString.toString());
@@ -98,7 +94,7 @@ public class DataPersister {
 		            
 	            for (int i=0; i < tokens.length; i++) {
 	                insertQuery.setString((i + 4), tokens[i]);
-	                LOGGER.info(tokens[i]);
+//	                LOGGER.info(tokens[i]);
 	            }          
 	 
 	            int insertResult = insertQuery.executeUpdate();
@@ -113,52 +109,62 @@ public class DataPersister {
             }
             else
             {
-                
-            	queryString.append("UPDATE yccs_chemistrylab1 SET ");
-                 for (int i=0; i < tokens.length; i++) {
-                	 String nextColumn = ""; 
-                	 for (int j=i+4; j <= rsMeta.getColumnCount(); ++j)
-                	 {	 
-                		 nextColumn = rsMeta.getColumnName(j);
-                		 if (nextColumn.contains("GRADE"))
-                		 {
-                			 continue;
+
+            	queryString.append("UPDATE " + labname + " SET ");
+            	int count = 0; 
+            	String nextColumn = "";
+            	LOGGER.info("token size is " + tokens.length);
+    			
+            	for (int j= 4; j <= rsMeta.getColumnCount(); ++j)
+                {	 
+                	 nextColumn = rsMeta.getColumnName(j);
+                	 if (nextColumn.contains("GRADE"))
+                	 {
+                		 continue;
                 			 
-                		 }
-                     	queryString.append(nextColumn + "= '?' ");
-                    	if (i< tokens.length-1)
-                    		queryString.append(",");
- 
                 	 }
+                     queryString.append(nextColumn + "= ? ");
+                     
+                     if ( count < tokens.length-1)
+                     {
+                    	  queryString.append(",");
+                	 }
+            		else
+            		{
+            			LOGGER.info("query is " + queryString.toString());
+            			break;
+            		}
+            		++count;
+                     
                 }
+            	
                  //insert where PK1 matches. 
  	            queryString.append(" WHERE " + rsMeta.getColumnName(1) + " = " + rSet.getString(1));
 
-//                 queryString.append(" WHERE " + rsMeta.getColumnName(2) + "= '?' AND " + rsMeta.getColumnName(3) + "= '?'");
+//                 queryString.append(" WHERE " + rsMeta.getColumnName(2) + "= ? AND " + rsMeta.getColumnName(3) + "= ? ");
 	            LOGGER.info(queryString.toString());
 	
 				
 	            PreparedStatement updateQuery = conn.prepareStatement(queryString.toString());
- 	            LOGGER.info("Input string: " + indata);
+ 	        /*    LOGGER.info("Input string: " + indata);
 	            LOGGER.info("Num columns: " + rsMeta.getColumnCount());
 	            LOGGER.info("Num data: " + tokens.length);
 	            LOGGER.info("Userid: " + userid);
 	            LOGGER.info("Courseid: " + courseid);
-
-	            for (int i=0; i < tokens.length; i++) 
-	            {
-	                LOGGER.info("index at " + (i+1) + " token " + tokens[i]);
-	                
+ 	         */
+	          for (int i=0; i < tokens.length; i++) 
+	           {
+	         //       LOGGER.info("index at " + (i+1) + " token " + tokens[i]);   
 	                updateQuery.setString((i + 1), tokens[i]);
 
-	             }          
+	            }          
 	            /*updateQuery.setString(tokens.length+1, userid);
 	            debugString.append(userid+",");
 	            
 	            updateQuery.setString(tokens.length+2, courseid);
 	            debugString.append(courseid);
 	            */
-	            LOGGER.info(debugString.toString());
+	            //LOGGER.info(debugString.toString());
 	            int updateResult = updateQuery.executeUpdate();
 	            
 	            if(updateResult != 1){
@@ -214,7 +220,7 @@ public class DataPersister {
             cManager = BbDatabase.getDefaultInstance().getConnectionManager();
             conn = cManager.getConnection();
 
-            queryString.append("INSERT INTO yccs_chemistrylab1 (");
+            queryString.append("INSERT INTO " + labname + " (");
             columns = columns.substring(rsMeta.getColumnName(1).length(), columns.length() );
             queryString.append(columns + " )");
 
