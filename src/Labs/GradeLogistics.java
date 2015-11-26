@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +67,17 @@ public class GradeLogistics {
  	   	    
 	   }
 
+	   public GradeLogistics(Context ctx)
+	   {
+		   this.ctx = ctx; 
+	   	   currentUser = ctx.getUser() ;
+	   	
+	       currUserId = currentUser.getId().toExternalString();
+	       courseid = ctx.getCourse().getId().toExternalString();
+ 	       LOGGER.info("init - Userid " + currUserId);
+	       LOGGER.info("init - Courseid " + courseid);
+ 	   	    
+	   }
 	   
 		public void initGradeLogistics(String tablename)
 		{
@@ -188,11 +200,13 @@ public class GradeLogistics {
 
 		public Id makeLineItem(String labname, int pointsPossible, Context ctx) throws KeyNotFoundException, PersistenceException
 		{
+			Lineitem assignment = null;
  			try
 			{
 					if (!checkLineItem(labname, ctx.getCourseId()))
 					{
-			     	    Lineitem assignment = new Lineitem();
+						LOGGER.info("No matching lineitem, create a new one");
+			     	    assignment = new Lineitem();
 			     	    assignment.setCourseId(ctx.getCourseId());
 			    	    assignment.setName(labname);
 			    	    assignment.setPointsPossible(pointsPossible);
@@ -205,23 +219,34 @@ public class GradeLogistics {
 			    	    LOGGER.info("LineItem id is " + assignment.getId());
 			    	    
 					} 
+					else
+					{
+						assignment = getLineItem(labname, ctx.getCourseId());
+						  		
+					}
             }
         	  catch (Exception e) {
         	    LOGGER.info( e.getMessage());
          	    e.printStackTrace();
 
         	  }
-			return getLineItem(labname, ctx.getCourseId()).getId();
-			
+			  if (assignment != null) 
+				  return assignment.getId();
+			  else
+				  return null;
 		}
 
 
 		private boolean checkLineItem(String labname, Id courseId) throws KeyNotFoundException, PersistenceException {
  		
 			// check if a lineitem exists return true if lineitem exists else return false 
-			if (getLineItem(labname, courseId) != null)
-					return true;
-			
+			Lineitem l = getLineItem(labname, courseId);
+			if ( l != null)
+			{
+				LOGGER.info("Found a matching linitem " + l.getId().toExternalString());
+				return true;
+			}
+			LOGGER.info("No matching linitem found ");
 			return false;
 		}
 
@@ -232,44 +257,85 @@ public class GradeLogistics {
 		    BbPersistenceManager bpManager = bpService.getDbPersistenceManager();
 		    Lineitem litem = null;
  			LineitemDbLoader loader = (LineitemDbLoader)bpManager.getLoader(LineitemDbLoader.TYPE);;
-			List<Lineitem> lItems =  loader.loadByCourseId(courseId); 
-			for (int i=0; i<lItems.size(); ++i)
+			List<Lineitem> lItems =  loader.loadByCourseId(courseId);
+			LOGGER.info("Number of line items " + lItems.size());
+			ListIterator<Lineitem> listIterator = lItems.listIterator();
+			Lineitem l = null;
+			while(listIterator.hasNext())
 			{
-				litem = lItems.get(i);
-				if(litem.getAssessmentId().equals(labname))
+				l = listIterator.next(); 
+			//	LOGGER.info("lineitem id " + l.getId() );
+			//	LOGGER.info("lineitem assessment id " + l.getAssessmentId());
+			//	LOGGER.info("labname " + labname);
+				if(l!=null && l.getAssessmentId() != null && l.getAssessmentId().toString().equals(labname))
 				 	break; 
 			}
 		 
-			return litem;
+			return l;
 		}
 		
-		public boolean addStudentAttempts(Context ctx, String labname, Id id) throws KeyNotFoundException, PersistenceException, ValidationException
+		public void addStudentAttempts(Context ctx, String labname, Id id)
 		{
 			/*
     	    String url = "/webapps/YCDB-Lab 20Debug-BBLEARN/index.jsp?course_id="+ctx.getCourseId()+"&"+ctx.getUser().getId();
      	    
     	    l.setAttemptHandlerUrl (url);
     	    */
-			PersistenceService bpService = PersistenceServiceFactory.getInstance() ;
+			PersistenceService bpService = null;
+			BbPersistenceManager bpManager = null;
+			ScoreDbPersister sdb = null;
+			List<CourseMembership> crsMembership ; 
+			List<Score> scores = new ArrayList<Score>();
+			   
+			 
+			bpService = PersistenceServiceFactory.getInstance() ;
 			
 			// TODO Auto-generated met
-		    BbPersistenceManager bpManager = bpService.getDbPersistenceManager();
-		
-			ScoreDbPersister sdb = (ScoreDbPersister) bpManager.getPersister( ScoreDbPersister.TYPE );
-			
-		    List<CourseMembership> crsMembership = fetchRoster(ctx);
-		    List<Score> scores = new ArrayList<Score>();
+		    bpManager = bpService.getDbPersistenceManager();
+		    try
+		    {
+		    	sdb = (ScoreDbPersister) bpManager.getPersister( ScoreDbPersister.TYPE );
+		    }
+		    catch(PersistenceException pE)
+		    {
+		    	LOGGER.info(pE.getMessage());
+		    	pE.printStackTrace();
+		    }
+		    
+		    crsMembership = fetchRoster(ctx);
 		    for(int i=0; i < crsMembership.size(); ++i)
 		    {
 		    	Score s = new Score();
 		    	s.setLineitemId(id);
-		    	s.setAttemptId("/webapps/YCDB-Lab 20Debug-BBLEARN/index.jsp?course_id="+ctx.getCourse().getId().toExternalString()+"&user_id="+crsMembership.get(i).getUser().getId(), Score.AttemptLocation.EXTERNAL);
-		    	s.setDateAdded();
+		    	CourseMembership cm = crsMembership.get(i);
+		    	//LOGGER.info("Course is " + cm.getCourseId());
+		    	//LOGGER.info("User id string is " + cm.getUserId().toExternalString());
 		    	
+		    	s.setAttemptId("/webapps/YCDB-Lab 20Debug-BBLEARN/index.jsp?course_id="+cm.getCourseId().toExternalString()+"&user_id="+cm.getUserId().toExternalString(), Score.AttemptLocation.EXTERNAL);
+		    	s.setDateAdded();
+		    	s.setCourseMembershipId(cm.getId());
 		    	scores.add(s);
 		    }
-		    sdb.persist(scores);
-		    
-    	    return true;
+		    try 
+		    {
+		    	sdb.persist(scores);
+		    }
+		    catch(PersistenceException pE)
+		    {
+		    	LOGGER.info(pE.getMessage());
+		    	pE.printStackTrace();
+		    }
+		    catch(ValidationException vE)
+		    {
+		    	LOGGER.info(vE.getMessage());
+		    	vE.printStackTrace();
+		    }
+    	    return ;
+		}
+
+		private Context getNewContext() {
+			  contextManager = ContextManagerFactory.getInstance();
+		   	  ctx = contextManager.getContext() ;
+		   	  return ctx;
 		}
 }

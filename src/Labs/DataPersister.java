@@ -39,8 +39,8 @@ public class DataPersister {
         userid = user.getId().toExternalString();
         courseid = ctx.getCourse().getId().toExternalString();
     	queryString = new StringBuffer("");
-        LOGGER.info("init - Userid " + userid);
-        LOGGER.info("init - Courseid " + courseid);
+        //LOGGER.info("init - Userid " + userid);
+        //LOGGER.info("init - Courseid " + courseid);
     	sb = new StringBuilder();
 //Temporary code for debug
      	GradeLogistics gl = new GradeLogistics();
@@ -66,6 +66,7 @@ public class DataPersister {
 			ResultSetMetaData rsMeta = rSet.getMetaData();
 			int columnCount = rsMeta.getColumnCount();
 			String[] tokens = h.removeNull(indata);
+			
             if (!(rSet.next()))
             {
             	//We should never hae to insert because the roster should be already uploaded. 
@@ -75,13 +76,13 @@ public class DataPersister {
 	            queryString.append(columns.toString() + " ) VALUES ( ");      
 	            String qmarks = h.qMarks(columnCount).toString() ; 
 	            
-	            LOGGER.info(qmarks);
+	  //          LOGGER.info(qmarks);
 	    			
 	            
 	
  	            queryString.append(qmarks);
 	            
-	            LOGGER.info(queryString.toString());
+	//            LOGGER.info(queryString.toString());
 	            
 				
 	            PreparedStatement insertQuery = conn.prepareStatement(queryString.toString());
@@ -93,7 +94,7 @@ public class DataPersister {
 		            
 	            for (int i=0; i < tokens.length; i++) {
 	                insertQuery.setString((i + 4), tokens[i]);
-	                LOGGER.info(tokens[i]);
+//	                LOGGER.info(tokens[i]);
 	            }          
 	 
 	            int insertResult = insertQuery.executeUpdate();
@@ -112,6 +113,8 @@ public class DataPersister {
             	queryString.append("UPDATE yccs_chemistrylab1 SET ");
             	int count = 0; 
             	String nextColumn = "";
+            	LOGGER.info("token size is " + tokens.length);
+    			
             	for (int j= 4; j <= rsMeta.getColumnCount(); ++j)
                 {	 
                 	 nextColumn = rsMeta.getColumnName(j);
@@ -121,13 +124,18 @@ public class DataPersister {
                 			 
                 	 }
                      queryString.append(nextColumn + "= ? ");
-                     ++count;
+                     
                      if ( count < tokens.length-1)
                      {
-                    	 queryString.append(",");
+                    	  queryString.append(",");
                 	 }
             		else
+            		{
+            			LOGGER.info("query is " + queryString.toString());
             			break;
+            		}
+            		++count;
+                     
                 }
             	
                  //insert where PK1 matches. 

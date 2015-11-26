@@ -71,7 +71,10 @@ blackboard.persist.gradebook.LineitemDbPersister"
 		roleInstructor = true;
 		GradeLogistics gl = new GradeLogistics();
 		Id id = gl.makeLineItem("yccs_chemistrylab1", 100, ctx);
-		gl.addStudentAttempts(ctx, "yccs_chemistrylab1", id);
+		if (id != null)
+			gl.addStudentAttempts(ctx, "yccs_chemistrylab1", id);
+		else
+			out.println("Something terrible happened because lineitem could not be created!");
 	}
 %>
 	<p>

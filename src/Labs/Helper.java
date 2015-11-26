@@ -91,16 +91,20 @@ public class Helper {
 			String[] token = indata.split(",");
 			int count = 0;
 			for(int i=0; i< token.length; ++i)
-				if (token[i] != "null")
-					count++;
+			{
+				if (!token[i].contains("null"))
+						count++;
+			}
+			LOGGER.info("token valid count is " + count);
 			String[] token_out = new String[count];
 			int j = 0;
-			for(int i=0; i< count; ++i)
+			for(int i=0; i < count; ++i)
 			{
-				while (token[j] == "null")
+				while (token[j].contains("null"))
 					++j;
 				
 				token_out[i] = token[j];
+				++j;
 				
 			}
 			return token_out;

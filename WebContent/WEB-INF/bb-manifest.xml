@@ -5,7 +5,7 @@
  <name value="York college Lab 1 Debugging from blackboard"/>
  <description value="Testing using blackboard frame"/>
  <handle value="Lab Debug"/>
- <version value="2.10.10"/>
+ <version value="2.10.27"/>
  <requires>
  <bbversion value="9.1"/>
  </requires>
