@@ -137,13 +137,14 @@ blackboard.persist.gradebook.LineitemDbPersister"
 </form>
 
 <br>
-		<form action="welcome" method="post">
-		<input type="submit" value="Lab 2">
-		</form>
+<form method="post" action="lab2.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
+    <input type="submit" id="button3" value="lab 2"/>
+</form>
+
 <br>
-		<form action="welcome" method="post">	
-			<input type="submit" value="Lab 3">
-		</form>
+<form method="post" action="lab3.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
+    <input type="submit" id="button4" value="lab 3"/>
+</form>
 <br>
 <br>
 <br>
