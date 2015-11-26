@@ -118,7 +118,7 @@ public class GradeLogistics {
 	   }
 
 
-		private void loadCourseMembership(List<CourseMembership> roster, String tablename) {
+		private void loadCourseMembership(List<CourseMembership> roster, String labname) {
 	 		ConnectionManager cManager = null;
 			Connection conn = null;
 
@@ -137,13 +137,13 @@ public class GradeLogistics {
 	            	String uid = "";
 	            	uid = roster.get(i).getUserId().toExternalString();
 	        		StringBuffer queryString = new StringBuffer("");
-	             	rSet = h.exists(conn, uid, courseid);
+	             	rSet = h.exists(conn, uid, courseid, labname);
 	            	rsMeta = rSet.getMetaData();
 	            	
 	            	if (!(rSet.next()))
 	                {
 	            		   LOGGER.info("Did not find userid " + uid);	      
-	                	   queryString.append("INSERT INTO " + tablename + " ( ");
+	                	   queryString.append("INSERT INTO " + labname + " ( ");
 	                	   columns = h.buildColumnString(rsMeta).toString();
 	         	           
 	 

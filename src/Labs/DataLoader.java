@@ -12,9 +12,14 @@ import blackboard.db.ConnectionNotAvailableException;
 
 public class DataLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class.getName());
-	
+	String labname = null;
+    public DataLoader(String labname)
+    {
+    	this.labname = labname;
+    	
+    }
 	public String loadData() {
-		Labs lab = new Labs();
+		Labs lab = new Labs(labname);
 		StringBuilder sb = new StringBuilder();
 		StringBuffer queryString = new StringBuffer("");
 		String userid = lab.getUserId();
@@ -28,8 +33,8 @@ public class DataLoader {
 			
 			queryString.append("SELECT * ");
 			queryString.append("FROM ");
-			queryString.append("yccs_chemistrylab1 ");
-			queryString.append("WHERE UserId = ? AND CourseId = ?");
+			queryString.append(labname);
+			queryString.append(" WHERE UserId = ? AND CourseId = ?");
 			LOGGER.info(queryString.toString());
 			selectQuery = conn.prepareStatement(queryString.toString(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 			
@@ -83,7 +88,7 @@ public class DataLoader {
 	}
 	
 	public String loadGrades() {
-		Labs lab = new Labs();
+		Labs lab = new Labs(labname);
 		StringBuilder sb = new StringBuilder();
 		StringBuffer queryString = new StringBuffer("");
 		String userid = lab.getUserId();
@@ -101,8 +106,8 @@ public class DataLoader {
 			queryString.append("SELECT ");
 			queryString.append(grades);
 			queryString.append(" FROM ");
-			queryString.append("yccs_chemistrylab1 ");
-			queryString.append("WHERE UserId = ? AND CourseId = ?");
+			queryString.append(labname);
+			queryString.append(" WHERE UserId = ? AND CourseId = ?");
 			selectQuery = conn.prepareStatement(queryString.toString(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 			selectQuery.setString(1, userid);
 			selectQuery.setString(2, lab.getCourseId());

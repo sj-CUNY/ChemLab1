@@ -30,6 +30,7 @@ public class Labs {
 	private String userId;
 	private String courseId;
 	private static final Logger LOGGER = LoggerFactory.getLogger(Labs.class.getName());
+	private String labname;
 	
 	public void setColumns(String columns) {
 		this.columns = columns;
@@ -68,16 +69,17 @@ public class Labs {
 		return userId;
 	}
  
-	public Labs()
+	public Labs(String labname)
 	{
 		ContextManager contextManager = ContextManagerFactory.getInstance();
     	ctx = contextManager.getContext() ;
-    	
+    	this.labname = labname;
     	this.init(ctx);
 	}
  
-	public Labs(Context ctx)
+	public Labs(Context ctx, String labname)
 	{
+		this.labname = labname;
 		this.init(ctx);
 	}
 	
@@ -111,12 +113,12 @@ public class Labs {
 			
 			queryString.append("(SELECT * ");
 			queryString.append("FROM ");
-			queryString.append("yccs_chemistrylab1)");
+			queryString.append(labname + ")");
 			selectQuery = conn.prepareStatement(queryString.toString(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 			ResultSet rSet = selectQuery.executeQuery();
 			ResultSetMetaData rsMeta = rSet.getMetaData();
 			int columnCount = rsMeta.getColumnCount();
-			//LOGGER.info(queryString.toString());
+			LOGGER.info(queryString.toString());
 			//LOGGER.info(Integer.toString(columnCount));
 	 
 				for (int i=1; i <= columnCount; i++){

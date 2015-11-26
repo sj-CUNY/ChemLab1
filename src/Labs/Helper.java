@@ -28,7 +28,7 @@ public class Helper {
 	}
 	
 
-	public ResultSet exists(Connection conn, String userid, String courseid)
+	public ResultSet exists(Connection conn, String userid, String courseid, String labname)
 	    {
 			StringBuffer queryString = new StringBuffer("");
 			PreparedStatement selectQuery = null;
@@ -37,8 +37,8 @@ public class Helper {
 			 
 			queryString.append("SELECT * ");
 			queryString.append("FROM ");
-			queryString.append("yccs_chemistrylab1 ");
-			queryString.append("WHERE USERID = ? and COURSEID = ?");
+			queryString.append(labname);
+			queryString.append(" WHERE USERID = ? and COURSEID = ?");
 			//LOGGER.info(queryString.toString());
 			try
 			{

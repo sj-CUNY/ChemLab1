@@ -15,21 +15,21 @@ public class inputChecks {
     DataLoader load;
     DataPersister save;
 
-    public inputChecks()
+    public inputChecks(String labname)
     {
         dataX = 0;
         dataY = 0;
-        load = new DataLoader();
-        save = new DataPersister();
+        load = new DataLoader(labname);
+        save = new DataPersister(labname);
         
     }
     
-    public inputChecks(int X, int Y)
+    public inputChecks(int X, int Y, String labname)
     {
         dataX = X;
         dataY = Y;
-        load = new DataLoader();
-        save = new DataPersister();
+        load = new DataLoader(labname);
+        save = new DataPersister(labname);
         
         data = new String[dataX][dataY];
         type = new String[dataX][dataY];

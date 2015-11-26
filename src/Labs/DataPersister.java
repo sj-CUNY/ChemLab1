@@ -27,25 +27,25 @@ public class DataPersister {
     String courseid;
     
 	StringBuffer queryString;
- 
+    String labname = null;
 	Labs labs;
 	
-   public DataPersister()
+   public DataPersister(String labname)
     {
     	contextManager = ContextManagerFactory.getInstance();
     	ctx = contextManager.getContext() ;
     	user = ctx.getUser() ;
-    	labs = new Labs(ctx);
+    	labs = new Labs(ctx, labname);
         userid = user.getId().toExternalString();
         courseid = ctx.getCourseId().toExternalString();
     	queryString = new StringBuffer("");
         //LOGGER.info("init - Userid " + userid);
         //LOGGER.info("init - Courseid " + courseid);
     	sb = new StringBuilder();
+    	this.labname = labname;
 //Temporary code for debug
      	GradeLogistics gl = new GradeLogistics();
-    	String tablename = "yccs_chemistrylab1";
-    	gl.initGradeLogistics(tablename);
+     	gl.initGradeLogistics(labname);
 
     }
 	 
@@ -62,7 +62,7 @@ public class DataPersister {
         	Helper h = new Helper();
             cManager = BbDatabase.getDefaultInstance().getConnectionManager();
             conn = cManager.getConnection();
-            ResultSet rSet = h.exists(conn, userid, courseid);
+            ResultSet rSet = h.exists(conn, userid, courseid, labname);
 			ResultSetMetaData rsMeta = rSet.getMetaData();
 			int columnCount = rsMeta.getColumnCount();
 			String[] tokens = h.removeNull(indata);
@@ -70,7 +70,7 @@ public class DataPersister {
             if (!(rSet.next()))
             {
             	//We should never hae to insert because the roster should be already uploaded. 
-	            queryString.append("INSERT INTO yccs_chemistrylab1 ( ");
+	            queryString.append("INSERT INTO " +  labname  + " ( ");
 	            columns = h.buildColumnString(rsMeta);
 	           //Insert blank for PK1
 	            queryString.append(columns.toString() + " ) VALUES ( ");      
@@ -110,7 +110,7 @@ public class DataPersister {
             else
             {
 
-            	queryString.append("UPDATE yccs_chemistrylab1 SET ");
+            	queryString.append("UPDATE " + labname + " SET ");
             	int count = 0; 
             	String nextColumn = "";
             	LOGGER.info("token size is " + tokens.length);
@@ -220,7 +220,7 @@ public class DataPersister {
             cManager = BbDatabase.getDefaultInstance().getConnectionManager();
             conn = cManager.getConnection();
 
-            queryString.append("INSERT INTO yccs_chemistrylab1 (");
+            queryString.append("INSERT INTO " + labname + " (");
             columns = columns.substring(rsMeta.getColumnName(1).length(), columns.length() );
             queryString.append(columns + " )");
 
