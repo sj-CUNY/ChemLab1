@@ -43,10 +43,12 @@ public class Labs {
 		this.grades = grades;
 	}
 	
-	public void setUserId(String userid) {
-		this.userId = userid;
+	public void setUserId(String id) {
+		this.userId = id;
 	}
-	
+	public void setCourseId(String id) {
+		this.courseId = id;
+	}
 	public String getColumns() {
 		return columns;
 	}
@@ -99,7 +101,7 @@ public class Labs {
 		}
 		if (course != null)
 		{
-			setUserId(course.getId().toExternalString());
+			setCourseId(course.getId().toExternalString());
 			LOGGER.info("Context course id: " + getCourseId());
 		}
 		try {

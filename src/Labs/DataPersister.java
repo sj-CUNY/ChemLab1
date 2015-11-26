@@ -37,7 +37,7 @@ public class DataPersister {
     	user = ctx.getUser() ;
     	labs = new Labs(ctx);
         userid = user.getId().toExternalString();
-        courseid = ctx.getCourse().getId().toExternalString();
+        courseid = ctx.getCourseId().toExternalString();
     	queryString = new StringBuffer("");
         //LOGGER.info("init - Userid " + userid);
         //LOGGER.info("init - Courseid " + courseid);

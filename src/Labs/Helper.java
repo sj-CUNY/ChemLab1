@@ -39,7 +39,7 @@ public class Helper {
 			queryString.append("FROM ");
 			queryString.append("yccs_chemistrylab1 ");
 			queryString.append("WHERE USERID = ? and COURSEID = ?");
-			LOGGER.info(queryString.toString());
+			//LOGGER.info(queryString.toString());
 			try
 			{
 				selectQuery = conn.prepareStatement(queryString.toString(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);			
