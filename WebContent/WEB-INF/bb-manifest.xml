@@ -5,7 +5,7 @@
  <name value="York college Lab 1 Debugging from blackboard"/>
  <description value="Testing using blackboard frame"/>
  <handle value="Lab Debug"/>
- <version value="2.11.11"/>
+ <version value="2.11.16"/>
  <requires>
  <bbversion value="9.1"/>
  </requires>
@@ -27,14 +27,23 @@
  </description>
  <links>
  <link>
- <type value="course_tool"/>
+ <type value="tool"/>
  <name value="Lab 1 Debug"/>
- <url value="welcome.jsp"/>
+ <url value="welcome.jsp?course_id=@X@course.pk_string@X@"/>
  <description value="Lab 1 Debug."/>
  <icons>
 <listitem value="images/icon.gif"/>
 </icons>
  </link>
+ <link>
+ <type value="course_tool"/>
+ <name value="Lab 1 Debug"/>
+ <url value="welcome.jsp?course_id=@X@course.pk_string@X@"/>
+ <description value="Lab 1 Debug."/>
+ <icons>
+<listitem value="images/icon.gif"/>
+</icons>
+</link>
  </links>
  <ActionMenu>
  <actionControlBar>
@@ -43,13 +52,12 @@
  </application>
 </application-defs>
  <permissions>
- <permission type="persist" name="content" actions="persist,create, modify, delete" />
- <permission type="persist" name="content_link" actions="persist,create, modify, delete" />
- <permission type="persist" name="course" actions="create,modify,delete" />
- <permission type="persist" name="coursemembership" actions="create,modify,delete"/>	             
- <permission type="persist" name="Attempt" actions="create,load,persist,delete" />
-  <permission type="persist" name="Outcome" actions="create,modify,delete, load, persist"/>
- <permission type="persist" name="OutcomeDefinition" actions="create,modify,delete, load, persist"/>	             
+ <permission type="persist" name="content" actions="create" />
+  <permission type="persist" name="course" actions="load" />
+ <permission type="persist" name="coursemembership" actions="load"/>	             
+ <permission type="persist" name="Attempt" actions="create,load,persist" />
+  <permission type="persist" name="Outcome" actions="create,load"/>
+ <permission type="persist" name="OutcomeDefinition" actions="create,load,persist"/>	             
  <permission type="persist" name="OutcomeDefinitionCategory" actions="create,modify, load persist"/>
  <permission type="persist" name="OutcomeDefinitionScale" actions="create,delete,load,persist" />
  <permission type="persist" name="OutcomeDefinitionScaleSymbol" actions="create,delete,load,persist" />      
@@ -60,6 +68,6 @@
  <permission type="attribute" name="GroupMembership" actions="get"/>
  <permission type="attribute" name="user.authinfo" actions="get" />
  <permission type="java.lang.RuntimePermission" name="db.connection.bb_bb60" actions="connect,accept" />
-</permissions>
+ </permissions>
 </plugin>
 </manifest> 

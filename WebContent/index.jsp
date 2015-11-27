@@ -14,7 +14,7 @@
     boolean initial = true;
     
     lab1Checks checks = new lab1Checks(dataX, dataY, "yccs_chemistrylab1");
-    
+   
     public void getData(HttpServletRequest request)
     {
         for (int i = 0; i < dataX; i++)

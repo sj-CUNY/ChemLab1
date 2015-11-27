@@ -66,6 +66,7 @@ blackboard.persist.gradebook.LineitemDbPersister"
 	CourseMembership.Role crsMembershipRole = crsMembership.getRole();
 	String crsMembershipRoleStr = crsMembershipRole.toString();
 	boolean roleInstructor = false;
+//This one needs to go behind the activate button
 	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR)
 	{
 		roleInstructor = true;
@@ -73,6 +74,7 @@ blackboard.persist.gradebook.LineitemDbPersister"
 		gl.makeLineItem("yccs_chemistrylab1", 100, ctx);
 		
 	}
+//This one will go behindthe lab submit button
 	else if (crsMembershipRole == CourseMembership.Role.STUDENT)
 	{
 		GradeLogistics gl = new GradeLogistics();
