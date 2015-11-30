@@ -1,12 +1,18 @@
 package Labs;
 
+import blackboard.platform.context.Context;
+
 public class lab1Checks extends inputChecks
 {
     public lab1Checks(int x, int y, String labname)
     {
         super(x,y, labname);
     }
-
+    public lab1Checks(int x, int y, String labname, Context ctx)
+    {
+        super(x,y, labname, ctx);
+    }
+    
     @Override
     protected void buildKey()
     {

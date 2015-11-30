@@ -68,17 +68,20 @@ public class Helper {
 			return q;
 		}
 		
-		public StringBuilder buildColumnString(ResultSetMetaData rsMeta) throws SQLException {
+		public StringBuilder buildColumnString(ResultSetMetaData rsMeta, String except) throws SQLException {
 			// TODO Auto-generated method stub
 			 StringBuilder columns = new StringBuilder();
 
 			int columnCount = rsMeta.getColumnCount();
 			
-			for (int i=1; i <= columnCount ; i++)
+			for (int i=2; i <= columnCount ; i++)
 	         {
+				if(!rsMeta.getColumnName(i).contains(except))
+				{
 					columns.append(rsMeta.getColumnName(i));
 					 if (i != columnCount)
 						 columns.append(",");
+				}
 	         }
 			return columns;
 		}
@@ -108,6 +111,22 @@ public class Helper {
 				
 			}
 			return token_out;
+		}
+
+
+		public Object buildColumnString(ResultSetMetaData rsMeta) throws SQLException {
+			 StringBuilder columns = new StringBuilder();
+
+			 int columnCount = rsMeta.getColumnCount();
+			
+			 for (int i=1; i <= columnCount ; i++)
+	         { 
+				columns.append(rsMeta.getColumnName(i));
+				 if (i != columnCount)
+					 columns.append(",");
+			 }
+	          
+			return columns;
 		}
 
 	

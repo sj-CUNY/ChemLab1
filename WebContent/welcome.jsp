@@ -71,19 +71,20 @@ blackboard.persist.gradebook.LineitemDbPersister"
 	{
 		roleInstructor = true;
 		GradeLogistics gl = new GradeLogistics();
+		gl.initGradeLogistics("yccs_chemistrylab1");
 		gl.makeLineItem("yccs_chemistrylab1", 100, ctx);
-		
+			
 	}
 //This one will go behindthe lab submit button
 	else if (crsMembershipRole == CourseMembership.Role.STUDENT)
 	{
-		GradeLogistics gl = new GradeLogistics();
+/*		GradeLogistics gl = new GradeLogistics();
 		Lineitem l = gl.getLineItem("yccs_chemistrylab1", ctx.getCourseId());
 		if (l != null)
 			gl.addStudentAttempts(ctx, "yccs_chemistrylab1", l.getId());
 		else
 			out.println("This should not happen: cant find lineitem for this assignment");
-
+*/
 	}
 %>
 	<p>

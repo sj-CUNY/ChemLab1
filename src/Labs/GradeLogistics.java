@@ -7,18 +7,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.ListIterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import blackboard.base.FormattedText;
+import blackboard.data.BbAttributes;
 import blackboard.data.ValidationException;
 import blackboard.data.course.Course;
 import blackboard.data.course.CourseMembership;
 import blackboard.data.gradebook.Lineitem;
 import blackboard.data.gradebook.Lineitem.AssessmentLocation;
 import blackboard.data.gradebook.Score;
+import blackboard.data.gradebook.impl.Attempt;
+import blackboard.data.gradebook.impl.Outcome;
+import blackboard.persist.gradebook.ext.AttemptDbPersister;
+import blackboard.persist.gradebook.ext.OutcomeDbPersister;
+import blackboard.persist.gradebook.impl.AttemptDbLoader;
 import blackboard.data.user.User;
 import blackboard.db.BbDatabase;
 import blackboard.db.ConnectionManager;
@@ -37,8 +45,7 @@ import blackboard.platform.context.ContextManagerFactory;
 import blackboard.platform.persistence.PersistenceService;
 import blackboard.platform.persistence.PersistenceServiceFactory;
  
-
-
+ 
 /**
  * @author SJ
  *
@@ -99,7 +106,7 @@ public class GradeLogistics {
 				List<CourseMembership> crsMembership = null;
 				CourseMembershipDbLoader crsMembershipLoader = null;
 				String errMsg = null;
-				LOGGER.info("Course name : " + courseName);
+			//	LOGGER.info("Course name : " + courseName);
 				try {
 					crsMembershipLoader = (CourseMembershipDbLoader)bpManager.getLoader(CourseMembershipDbLoader.TYPE);
 					crsMembership = crsMembershipLoader.loadByCourseId(courseId);
@@ -151,11 +158,13 @@ public class GradeLogistics {
 		                    columnCount = rsMeta.getColumnCount();
 		                    q = h.qMarks(columnCount) ;
 		                    queryString.append(q);
-		                    LOGGER.info(queryString.toString());
+		                    String[] temp_t = uid.split("_");
+		                    
+		                    LOGGER.info(queryString.toString() + " " + temp_t[1]);
 		
-		                    PreparedStatement insertQuery = conn.prepareStatement(queryString.toString(), new String[]{"PK1"});
-		                    insertQuery.setString(1, Integer.toString(i+1000));
-			                    
+		                    PreparedStatement insertQuery = conn.prepareStatement(queryString.toString(), PreparedStatement.RETURN_GENERATED_KEYS);
+		                    
+		                    insertQuery.setString(1, temp_t[1]);
 		                    insertQuery.setString(2, uid);
 		                    insertQuery.setString(3, courseid);
 		                    String temp = "0";
@@ -174,7 +183,7 @@ public class GradeLogistics {
 	            		for (int j = 1; j<rsMeta.getColumnCount(); ++j) 
 	            			debug.append(rSet.getString(j) + ",");
 	            
-	            		LOGGER.info("membership " + debug.toString());
+	            		//LOGGER.info("membership " + debug.toString());
 	            	}	
 	            	
 
@@ -207,7 +216,7 @@ public class GradeLogistics {
 
 					if (!checkLineItem(labname, ctx.getCourseId()))
 					{
-						LOGGER.info("No matching lineitem, create a new one");
+						//LOGGER.info("No matching lineitem, create a new one");
 			     	    assignment = new Lineitem();
 			     	    assignment.setCourseId(ctx.getCourseId());
 			    	    assignment.setName(labname);
@@ -219,7 +228,7 @@ public class GradeLogistics {
 			    	    assignment.setAttemptHandlerUrl(url);
 			    	    LineitemDbPersister linePersister = LineitemDbPersister.Default.getInstance();
 			    	    linePersister.persist(assignment);
-			    	    LOGGER.info("LineItem id is " + assignment.getId());
+			    	    //LOGGER.info("LineItem id is " + assignment.getId());
 			    	    
 					} 
 					else
@@ -246,10 +255,10 @@ public class GradeLogistics {
 			Lineitem l = getLineItem(labname, courseId);
 			if ( l != null)
 			{
-				LOGGER.info("Found a matching linitem " + l.getId().toExternalString());
+				//LOGGER.info("Found a matching linitem " + l.getId().toExternalString());
 				return true;
 			}
-			LOGGER.info("No matching linitem found ");
+			//LOGGER.info("No matching linitem found ");
 			return false;
 		}
 
@@ -273,7 +282,7 @@ public class GradeLogistics {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			LOGGER.info("Number of line items " + lItems.size());
+			//LOGGER.info("Number of line items " + lItems.size());
 			ListIterator<Lineitem> listIterator = lItems.listIterator();
 			Lineitem l = null;
 			while(listIterator.hasNext())
@@ -289,7 +298,41 @@ public class GradeLogistics {
 			return l;
 		}
 		
-		public void addStudentAttempts(Context ctx, String labname, Id id)
+		public void addStudentAttempts(String labname, Lineitem lineitem) throws PersistenceException, ValidationException
+		{
+			addStudentAttempts(ctx, labname, lineitem);
+			//addStudentAttempts2(ctx, labname, currentUser.getId());
+		}
+		/*
+		private void addStudentAttempts2(Context ctx, String labname, Id id) throws PersistenceException, ValidationException
+		{
+			PersistenceService bpService = null;
+			BbPersistenceManager bpManager = null;
+ 			List<CourseMembership> crsMembership ; 
+			    
+			 
+			bpService = PersistenceServiceFactory.getInstance() ;
+			
+			bpManager = bpService.getDbPersistenceManager();
+			crsMembership = fetchRoster(ctx);
+		    Score s = null;
+		    ListIterator<CourseMembership> cList = crsMembership.listIterator();
+		    while(cList.hasNext())
+		    {
+		    	CourseMembership cm = cList.next();
+ 		    	if (cm.getUserId().toExternalString().equals(ctx.getUserId().toExternalString()))// && cm.getRole() == CourseMembership.Role.STUDENT)
+		    	{
+ 		    		Attempt attempt = new Attempt();
+ 		    		FormattedText fText = new FormattedText("/blackboard/webapps/YCDB-Lab%20Debug-BBLEARN/index.jsp?course_id="+cm.getCourseId().toExternalString()+"&user_id="+cm.getUserId().toExternalString(),FormattedText.Type.HTML);
+  		    		attempt.setStudentSubmission(fText);
+  		    		attempt.setOutcomeId();
+   		    		AttemptDbPersister adb = (AttemptDbPersister) bpManager.getPersister( AttemptDbPersister.TYPE );
+  		    		adb.persist(attempt);
+		    	}
+		    }
+		    return;
+		}*/
+		private void addStudentAttempts(Context ctx, String labname, Lineitem lineitem) throws KeyNotFoundException, PersistenceException, ValidationException
 		{
 			/*
     	    String url = "/webapps/YCDB-Lab 20Debug-BBLEARN/index.jsp?course_id="+ctx.getCourseId()+"&"+ctx.getUser().getId();
@@ -304,8 +347,8 @@ public class GradeLogistics {
 			 
 			bpService = PersistenceServiceFactory.getInstance() ;
 			
-			// TODO Auto-generated met
-		    bpManager = bpService.getDbPersistenceManager();
+			bpManager = bpService.getDbPersistenceManager();
+		    LOGGER.info("addStudentAttept " + labname + " " +  ctx.getRequestUrl());
 		    try
 		    {
 		    	sdb = (ScoreDbPersister) bpManager.getPersister( ScoreDbPersister.TYPE );
@@ -318,30 +361,59 @@ public class GradeLogistics {
 		    
 		    crsMembership = fetchRoster(ctx);
 		    Score s = null;
-		    
-		    for(int i=0; i < crsMembership.size(); ++i)
+		    ListIterator<CourseMembership> cList = crsMembership.listIterator();
+		    while(cList.hasNext())
 		    {
-		    	CourseMembership cm = crsMembership.get(i);
-		    	    	
-		    	if (cm.getUserId() == ctx.getUser().getId())
+		    	CourseMembership cm = cList.next();
+		    	/*if (cm != null)
+		    		LOGGER.info("cm addStudentAttept userid " + cm.getUserId().toExternalString());
+			    if(ctx != null)
+			    	if (ctx.getUser() != null)
+			    		LOGGER.info("ctx addStudentAttept userid " + ctx.getUserId().toExternalString());
+	    		LOGGER.info("Membership size " + crsMembership.size());
+		    	*/
+		    	if (cm.getUserId().toExternalString().equals(ctx.getUserId().toExternalString()))// && cm.getRole() == CourseMembership.Role.STUDENT)
 		    	{
 		    		s = new Score();
-			    	
-		    		s.setLineitemId(id);
+		    		s.setDateAdded();
+		    		lineitem.setAttemptHandlerUrl("https://cunytd.blackboard.com/blackboard/webapps/YCDB-Lab%20Debug-BBLEARN/index.jsp?course_id="+cm.getCourseId().toExternalString()+"&user_id="+cm.getUserId().toExternalString());
+		    		s.setLineitemId(lineitem.getId());
 		    	//LOGGER.info("Course is " + cm.getCourseId());
-		    	//LOGGER.info("User id string is " + cm.getUserId().toExternalString());
-		       	   	s.setAttemptId(ctx.getRequestUrl(), Score.AttemptLocation.EXTERNAL );
-		    		//s.setAttemptId("/index.jsp?course_id="+cm.getCourseId().toExternalString()+"&user_id="+cm.getUserId().toExternalString(), Score.AttemptLocation.EXTERNAL);
-		    	 	s.setDateAdded();
-		    	 	s.setCourseMembershipId(cm.getId());
-		    	 	
-		    	 	break;
+ 		       	 // 	s.setAttemptId(ctx.getRequestUrl(), Score.AttemptLocation.EXTERNAL );
+ 		    	 	s.setCourseMembershipId(cm.getId());
+ 		    	 	ScoreDbPersister.Default.getInstance().persist(s);
+
+ 		    	 	Outcome outcome = s.getOutcome();
+ 		    		Attempt attempt ;
+ 
+ 		    	 	if (outcome.getAttemptCount() == 0) {
+ 		    	 		attempt = outcome.createAttempt();
+ 		    	 	    if (attempt == null) {
+ 		    	 	        throw new IllegalStateException("could not create attempt");
+ 		    	 	    }
+ 		    	 	    attempt.setOutcomeId(outcome.getId());
+ 		    	 	} else {
+ 		    	 	    attempt = AttemptDbLoader.Default.getInstance().loadById(outcome.getLastAttemptId());
+ 		    	 	} 
+
+ 		    	 //	String str = "<%@ taglib uri=\"/bbUI\" prefix=\"bbUI\" %><html><head><title>Submitted Text</head><body><c:url value=\"/blackboard/webapps/YCDB-Lab%20Debug-BBLEARN/index.jsp?course_id="+cm.getCourseId().toExternalString()+"&user_id="+cm.getUserId().toExternalString()+"/></body></html>";
+ 		    	 //	FormattedText fText = new FormattedText(str,FormattedText.Type.HTML);
+   		    		
+ 		    	 	attempt.setStatus(Attempt.Status.NEEDS_GRADING);
+ 		    	 	attempt.setAttemptedDate(Calendar.getInstance());
+ 		    	 	AttemptDbPersister.Default.getInstance().persist(attempt);
+ 		    	 	
+ 		    	 	break;
 		    	}
 		    }
+		    /*
 		    try 
 		    {
 		    	if (s != null)
+		    	{
 		    		sdb.persist(s);
+		    		LOGGER.info("Storing score " + s.getAttemptId());
+		    	}
 		    }
 		    catch(PersistenceException pE)
 		    {
@@ -352,9 +424,9 @@ public class GradeLogistics {
 		    {
 		    	LOGGER.info(vE.getMessage());
 		    	vE.printStackTrace();
-		    }
+		    }*/
     	    return ;
 		}
 
-		 
+	     
 }
