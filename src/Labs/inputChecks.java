@@ -1,5 +1,8 @@
 package Labs;
 
+import blackboard.data.course.CourseMembership;
+import blackboard.platform.context.Context;
+
 public class inputChecks {
     
     protected int dataX;
@@ -40,8 +43,32 @@ public class inputChecks {
 
         
         String tempData;
-        tempData = load.loadData();
+        tempData = load.loadData(labname);
+        initData(tempData);
+    }
 
+    public inputChecks(int X, int Y, String labname, Context ctx)
+    {
+        dataX = X;
+        dataY = Y;
+        load = new DataLoader(labname);
+        save = new DataPersister(ctx, labname);
+        
+        data = new String[dataX][dataY];
+        type = new String[dataX][dataY];
+        error = new String[dataX][dataY];
+        key = new String[dataX][dataY];
+        weight = new double[dataX][dataY];
+        grade = new double[dataX][dataY];
+
+        
+        String tempData;
+        tempData = load.loadData(labname);
+        initData(tempData);
+    }
+    
+    private void initData(String tempData)
+    {
         for (int i = 0; i < dataX; i++)
         {
             for (int j = 0; j < dataY; j++)
@@ -195,7 +222,7 @@ public class inputChecks {
         }
     }
     
-    public void submit()
+    public void submit(Context ctx)
     {
         //call save and then save grade
         save();
@@ -219,7 +246,7 @@ public class inputChecks {
         save.saveGrade(theString);
 
         //set submitted
-        save.submitted();
+        save.submitted(ctx);
     }
     
     protected void unitStandard (int x, int y)
