@@ -1,5 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Labs.lab1Checks" %>
+<%@ page import="Labs.lab2Checks" %>
 
  <%@ taglib uri="/bbUI" prefix="bbUI" %> 
  <%@ taglib uri="/bbData" prefix="bbData"%> 
@@ -29,7 +29,7 @@ For Deven: this is compatible for your jsp additions.
     String button = "";
     boolean initial = true;
     
-    lab1Checks checks = new lab1Checks(dataX, dataY, "yccs_chemistrylab2");
+    lab2Checks checks = new lab2Checks(dataX, dataY, "yccs_chemistrylab2");
     
     public void getData(HttpServletRequest request)
     {
@@ -54,14 +54,7 @@ For Deven: this is compatible for your jsp additions.
         {
             for (int j = 0; j < dataY; j++)
             {
-                if (j == 1)
-                {
-                    checks.setType(i,j,"unit");
-                }
-                else
-                {
-                    checks.setType(i, j,"double");
-                }
+                checks.setType(i, j,"double");
             }
         }
         
