@@ -1,5 +1,6 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="Labs.lab8Checks" %>
+
 <!DOCTYPE html>
 <!--
 For Deven: this is compatible for your jsp additions. 
@@ -16,15 +17,13 @@ For Deven: this is compatible for your jsp additions.
         for (int i = 0; i < dataX; i++)
         {
             for (int j = 0; j < dataY; j++)
-            {
-                
+            {                
                 checks.setData(i, j, request.getParameter("" + i + j));
             }
         }
     }
  %>
  <%
-
 	User u = ctx.getUser();
 	Course c = ctx.getCourse();
 
@@ -41,17 +40,15 @@ For Deven: this is compatible for your jsp additions.
             {
                 checks.setType(i, j,"double");
             }
-        }
-        
+        }     
         initial = false;
     }
     
     if (button != null)
     {
         if (button.equals("Clear"))
-        {
-             
-        	checks.clear();
+        { 
+            checks.clear();
         }
         else if (button.equals("Save"))
         {
