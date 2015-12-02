@@ -1,5 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Labs.lab2bChecks" %>
+<%@ page import="Labs.lab3bChecks" %>
 <!DOCTYPE html>
 <!--
 For Deven: this is compatible for your jsp additions. 
@@ -9,7 +9,7 @@ For Deven: this is compatible for your jsp additions.
     int dataY = 3;
     String button = "";
     boolean initial = true;
-    lab2bChecks checks = new lab2bChecks(dataX, dataY, "yccs_chemistrylab2b");
+    lab3bChecks checks = new lab3bChecks(dataX, dataY, "yccs_chemistrylab3b");
    
     public void getData(HttpServletRequest request)
     {
@@ -88,19 +88,19 @@ For Deven: this is compatible for your jsp additions.
  %>
 <html>
     <head>
-        <title>Lab 2: Analysis of an Iron Complex Salt by Redox Titration</title>
+        <title>Lab 3: Analysis of the Iron Complex Salt for Iron: Tritation with EDTA</title>
     </head>
     <body>
         <fieldset>
-            <legend>Lab 2: Analysis of an Iron Complex Salt by Redox Titration</legend>
+            <legend>Lab 3: Analysis of the Iron Complex Salt for Iron: Tritation with EDTA</legend>
             <form method="POST" action=""><!--add destination in action field-->
                 <table>
                     <tr>
                         <td>
-                            Partner's Name(s): 
+                            Partner's Name(s):
                         </td>
                         <td>
-                            <input type="text" name="00" <% if (checks.getData(0,0) != null){out.print("value=\"" + checks.getData(0,0) + "\"");}%> /><br>
+                            <input type="text" name="00"  />
                         </td>
                     </tr>
                     <tr>
@@ -117,11 +117,30 @@ For Deven: this is compatible for your jsp additions.
                     <legend>DATA</legend>
                     <table>
                         <tr>
+                            <th>
+                            </th>
+                            <th>
+                                Sample 1
+                            </th>
+                            <th>
+                                Sample 2
+                            </th>
+                            <th>
+                                Sample 3
+                            </th>
+                        </tr>
+                        <tr>
                             <td>
-                                Weight of vial and salt: 
+                                Weight of complex iron salt used
                             </td>
                             <td>
-                                <input type="text" name="10" <% if (checks.getData(1,0) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> /><br>
+                                <input type="text" name="10"  />
+                            </td>
+                            <td>
+                                <input type="text" name="11"  />
+                            </td>
+                            <td>
+                                <input type="text" name="12"  />
                             </td>
                         </tr>
                         <tr>
@@ -132,13 +151,29 @@ For Deven: this is compatible for your jsp additions.
                                 <% if (checks.getError(1,0) != null){out.print(checks.getError(1, 0));} %>
                                 </div>
                             </td>
+                            <td>
+                                <div style="color: red" >
+                                <% if (checks.getError(1,1) != null){out.print(checks.getError(1, 1));} %>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                <% if (checks.getError(1,2) != null){out.print(checks.getError(1, 2));} %>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td>
-                                Weight of vial alone: 
+                                Final buret reading
                             </td>
                             <td>
-                                <input type="text" name="20" <% if (checks.getData(2,0) != null){out.print("value=\"" + checks.getData(2,0) + "\"");}%> /><br>
+                                <input type="text" name="20"  />
+                            </td>
+                            <td>
+                                <input type="text" name="21"  />
+                            </td>
+                            <td>
+                                <input type="text" name="22"  />
                             </td>
                         </tr>
                         <tr>
@@ -149,13 +184,29 @@ For Deven: this is compatible for your jsp additions.
                                 <% if (checks.getError(2,0) != null){out.print(checks.getError(2, 0));} %>
                                 </div>
                             </td>
+                            <td>
+                                <div style="color: red" >
+                                <% if (checks.getError(2,1) != null){out.print(checks.getError(2, 1));} %>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                <% if (checks.getError(2,2) != null){out.print(checks.getError(2, 2));} %>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td>
-                                Total weight of salt: 
+                                Initial buret reading
                             </td>
                             <td>
-                                <input type="text" name="30" <% if (checks.getData(3,0) != null){out.print("value=\"" + checks.getData(3,0) + "\"");}%> /><br>
+                                <input type="text" name="30"  />
+                            </td>
+                            <td>
+                                <input type="text" name="31"  />
+                            </td>
+                            <td>
+                                <input type="text" name="32"  />
                             </td>
                         </tr>
                         <tr>
@@ -166,8 +217,79 @@ For Deven: this is compatible for your jsp additions.
                                 <% if (checks.getError(3,0) != null){out.print(checks.getError(3, 0));} %>
                                 </div>
                             </td>
+                            <td>
+                                <div style="color: red" >
+                                <% if (checks.getError(3,1) != null){out.print(checks.getError(3, 1));} %>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                <% if (checks.getError(3,2) != null){out.print(checks.getError(3, 2));} %>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Volume of EDTA used
+                            </td>
+                            <td>
+                                <input type="text" name="40"  />
+                            </td>
+                            <td>
+                                <input type="text" name="41"  />
+                            </td>
+                            <td>
+                                <input type="text" name="42"  />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                <% if (checks.getError(4,0) != null){out.print(checks.getError(4, 0));} %>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                <% if (checks.getError(4,1) != null){out.print(checks.getError(4, 1));} %>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                <% if (checks.getError(4,2) != null){out.print(checks.getError(4, 2));} %>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Molarity of EDTA
+                            </td>
+                            <td>
+                                <input type="text" name="50"  />
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                <% if (checks.getError(5,0) != null){out.print(checks.getError(5, 0));} %>
+                                </div>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
                         </tr>
                     </table>
+                </fieldset>
+                <fieldset>
+                    <legend>RESULTS</legend>
                     <table>
                         <tr>
                             <th>
@@ -184,74 +306,16 @@ For Deven: this is compatible for your jsp additions.
                         </tr>
                         <tr>
                             <td>
-                                Molar concentration of KMnO<sub>4</sub>
+                                Moles EDTA  used in titration
                             </td>
                             <td>
-                                <input type="text" name="40" <% if (checks.getData(4,0) != null){out.print("value=\"" + checks.getData(4,0) + "\"");}%> />
+                                <input type="text" name="60"  />
                             </td>
                             <td>
+                                <input type="text" name="61"  />
                             </td>
                             <td>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(4,0) != null){out.print(checks.getError(4, 0));} %>
-                                </div>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Weight of complex iron salt used
-                            </td>
-                            <td>
-                                <input type="text" name="50" <% if (checks.getData(5,0) != null){out.print("value=\"" + checks.getData(5,0) + "\"");}%> />
-                            </td>
-                            <td>
-                                <input type="text" name="51" <% if (checks.getData(5,1) != null){out.print("value=\"" + checks.getData(5,1) + "\"");}%> />
-                            </td>
-                            <td>
-                                <input type="text" name="52" <% if (checks.getData(5,2) != null){out.print("value=\"" + checks.getData(5,2) + "\"");}%> />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(5,0) != null){out.print(checks.getError(5, 0));} %>
-                                </div>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(5,1) != null){out.print(checks.getError(5, 1));} %>
-                                </div>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(5,2) != null){out.print(checks.getError(5, 2));} %>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Final buret reading
-                            </td>
-                            <td>
-                                <input type="text" name="60" <% if (checks.getData(6,0) != null){out.print("value=\"" + checks.getData(6,0) + "\"");}%> />
-                            </td>
-                            <td>
-                                <input type="text" name="61" <% if (checks.getData(6,1) != null){out.print("value=\"" + checks.getData(6,1) + "\"");}%> />
-                            </td>
-                            <td>
-                                <input type="text" name="62" <% if (checks.getData(6,2) != null){out.print("value=\"" + checks.getData(6,2) + "\"");}%> />
+                                <input type="text" name="62"  />
                             </td>
                         </tr>
                         <tr>
@@ -275,16 +339,16 @@ For Deven: this is compatible for your jsp additions.
                         </tr>
                         <tr>
                             <td>
-                                Initial buret reading
+                                Moles Fe<sup>3+</sup> in sample
                             </td>
                             <td>
-                                <input type="text" name="70" <% if (checks.getData(7,0) != null){out.print("value=\"" + checks.getData(7,0) + "\"");}%> />
+                                <input type="text" name="70"  />
                             </td>
                             <td>
-                                <input type="text" name="71" <% if (checks.getData(7,1) != null){out.print("value=\"" + checks.getData(7,1) + "\"");}%> />
+                                <input type="text" name="71"  />
                             </td>
                             <td>
-                                <input type="text" name="72" <% if (checks.getData(7,2) != null){out.print("value=\"" + checks.getData(7,2) + "\"");}%> />
+                                <input type="text" name="72"  />
                             </td>
                         </tr>
                         <tr>
@@ -308,16 +372,16 @@ For Deven: this is compatible for your jsp additions.
                         </tr>
                         <tr>
                             <td>
-                                Volume of KMnO<sub>4</sub> used
+                                Moles Fe<sup>3+</sup> per gram of salt
                             </td>
                             <td>
-                                <input type="text" name="80" <% if (checks.getData(8,0) != null){out.print("value=\"" + checks.getData(8,0) + "\"");}%> />
+                                <input type="text" name="80"  />
                             </td>
                             <td>
-                                <input type="text" name="81" <% if (checks.getData(8,1) != null){out.print("value=\"" + checks.getData(8,1) + "\"");}%> />
+                                <input type="text" name="81"  />
                             </td>
                             <td>
-                                <input type="text" name="82" <% if (checks.getData(8,2) != null){out.print("value=\"" + checks.getData(8,2) + "\"");}%> />
+                                <input type="text" name="82"  />
                             </td>
                         </tr>
                         <tr>
@@ -339,36 +403,16 @@ For Deven: this is compatible for your jsp additions.
                                 </div>
                             </td>
                         </tr>
-                    </table>
-                </fieldset>
-                <fieldset>
-                    <legend>RESULTS</legend>
-                    <table>
-                        <tr>
-                            <th>
-                            </th>
-                            <th>
-                                Sample 1
-                            </th>
-                            <th>
-                                Sample 2
-                            </th>
-                            <th>
-                                Sample 3
-                            </th>
-                        </tr>
                         <tr>
                             <td>
-                                Moles MnO<sub>4</sub><sup>-</sup> used in titration
+                                Average moles Fe<sup>3+</sup> per gram of salt
                             </td>
                             <td>
-                                <input type="text" name="90" <% if (checks.getData(9,0) != null){out.print("value=\"" + checks.getData(9,0) + "\"");}%> />
+                                <input type="text" name="90"  />
                             </td>
                             <td>
-                                <input type="text" name="91" <% if (checks.getData(9,1) != null){out.print("value=\"" + checks.getData(9,1) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="92" <% if (checks.getData(9,2) != null){out.print("value=\"" + checks.getData(9,2) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
@@ -380,28 +424,20 @@ For Deven: this is compatible for your jsp additions.
                                 </div>
                             </td>
                             <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(9,1) != null){out.print(checks.getError(9, 1));} %>
-                                </div>
                             </td>
                             <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(9,2) != null){out.print(checks.getError(9, 2));} %>
-                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                Moles C<sub>2</sub>O<sub>4</sub><sup>2-</sup> in sample
+                                Average moles of C<sub>2</sub>O<sub>4</sub><sup>2-</sup> per gram of salt (from last experiment)
                             </td>
                             <td>
-                                <input type="text" name="100" <% if (checks.getData(10,0) != null){out.print("value=\"" + checks.getData(10,0) + "\"");}%> />
+                                <input type="text" name="100"  />
                             </td>
                             <td>
-                                <input type="text" name="101" <% if (checks.getData(10,1) != null){out.print("value=\"" + checks.getData(10,1) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="102" <% if (checks.getData(10,2) != null){out.print("value=\"" + checks.getData(10,2) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
@@ -413,28 +449,20 @@ For Deven: this is compatible for your jsp additions.
                                 </div>
                             </td>
                             <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(10,1) != null){out.print(checks.getError(10, 1));} %>
-                                </div>
                             </td>
                             <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(10,2) != null){out.print(checks.getError(10, 2));} %>
-                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                Moles C<sub>2</sub>O<sub>4</sub><sup>2-</sup> per gram of salt
+                                Ratio of moles C<sub>2</sub>O<sub>4</sub><sup>2-</sup> / Fe<sup>3+</sup>
                             </td>
                             <td>
-                                <input type="text" name="110" <% if (checks.getData(11,0) != null){out.print("value=\"" + checks.getData(11,0) + "\"");}%> />
+                                <input type="text" name="110"  />
                             </td>
                             <td>
-                                <input type="text" name="111" <% if (checks.getData(11,1) != null){out.print("value=\"" + checks.getData(11,1) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="112" <% if (checks.getData(11,2) != null){out.print("value=\"" + checks.getData(11,2) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
@@ -446,22 +474,16 @@ For Deven: this is compatible for your jsp additions.
                                 </div>
                             </td>
                             <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(11,1) != null){out.print(checks.getError(11, 1));} %>
-                                </div>
                             </td>
                             <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(11,2) != null){out.print(checks.getError(11, 2));} %>
-                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                Average C<sub>2</sub>O<sub>4</sub><sup>2-</sup> moles per gram of salt
+                                Formula and charge of complex ion
                             </td>
                             <td>
-                                <input type="text" name="120" <% if (checks.getData(12,0) != null){out.print("value=\"" + checks.getData(12,0) + "\"");}%> />
+                                <input type="text" name="120"  />
                             </td>
                             <td>
                             </td>

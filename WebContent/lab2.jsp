@@ -13,10 +13,10 @@
 		<bbNG:breadcrumbBar environment="COURSE"
 			navItem="course_plugin_manage" >
 				<bbNG:breadcrumb title="Home" href="index.jsp?course_id=@X@course.id@X@&user_id=@X@user.pk_string@X@" />
-			<bbNG:breadcrumb> Lab 1 </bbNG:breadcrumb>
+			<bbNG:breadcrumb> Lab 2 </bbNG:breadcrumb>
 		</bbNG:breadcrumbBar>
 		<bbNG:pageTitleBar>
-			Welcome to to Chem 109 Lab 1
+			Welcome to to Chem 109 Lab 2
 		</bbNG:pageTitleBar>
 	</bbNG:pageHeader>
 <!DOCTYPE html>
