@@ -6,17 +6,17 @@
  <%@ taglib uri="/bbNG" prefix="bbNG"%>
  
  <bbNG:learningSystemPage 
-	title="LAB 2"
+	title="LAB 3"
 	ctxId="ctx">
 
 	<bbNG:pageHeader>
 		<bbNG:breadcrumbBar environment="COURSE"
 			navItem="course_plugin_manage" >
 				<bbNG:breadcrumb title="Home" href="index.jsp?course_id=@X@course.id@X@&user_id=@X@user.pk_string@X@" />
-			<bbNG:breadcrumb> Lab 1 </bbNG:breadcrumb>
+			<bbNG:breadcrumb> Lab 3 </bbNG:breadcrumb>
 		</bbNG:breadcrumbBar>
 		<bbNG:pageTitleBar>
-			Welcome to to Chem 109 Lab 1
+			Welcome to to Chem 109 Lab 3
 		</bbNG:pageTitleBar>
 	</bbNG:pageHeader>
     
