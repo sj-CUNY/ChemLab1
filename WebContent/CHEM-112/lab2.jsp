@@ -481,6 +481,13 @@ For Deven: this is compatible for your jsp additions.
                         </tr>
                     </table>
                 </fieldset>
+                <div style="text-align: center">
+                    <input type="submit" name="button" value="Check" />
+                    <input type="submit" name="button" value="Clear" />
+                    <input type="submit" name="button" value="Save" />
+                    <input type="submit" name="button" value="Submit" />
+                </div>
+                <br>
             </form>
         </fieldset>
     </body>
