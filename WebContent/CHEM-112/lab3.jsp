@@ -1,3 +1,5 @@
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="Labs.lab3bChecks" %>
 <!DOCTYPE html>
 <!--
 For Deven: this is compatible for your jsp additions. 
@@ -7,7 +9,7 @@ For Deven: this is compatible for your jsp additions.
     int dataY = 3;
     String button = "";
     boolean initial = true;
-    lab8Checks checks = new lab8Checks(dataX, dataY, "yccs_chemistrylab8");
+    lab3bChecks checks = new lab3bChecks(dataX, dataY, "yccs_chemistrylab3b");
    
     public void getData(HttpServletRequest request)
     {

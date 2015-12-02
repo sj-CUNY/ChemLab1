@@ -1,3 +1,5 @@
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="Labs.lab2bChecks" %>
 <!DOCTYPE html>
 <!--
 For Deven: this is compatible for your jsp additions. 
