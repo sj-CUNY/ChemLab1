@@ -51,6 +51,9 @@
  </ActionMenu>
  </application>
 </application-defs>
+<schema-dirs>
+  <schema-dir dir-name="chemlab"/>
+</schema-dirs>
  <permissions>
  <permission type="persist" name="content" actions="create" />
   <permission type="persist" name="course" actions="load" />
