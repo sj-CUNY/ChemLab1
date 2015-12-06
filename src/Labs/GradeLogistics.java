@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.util.ArrayList;
+import java.sql.Statement;
 import java.util.Calendar;
 import java.util.List;
 import java.util.ListIterator;
@@ -14,8 +14,6 @@ import java.util.ListIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import blackboard.base.FormattedText;
-import blackboard.data.BbAttributes;
 import blackboard.data.ValidationException;
 import blackboard.data.course.Course;
 import blackboard.data.course.CourseMembership;
@@ -86,12 +84,98 @@ public class GradeLogistics {
  	   	    
 	   }
 	   
-		public void initGradeLogistics(String tablename)
+	   //Use this function only if you know what you are doing
+	   public void delete(String labname)
+	   {
+		   ConnectionManager cManager = null;
+			Connection conn = null;
+
+			StringBuilder q = new StringBuilder();
+			 try {
+	            cManager = BbDatabase.getDefaultInstance().getConnectionManager();
+	            conn = cManager.getConnection();
+	            StringBuffer queryString = new StringBuffer("");
+         	    queryString.append("DROP TABLE " + labname + " PURGE");
+
+               PreparedStatement deleteQuery = conn.prepareStatement(queryString.toString());
+               deleteQuery.executeUpdate();
+               PreparedStatement deleteSeq = conn.prepareStatement("DROP SEQUENCE "+labname+"_seq");
+               deleteSeq.executeUpdate();
+               
+               LOGGER.info("dropped all tables");
+			 }
+			catch (java.sql.SQLException sE){
+	        	
+	        	LOGGER.error( sE.getMessage());
+	        	sE.printStackTrace();
+	        		
+			} catch (ConnectionNotAvailableException cE){
+	                	
+	        	LOGGER.error( cE.getMessage() );
+	        	cE.printStackTrace();
+	           
+	        } finally {
+	            if(conn != null){
+	                cManager.releaseConnection(conn);
+	            }
+	        }
+			
+	   }
+	   
+	   public void createTrigger(String labname)
+	   {
+		   ConnectionManager cManager = null;
+			Connection conn = null;
+
+			StringBuilder q = new StringBuilder();
+			 try {
+	            cManager = BbDatabase.getDefaultInstance().getConnectionManager();
+	            conn = cManager.getConnection();
+	            StringBuffer queryString = new StringBuffer("");
+        	   /* queryString.append("CREATE OR REPLACE TRIGGER  " + labname + 
+        	    		"_trig BEFORE INSERT ON " + labname + " FOR EACH ROW WHEN (new.pk1 IS NULL) ");
+        	    queryString.append("BEGIN SELECT " + labname + "_seq.NEXTVAL INTO :new.pk1 FROM dual; END;"
+        	    		+ "	 / ALTER TRIGGER " + labname + "_trig ENABLE" );
+        	    */
+	            queryString.append("CREATE OR REPLACE TRIGGER  " + labname + 
+        	    		"_trig BEFORE INSERT ON " + labname + " FOR EACH ROW ");
+        	    queryString.append("BEGIN :new.pk1 := " + labname + "_seq.nextval;  END;"
+        	    		+ "	 / ALTER TRIGGER " + labname + "_trig ENABLE" );
+        	   
+        	    LOGGER.info(queryString.toString());
+              Statement trigQuery = conn.createStatement();
+              trigQuery.executeQuery(queryString.toString());
+               LOGGER.info("make trigger " + labname);
+                 
+			 }
+			catch (java.sql.SQLException sE){
+	        	
+	        	LOGGER.error( sE.getMessage());
+	        	sE.printStackTrace();
+	        		
+			} catch (ConnectionNotAvailableException cE){
+	                	
+	        	LOGGER.error( cE.getMessage() );
+	        	cE.printStackTrace();
+	           
+	        } finally {
+	            if(conn != null){
+	                cManager.releaseConnection(conn);
+	            }
+	        }
+		   
+	   }
+	   		public void initGradeLogistics(String tablename)
 		{
 		    loadCourseMembership(fetchRoster(ctx), tablename);				
 		}
 
-	   private List<CourseMembership> fetchRoster(Context ctx)
+	   
+		public Context getContext()
+		{
+			return this.ctx;
+		}
+		private List<CourseMembership> fetchRoster(Context ctx)
 	   {
 			    PersistenceService bpService = PersistenceServiceFactory.getInstance() ;
 			    BbPersistenceManager bpManager = bpService.getDbPersistenceManager();
@@ -150,22 +234,22 @@ public class GradeLogistics {
 	            	if (!(rSet.next()))
 	                {
 	            		   LOGGER.info("Did not find userid " + uid);	      
+	            		   int pk1 = h.nextVal(labname);
 	                	   queryString.append("INSERT INTO " + labname + " ( ");
 	                	   columns = h.buildColumnString(rsMeta).toString();
 	         	           
 	 
 		                    queryString.append(columns + " ) " + "VALUES ( ");
+		                 //   String pk = labname.trim()+"_seq.nextval";
+		                   // queryString.append(pk);
+		                    
 		                    columnCount = rsMeta.getColumnCount();
-		                    q = h.qMarks(columnCount) ;
+		                    q = h.qMarks(columnCount, 0) ;//Start from 0 or 1
 		                    queryString.append(q);
-		                    String[] temp_t = uid.split("_");
-		                    
-		                    LOGGER.info(queryString.toString() + " " + temp_t[1]);
-		
-		                    PreparedStatement insertQuery = conn.prepareStatement(queryString.toString(), PreparedStatement.RETURN_GENERATED_KEYS);
-		                    
-		                    insertQuery.setString(1, temp_t[1]);
-		                    insertQuery.setString(2, uid);
+		                    LOGGER.info("INSERT string " + queryString.toString());
+ 		                    PreparedStatement insertQuery = conn.prepareStatement(queryString.toString(), PreparedStatement.RETURN_GENERATED_KEYS);
+		                    insertQuery.setInt(1,pk1);
+ 		                    insertQuery.setString(2, uid);
 		                    insertQuery.setString(3, courseid);
 		                    String temp = "0";
 		                    for (int j=4; j <= columnCount; j++) 

@@ -49,8 +49,8 @@ public class DataPersister {
     	sb = new StringBuilder();
     	this.labname = labname;
 //Temporary code for debug
-     	GradeLogistics gl = new GradeLogistics(ctx);
-     	gl.initGradeLogistics(labname);
+    // 	GradeLogistics gl = new GradeLogistics(ctx);
+     //	gl.initGradeLogistics(labname);
 
     }
 	 
@@ -91,12 +91,14 @@ public class DataPersister {
 			
             if (!(rSet.next()))
             {
+              int pk1 =  h.nextVal(labname);
+               	
             	//We should never hae to insert because the roster should be already uploaded. 
 	            queryString.append("INSERT INTO " +  labname  + " ( ");
 	            columns = h.buildColumnString(rsMeta, "GRADES");
 	           //Insert blank for PK1
 	            queryString.append(columns.toString() + " ) VALUES ( ");      
-	            String qmarks = h.qMarks(columnCount).toString() ; 
+	            String qmarks = h.qMarks(columnCount,0).toString() ; 
 	            
 	  //          LOGGER.info(qmarks);
 	    			
@@ -109,8 +111,7 @@ public class DataPersister {
 				
 	            PreparedStatement insertQuery = conn.prepareStatement(queryString.toString());
 	          //need to change this to unique key
-                String[] temp_t = userid.split("_");
-	            insertQuery.setString(1, temp_t[1].trim());
+  	            insertQuery.setInt(1, pk1);
 	            insertQuery.setString(2, userid);
 	            insertQuery.setString(3, courseid);
 	            

@@ -41,9 +41,12 @@ blackboard.persist.gradebook.LineitemDbPersister"
 		</bbNG:pageTitleBar>
 	</bbNG:pageHeader>
   
-<% 
 
-	User u = ctx.getUser();;
+<%
+	String button = "";
+
+
+	User u = ctx.getUser();
 	Course c = ctx.getCourse();
 	// get the membership data to determine the User's Role
 	CourseMembership crsMembership = null;
@@ -66,95 +69,262 @@ blackboard.persist.gradebook.LineitemDbPersister"
 	CourseMembership.Role crsMembershipRole = crsMembership.getRole();
 	String crsMembershipRoleStr = crsMembershipRole.toString();
 	boolean roleInstructor = false;
-//This one needs to go behind the activate button
+ 
 	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR)
 	{
 		roleInstructor = true;
-		GradeLogistics gl = new GradeLogistics();
-		gl.initGradeLogistics("yccs_chemistrylab1");
-		gl.makeLineItem("yccs_chemistrylab1", 100, ctx);
-			
+
 	}
-//This one will go behindthe lab submit button
-	else if (crsMembershipRole == CourseMembership.Role.STUDENT)
-	{
-/*		GradeLogistics gl = new GradeLogistics();
-		Lineitem l = gl.getLineItem("yccs_chemistrylab1", ctx.getCourseId());
-		if (l != null)
-			gl.addStudentAttempts(ctx, "yccs_chemistrylab1", l.getId());
-		else
-			out.println("This should not happen: cant find lineitem for this assignment");
-*/
-	}
+	 
 %>
-	<p>
-	The User's Role is: <%=crsMembershipRoleStr%> </p>
+<%
+    button = request.getParameter("button");
+ if (button != null && roleInstructor==true)
+    {
+		GradeLogistics gl = new GradeLogistics();
 
-     <script>
-        function enableButton2() {
-        	document.getElementById("button2").disabled = false;
-
-        	out.println("<p> test try");
-<%---		try{
-         	    Lineitem assignment = new Lineitem();
-        		out.println("<p> test try");
-        	    assignment.setCourseId(ctx.getCourseId());
-        	    assignment.setName("Lab 1");
-        	    assignment.setPointsPossible(100);
-        	    assignment.setType("Lab 1");
-        	    assignment.setIsAvailable(true);
-        	    assignment.setDateAdded();
-
-        	    LineitemDbPersister linePersister = LineitemDbPersister.Default.getInstance();
-        	    linePersister.persist(assignment);
-        	    out.println("<p>check the gradecenter");
-        		} 
-        	  
-        	  catch (Exception e) {
-        	    out.println("<p>" + e.getClass().getSimpleName() + ": " + e.getMessage());
-        	    out.println("<p>check the tomcat logfiles");
-        	    e.printStackTrace();
-
-        	  }
-
-        ---%>	
+        if (button.equals("ActivateLab1"))
+        {
+   		gl.initGradeLogistics("ycdb_chemistrylab1");
+		gl.makeLineItem("ycdb_chemistrylab1", 100, gl.getContext());
+ 
+	 	}
+        else if (button.equals("ActivateLab2"))
+        {
+   		gl.initGradeLogistics("ycdb_chemistrylab2");
+		gl.makeLineItem("ycdb_chemistrylab2", 100, gl.getContext());
+ 
         }
-    </script>
+        else if (button.equals("ActivateLab3"))
+        {
+           	gl.initGradeLogistics("ycdb_chemistrylab3");
+		gl.makeLineItem("ycdb_chemistrylab3", 100, gl.getContext());
+ 
+        }
+        else if (button.equals("ActivateLab4"))
+        {
+             	gl.initGradeLogistics("ycdb_chemistrylab4");
+		gl.makeLineItem("ycdb_chemistrylab4", 100, gl.getContext());
+ 
+        }
+        else if (button.equals("ActivateLab5"))
+        {
 
-<script>
-		function callLab1 () {
-			window.open("index.jsp") 
-		//	window.open("create.jsp")
-		
+ 		gl.initGradeLogistics("ycdb_chemistrylab5");
+		gl.makeLineItem("ycdb_chemistrylab5", 100, gl.getContext());
+ 
+        }
+        else if (button.equals("ActivateLab6"))
+        {
+            	gl.initGradeLogistics("ycdb_chemistrylab6");
+		gl.makeLineItem("ycdb_chemistrylab6", 100, gl.getContext());
+ 
+        }
+        else if (button.equals("ActivateLab7"))
+        {
+            	gl.initGradeLogistics("ycdb_chemistrylab7");
+		gl.makeLineItem("ycdb_chemistrylab7", 100, gl.getContext());
+ 
+        }
+        else if (button.equals("deletelab1"))
+        {
+	   		/*gl.delete("ycdb_chemistrylab1");
+		 	gl.delete("ycdb_chemistrylab2");
+		 	 
+	   		gl.delete("ycdb_chemistrylab3");
+	   		gl.delete("ycdb_chem109_logistics");
+			*/
+			//int val = gl.nextVal("ycdb_chemistrylab1");
+        }
+        else
+        {
+            button = "";
+        }
+    }
+
+
+%>
+<html>
+	<head>
+    	<script>
+        function ActivateLab1() {
+        document.getElementById("Lab1").disabled = false;
+        out.println("<p> test try")
 		}
+   		
+   		function ActivateLab2() {
+   		document.getElementById("Lab2").disabled = false;
+		}
+		
+		function ActivateLab3() {
+   		document.getElementById("Lab3").disabled = false;
+		}
+		
+		function ActivateLab4() {
+   		document.getElementById("Lab4").disabled = false;
+		}
+   		
+   		function ActivateLab5() {
+   		document.getElementById("Lab5").disabled = false;
+		}
+		
+		function ActivateLab6() {
+   		document.getElementById("Lab6").disabled = false;
+		}
+   		
+   		function ActivateLab7() {
+   		document.getElementById("Lab7").disabled = false;
+		}
+    					
+		
+		function ActivateLab8() {
+   		document.getElementById("Lab8").disabled = false;
+		}
+    					
+		
+		function ActivateLab9() {
+   		document.getElementById("Lab9").disabled = false;
+		}
+    	
+    	function callLab1 () {
+		window.open("index.jsp") 		
+		}		
 	
 
-</script>
+        function callLab2 () {
+		window.open("lab2.jsp")
+		}	
+	
 
- <form method="post" action="${pageContext.request.contextPath}/Labs" > 
-    <input type="submit" name="Activate" id="button1" value="Activate"  onclick=enableButton2() />  
- </form>
- 
-<form method="post" action="index.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
-    <input type="submit" id="button2" value="lab 1"/>
-</form>
+         function callLab3 () {
+		window.open("lab3.jsp")
+		}	
+	
+		
+         function callLab4 () {
+		window.open("lab4.jsp")
+		}	
+
+	     function callLab5 () {
+		window.open("lab5.jsp")
+		}	
+
+          function callLab6 () {
+		window.open("lab6.jsp")
+		}	
+	
+          function callLab7 () {
+		window.open("lab7.jsp")
+		}
+	
+         function callLab8 () {
+		window.open("lab8.jsp")
+		}
+	
+         function callLab9 () {
+		window.open("lab9.jsp")
+		}
+    		
+    	
+    	</script>
+	
+
+	
+	</head>
+
+
+
 
 <br>
-<form method="post" action="lab2.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
-    <input type="submit" id="button3" value="lab 2"/>
-</form>
+<br>
+<br>
 
+		<body>
+		            <div style="text-align: left">
+		
+    <form method="post" action="welcome.jsp?course_id=${ctx.courseId.externalString}"> 
+    	<input type="submit" name="button" id="ActivateLab1" value="ActivateLab1"   />
+    	</form>
+    <form method="post" action="index.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
+        <input type="submit" id="lab1" value="lab 1"/>
+    </form>
+     <form method="post" action="welcome.jsp?course_id=${ctx.courseId.externalString}"> 
+    	<input type="submit" name="button" id="deletelab1" value="deletelab1"   />
+    	</form>
+   
+    	 </div>
 <br>
-<form method="post" action="lab3.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
-    <input type="submit" id="button4" value="lab 3"/>
-</form>
 <br>
 <br>
-<br>
-		<form action="welcome" method="post">
-			<input type="submit" value="Lab n">
-		</form>
+    <div style="text-align: left">
 
+    <form method="post" action="welcome.jsp?course_id=${ctx.courseId.externalString}"> 
+		<input type="submit" name="button" id="ActivateLab2" value="ActivateLab2" />
+	</form>
+	<form method="post" action="lab2.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
+        <input type="submit" id="lab2" value="lab 2"/>
+    </form>
+    
+	</div>	
+<br>
+<br>
+<br>
+	<form method="post" action="welcome.jsp?course_id=${ctx.courseId.externalString}"> 
+		<input type="submit" name="button" id="ActivateLab3" value="ActivateLab3"  />
+	</form>
+	<form method="post" action="lab3.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
+        <input type="submit" id="lab3" value="lab 3"/>
+    </form>
+    
+		
+<br>
+<br>
+<br>
+		
+    	<input type="submit" name="button" id="ActivateLab4" value="Activate" onclick="ActivateLab4()"  />
+    	<input type="submit" name="button" id="Lab4" value="lab 4" disabled onclick="callLab4()"/>
+		
+<br>
+<br>
+<br>
+		
+		<input type="submit" name="button" id="ActivateLab5" value="Activate" onclick="ActivateLab5()" />
+		<input type="submit" name="button" id="Lab5" value="lab 5" disabled onclick="callLab5()"/>
+		
+<br>
+<br>
+<br>
+		
+		<input type="submit" name="button" id="ActivateLab6" value="Activate" onclick="ActivateLab6()" />
+		<input type="submit" name="button" id="Lab6" value="lab 6" disabled onclick="callLab6()"/>
+		
+<br>
+<br>
+<br>
+		
+    	<input type="submit" name="button" id="ActivateLab7" value="ActivateLab7" onclick="ActivateLab7()"  />
+    	<input type="submit" name="button" id="Lab7" value="lab 7" disabled onclick="callLab7()"/>
+		
+<br>
+<br>
+<br>
+		
+		<input type="submit" name="button" id="ActivateLab8" value="ActivateLab8" onclick="ActivateLab8()" />
+		<input type="submit" name="button" id="Lab8" value="lab 8" disabled onclick="callLab8()"/>
+		
+<br>
+<br>
+<br>
+		
+		<input type="submit" name="button" id="ActivateLab9" value="ActivateLab9" onclick="ActivateLab9()" />
+		<input type="submit" name="button" id="Lab9" value="lab 9" disabled onclick="callLab9()"/>
+		</body>
+<br>
+<br>
+<br>
 	</html>
 
 </bbNG:learningSystemPage>
+
+
+

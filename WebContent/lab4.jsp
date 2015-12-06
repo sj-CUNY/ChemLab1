@@ -1,5 +1,37 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Labs.lab4Checks" %>
+<%@ page import="Labs.lab1Checks" %>
+<%@ page import="blackboard.platform.context.Context" %>
+<%@ page import="blackboard.platform.context.ContextManager" %>
+<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
+<%@ page import="blackboard.data.user.User" %>
+<%@ page import="blackboard.data.course.*" %>
+<%@ page import="blackboard.persist.course.*" %>
+<%@ page import="blackboard.platform.persistence.PersistenceService" %>
+<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
+<%@ page import="blackboard.persist.BbPersistenceManager"%>
+ <%@ page import="blackboard.persist.*"%>
+ 
+<%@ page import="blackboard.data.gradebook.Lineitem" %>
+<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
+ 
+ <%@ taglib uri="/bbUI" prefix="bbUI" %> 
+ <%@ taglib uri="/bbData" prefix="bbData"%> 
+ <%@ taglib uri="/bbNG" prefix="bbNG"%>
+ <bbNG:learningSystemPage 
+	title="LAB 4"
+	ctxId="ctx">
+
+	<bbNG:pageHeader>
+		<bbNG:breadcrumbBar environment="COURSE"
+			navItem="course_plugin_manage" >
+				<bbNG:breadcrumb title="Home" href="lab4.jsp?course_id=@X@course.id@X@&user_id=@X@user.pk_string@X@" />
+			<bbNG:breadcrumb> Lab 4 </bbNG:breadcrumb>
+		</bbNG:breadcrumbBar>
+		<bbNG:pageTitleBar>
+			Welcome to to Chem 109 Lab 4
+		</bbNG:pageTitleBar>
+	</bbNG:pageHeader>
+
 <!DOCTYPE html>
 <!--
 For Deven: this is compatible for your jsp additions. 
@@ -10,7 +42,7 @@ For Deven: this is compatible for your jsp additions.
     String button = "";
     boolean initial = true;
     
-    lab4Checks checks = new lab4Checks(dataX, dataY);
+    lab1Checks checks = new lab1Checks(dataX, dataY, "ycdb_chemistrylab4");
     
     public void getData(HttpServletRequest request)
     {
@@ -73,7 +105,7 @@ For Deven: this is compatible for your jsp additions.
             checks.save();
             
             //perform submit
-            checks.submit();
+            checks.submit(ctx);
         }
         else
         {
@@ -250,3 +282,4 @@ For Deven: this is compatible for your jsp additions.
         </fieldset>
     </body>
 </html>
+</bbNG:learningSystemPage>
