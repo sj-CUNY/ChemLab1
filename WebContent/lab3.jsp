@@ -1,10 +1,22 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Labs.lab3Checks" %>
-    
+<%@ page import="Labs.lab1Checks" %>
+<%@ page import="blackboard.platform.context.Context" %>
+<%@ page import="blackboard.platform.context.ContextManager" %>
+<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
+<%@ page import="blackboard.data.user.User" %>
+<%@ page import="blackboard.data.course.*" %>
+<%@ page import="blackboard.persist.course.*" %>
+<%@ page import="blackboard.platform.persistence.PersistenceService" %>
+<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
+<%@ page import="blackboard.persist.BbPersistenceManager"%>
+ <%@ page import="blackboard.persist.*"%>
+ 
+<%@ page import="blackboard.data.gradebook.Lineitem" %>
+<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
+ 
  <%@ taglib uri="/bbUI" prefix="bbUI" %> 
  <%@ taglib uri="/bbData" prefix="bbData"%> 
  <%@ taglib uri="/bbNG" prefix="bbNG"%>
- 
  <bbNG:learningSystemPage 
 	title="LAB 3"
 	ctxId="ctx">
@@ -12,14 +24,14 @@
 	<bbNG:pageHeader>
 		<bbNG:breadcrumbBar environment="COURSE"
 			navItem="course_plugin_manage" >
-				<bbNG:breadcrumb title="Home" href="index.jsp?course_id=@X@course.id@X@&user_id=@X@user.pk_string@X@" />
+				<bbNG:breadcrumb title="Home" href="lab3.jsp?course_id=@X@course.id@X@&user_id=@X@user.pk_string@X@" />
 			<bbNG:breadcrumb> Lab 3 </bbNG:breadcrumb>
 		</bbNG:breadcrumbBar>
 		<bbNG:pageTitleBar>
 			Welcome to to Chem 109 Lab 3
 		</bbNG:pageTitleBar>
 	</bbNG:pageHeader>
-    
+
 <!DOCTYPE html>
 <html>
     <head>

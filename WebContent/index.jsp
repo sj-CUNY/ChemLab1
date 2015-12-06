@@ -39,7 +39,7 @@
     int dataY = 3;
     String button = "";
     boolean initial = true;
-    lab1Checks checks = new lab1Checks(dataX, dataY, "yccs_chemistrylab1");
+    lab1Checks checks = new lab1Checks(dataX, dataY, "ycdb_chemistrylab1");
    
     public void getData(HttpServletRequest request)
     {

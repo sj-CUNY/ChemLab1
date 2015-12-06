@@ -2,16 +2,16 @@
 <!DOCTYPE xml>
 <manifest>
  <plugin>
- <name value="York college Lab 1 Debugging from blackboard"/>
+ <name value="York college Chem 109"/>
  <description value="Testing using blackboard frame"/>
  <handle value="Lab Debug"/>
- <version value="2.11.68"/>
+ <version value="2.12.33"/>
  <requires>
  <bbversion value="9.1"/>
  </requires>
  <vendor>
- <id value="YCDB"/>
- <name value="York college Lab 1 Debugging from blackboard"/>
+ <id value="ycdb"/>
+ <name value="York college Chem 109"/>
  <url value="http://www.york.cuny.edu"/>
  <description value="Blackboard Lab 1 Debug"/>
  </vendor>
@@ -28,18 +28,18 @@
  <links>
  <link>
  <type value="tool"/>
- <name value="Lab 1 Debug"/>
+ <name value="York college Chem 109"/>
  <url value="welcome.jsp?course_id=@X@course.pk_string@X@"/>
- <description value="Lab 1 Debug."/>
+ <description value="York college Chem 109."/>
  <icons>
 <listitem value="images/icon.gif"/>
 </icons>
  </link>
  <link>
  <type value="course_tool"/>
- <name value="Lab 1 Debug"/>
+ <name value="York college Chem 109"/>
  <url value="welcome.jsp?course_id=@X@course.pk_string@X@"/>
- <description value="Lab 1 Debug."/>
+ <description value="York college Chem 109."/>
  <icons>
 <listitem value="images/icon.gif"/>
 </icons>

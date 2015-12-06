@@ -12,6 +12,10 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import blackboard.db.BbDatabase;
+import blackboard.db.ConnectionManager;
+import blackboard.db.ConnectionNotAvailableException;
+
 /**
  * @author SJ
  *
@@ -58,23 +62,23 @@ public class Helper {
 	    }
 
 
-		public StringBuilder qMarks(int length)
+		public StringBuilder qMarks(int length, int start)
 		{
 			StringBuilder q = new StringBuilder();
-			for(int i = 0; i < length; i++) {
-	             if (i == length -1)  q.append("? )");
+			for(int i = start; i < length; i++) {
+	             if (i == length-1 )  q.append("? )");
 	            else  q.append(" ?, ");
 	        }
 			return q;
 		}
-		
+
 		public StringBuilder buildColumnString(ResultSetMetaData rsMeta, String except) throws SQLException {
 			// TODO Auto-generated method stub
 			 StringBuilder columns = new StringBuilder();
 
 			int columnCount = rsMeta.getColumnCount();
 			
-			for (int i=2; i <= columnCount ; i++)
+			for (int i=1; i <= columnCount ; i++)
 	         {
 				if(!rsMeta.getColumnName(i).contains(except))
 				{
@@ -86,6 +90,21 @@ public class Helper {
 			return columns;
 		}
 
+//Use this for insert -- 
+		public Object buildColumnString(ResultSetMetaData rsMeta) throws SQLException {
+			 StringBuilder columns = new StringBuilder();
+
+			 int columnCount = rsMeta.getColumnCount();
+			
+			 for (int i=1; i <= columnCount ; i++)
+	         { 
+				columns.append(rsMeta.getColumnName(i));
+				 if (i != columnCount)
+					 columns.append(",");
+			 }
+	          
+			return columns;
+		}
  
 
 		public String[] removeNull(String indata) 
@@ -114,20 +133,42 @@ public class Helper {
 		}
 
 
-		public Object buildColumnString(ResultSetMetaData rsMeta) throws SQLException {
-			 StringBuilder columns = new StringBuilder();
+		   public int nextVal(String labname)
+		   {
+			   ConnectionManager cManager = null;
+				Connection conn = null;
+				int value = 101;
+				StringBuilder q = new StringBuilder();
+				 try {
+		            cManager = BbDatabase.getDefaultInstance().getConnectionManager();
+		            conn = cManager.getConnection();
+		            StringBuffer queryString = new StringBuffer("");
+	        	    queryString.append("Select " + labname + "_seq.nextval FROM dual");
 
-			 int columnCount = rsMeta.getColumnCount();
-			
-			 for (int i=1; i <= columnCount ; i++)
-	         { 
-				columns.append(rsMeta.getColumnName(i));
-				 if (i != columnCount)
-					 columns.append(",");
-			 }
-	          
-			return columns;
-		}
+	              PreparedStatement query = conn.prepareStatement(queryString.toString());
+	              ResultSet rs = query.executeQuery();
+	              if(rs.next())
+	            	  value = rs.getInt(1);
+	              LOGGER.info("query executed value is " + value);
+				 }
+				catch (java.sql.SQLException sE){
+		        	
+		        	LOGGER.error( sE.getMessage());
+		        	sE.printStackTrace();
+		        		
+				} catch (ConnectionNotAvailableException cE){
+		                	
+		        	LOGGER.error( cE.getMessage() );
+		        	cE.printStackTrace();
+		           
+		        } finally {
+		            if(conn != null){
+		                cManager.releaseConnection(conn);
+		            }
+		        }
+			   
+			   return value;
+		   }
 
 	
 }

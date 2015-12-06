@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<schema name="ycdb_chemlab">
+<schema name="ycdb_chemistrylab">
   <table name="ycdb_chemistrylab1">
- 	  <column name="pk1" data-type="id" nullable="false" identity="true" />
+ 	  <column name="pk1" data-type="int" nullable="false" identity="true" />
  	  <column name="UserId" data-type="varchar(30)" nullable="true" identity="true" />
+	  <column name="CourseId" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="NumMetalRod" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="nmrGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="NumMetalWire" data-type="varchar(10)" nullable="true" identify="false"/>
@@ -69,13 +70,15 @@
 	  <column name="ncsGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="TimeSubmitted" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="IsSubmitted" data-type="varchar(20)" nullable="true" identify="false"/>
-	  <primary-key name="yccs_chemlab1_ak1" comment="Unique primary key">
+	  <primary-key name="ycdb_chemistrylab1_pk1" comment="Unique primary key">
        <columnref name="pk1" />
       </primary-key>
+      <index name="ycdb_chemistrylab1_ui1" unique="true">
+      	<columnref name="UserId"/>
+      </index>
   </table>
-  <table name="ycdb_chemlab3">
-      <column name="pk1" data-type="id" nullable="false" identity="true" />
-      <column name="Student" data-type="varchar(100)" nullable="true" identify="false"/>
+  <table name="ycdb_chemistrylab3">
+      <column name="pk1" data-type="int" nullable="false" identity="true" />
 	  <column name="UserId" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="CourseId" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="PartnerNames" data-type="varchar(10)" nullable="true" identify="false"/>
@@ -136,14 +139,18 @@
 	  <column name="FormulaCharge" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="TimeSubmitted" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="IsSubmitted" data-type="varchar(20)" nullable="true" identify="false"/>
-	<primary-key name="yccs_chemlab3_ak1" comment="Unique primary key">
+	<primary-key name="ycdb_chemistrylab3_ak1" comment="Unique primary key">
+	        <columnref name="pk1" />
       </primary-key>
+      <index name="ycdb_chemistrylab3_ui1" unique="true">
+      	<columnref name="UserId"/>
+      </index>
   </table>
-  <table name="ycdb_chemlab2">
-      <column name="pk1" data-type="id" nullable="false" identity="true" />
-      <column name="Student" data-type="varchar(100)" nullable="true" identify="false"/>
+  <table name="ycdb_chemistrylab2">
+      <column name="pk1" data-type="int" nullable="false" identity="true" />
 	  <column name="UserId" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="CourseId" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="Student" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="PartnerNames" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="WeightVialSalt" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="WVSGrade" data-type="varchar(10)" nullable="true" identify="false"/>
@@ -203,21 +210,26 @@
 	  <column name="AMPGSGrade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="TimeSubmitted" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="IsSubmitted" data-type="varchar(20)" nullable="true" identify="false"/>
-	  <primary-key name="yccs_chemlab2_ak1" comment="Unique primary key">
+	  <primary-key name="ycdb_chemistrylab2_ak1" comment="Unique primary key">
         <columnref name="pk1" />
       </primary-key>
+      <index name="ycdb_chemistrylab2_ui1" unique="true">
+      	<columnref name="UserId"/>
+      </index>
   </table>
-    <table name="ycdb_chemlab_logistics">
-      <column name="pk1" data-type="id" nullable="false" identity="true" />
-      <column name="PrimaryKey" data-type="varchar(10)" nullable="true" identity="false" />
+    <table name="ycdb_chem109_logistics">
+      <column name="pk1" data-type="int" nullable="false" identity="true" />
       <column name="UserId" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="CourseId" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="LineItemId" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="isActivated" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="LabName" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="TableName" data-type="varchar(10)" nullable="true" identify="false"/>
-	  <primary-key name="ycdb_chemlab_logistics_ak1" comment="Unique primary key">
+	  <primary-key name="ycdb_chem109_logistics_ak1" comment="Unique primary key">
         <columnref name="pk1" />
       </primary-key>
+        <index name="ycdb_chem109_logistics_ui1" unique="true">
+      	<columnref name="UserId"/>
+      </index>
   </table>
 </schema>

@@ -1,6 +1,36 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Labs.lab8Checks" %>
+<%@ page import="Labs.lab1Checks" %>
+<%@ page import="blackboard.platform.context.Context" %>
+<%@ page import="blackboard.platform.context.ContextManager" %>
+<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
+<%@ page import="blackboard.data.user.User" %>
+<%@ page import="blackboard.data.course.*" %>
+<%@ page import="blackboard.persist.course.*" %>
+<%@ page import="blackboard.platform.persistence.PersistenceService" %>
+<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
+<%@ page import="blackboard.persist.BbPersistenceManager"%>
+ <%@ page import="blackboard.persist.*"%>
+ 
+<%@ page import="blackboard.data.gradebook.Lineitem" %>
+<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
+ 
+ <%@ taglib uri="/bbUI" prefix="bbUI" %> 
+ <%@ taglib uri="/bbData" prefix="bbData"%> 
+ <%@ taglib uri="/bbNG" prefix="bbNG"%>
+ <bbNG:learningSystemPage 
+	title="LAB 8"
+	ctxId="ctx">
 
+	<bbNG:pageHeader>
+		<bbNG:breadcrumbBar environment="COURSE"
+			navItem="course_plugin_manage" >
+				<bbNG:breadcrumb title="Home" href="lab8.jsp?course_id=@X@course.id@X@&user_id=@X@user.pk_string@X@" />
+			<bbNG:breadcrumb> Lab 8 </bbNG:breadcrumb>
+		</bbNG:breadcrumbBar>
+		<bbNG:pageTitleBar>
+			Welcome to to Chem 109 Lab 8
+		</bbNG:pageTitleBar>
+	</bbNG:pageHeader>
 <!DOCTYPE html>
 <!--
 For Deven: this is compatible for your jsp additions. 
@@ -10,7 +40,7 @@ For Deven: this is compatible for your jsp additions.
     int dataY = 3;
     String button = "";
     boolean initial = true;
-    lab8Checks checks = new lab8Checks(dataX, dataY, "yccs_chemistrylab8");
+    lab1Checks checks = new lab1Checks(dataX, dataY, "ycdb_chemistrylab8");
    
     public void getData(HttpServletRequest request)
     {
@@ -433,3 +463,4 @@ For Deven: this is compatible for your jsp additions.
         </fieldset>
     </body>
 </html>
+</bbNG:learningSystemPage>
