@@ -29,7 +29,7 @@
  <link>
  <type value="tool"/>
  <name value="York college Chem 109"/>
- <url value="welcome.jsp?course_id=@X@course.pk_string@X@"/>
+ <url value="welcome.jsp?role=@X@membership.role@X@"/>
  <description value="York college Chem 109."/>
  <icons>
 <listitem value="images/icon.gif"/>
@@ -38,7 +38,7 @@
  <link>
  <type value="course_tool"/>
  <name value="York college Chem 109"/>
- <url value="welcome.jsp?course_id=@X@course.pk_string@X@"/>
+ <url value="welcome.jsp?role=@X@membership.role@X@"/>
  <description value="York college Chem 109."/>
  <icons>
 <listitem value="images/icon.gif"/>
