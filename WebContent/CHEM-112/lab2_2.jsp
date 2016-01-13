@@ -1,15 +1,15 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Labs.lab2bChecks" %>
+<%@ page import="Labs.lab2_2Checks" %>
 <!DOCTYPE html>
 <!--
-For Deven: this is compatible for your jsp additions. 
+This is compatible with any jsp additions. 
 -->
 <%!
     int dataX = 13;
     int dataY = 3;
     String button = "";
     boolean initial = true;
-    lab2bChecks checks = new lab2bChecks(dataX, dataY, "yccs_chemistrylab2b");
+    lab2_2Checks checks = new lab2_2Checks(dataX, dataY, "yccs_chemistrylab2_2");
    
     public void getData(HttpServletRequest request)
     {
@@ -24,7 +24,6 @@ For Deven: this is compatible for your jsp additions.
     }
  %>
  <%
-
 	User u = ctx.getUser();
 	Course c = ctx.getCourse();
 
@@ -42,7 +41,7 @@ For Deven: this is compatible for your jsp additions.
                 checks.setType(i, j,"double");
             }
         }
-        
+
         initial = false;
     }
     
