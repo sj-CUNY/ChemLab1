@@ -1,5 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Labs.lab2Checks" %>
+<%@ page import="Labs.lab1_2Checks" %>
 
  <%@ taglib uri="/bbUI" prefix="bbUI" %> 
  <%@ taglib uri="/bbData" prefix="bbData"%> 
@@ -21,7 +21,7 @@
 	</bbNG:pageHeader>
 <!DOCTYPE html>
 <!--
-For Deven: this is compatible for your jsp additions. 
+This is compatible with any jsp additions. 
 -->
 <%!
     int dataX = 16;
@@ -29,7 +29,7 @@ For Deven: this is compatible for your jsp additions.
     String button = "";
     boolean initial = true;
     
-    lab2Checks checks = new lab2Checks(dataX, dataY, "yccs_chemistrylab2");
+    lab1_2Checks checks = new lab1_2Checks(dataX, dataY, "yccs_chemistrylab1_2");
     
     public void getData(HttpServletRequest request)
     {
