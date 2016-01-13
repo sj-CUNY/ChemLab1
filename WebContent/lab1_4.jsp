@@ -1,31 +1,33 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Labs.lab4Checks" %>
+<%@ page import="Labs.lab1_4Checks" %>
 <!DOCTYPE html>
 <!--
-For Deven: this is compatible for your jsp additions. 
+This is compatible with any jsp additions. 
 -->
 <%!
     int dataX = 4;
     int dataY = 3;
     String button = "";
     boolean initial = true;
-    
-    lab4Checks checks = new lab4Checks(dataX, dataY);
-    
+    lab1_4Checks checks = new lab1_4Checks(dataX, dataY, "yccs_chemistrylab1_4");
+   
     public void getData(HttpServletRequest request)
     {
         for (int i = 0; i < dataX; i++)
         {
             for (int j = 0; j < dataY; j++)
-            {
+            {                
                 checks.setData(i, j, request.getParameter("" + i + j));
             }
         }
     }
  %>
- <%     
+ <%
+	User u = ctx.getUser();
+	Course c = ctx.getCourse();
+
     button = request.getParameter("button");
-    
+ 
     if (initial)
     {
         button = "";
@@ -37,22 +39,21 @@ For Deven: this is compatible for your jsp additions.
             {
                 checks.setType(i, j,"text");
             }
-        }
-        
+        }     
         initial = false;
     }
     
     if (button != null)
     {
         if (button.equals("Clear"))
-        {
+        { 
             checks.clear();
         }
         else if (button.equals("Save"))
         {
             //get data from form
             getData(request);
-            
+             
             //perform save
             checks.save();
         }
@@ -60,7 +61,7 @@ For Deven: this is compatible for your jsp additions.
         {
             //get data from form
             getData(request);
-            
+             
             //perform checks
             checks.check();
         }
@@ -68,12 +69,12 @@ For Deven: this is compatible for your jsp additions.
         {
             //get data from form
             getData(request);
-            
+             
             //perform save
             checks.save();
             
             //perform submit
-            checks.submit();
+            checks.submit(ctx);
         }
         else
         {
