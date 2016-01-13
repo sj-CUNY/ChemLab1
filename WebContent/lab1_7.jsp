@@ -1,15 +1,15 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Labs.lab7Checks" %>
+<%@ page import="Labs.lab1_7Checks" %>
 <!DOCTYPE html>
 <!--
-For Deven: this is compatible for your jsp additions. 
+This is compatible with any jsp additions. 
 -->
 <%!
     int dataX = 13;
     int dataY = 4;
     String button = "";
     boolean initial = true;
-    lab7Checks checks = new lab7Checks(dataX, dataY, "yccs_chemistrylab7");
+    lab1_7Checks checks = new lab1_7Checks(dataX, dataY, "yccs_chemistrylab1_7");
    
     public void getData(HttpServletRequest request)
     {
