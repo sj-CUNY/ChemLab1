@@ -100,7 +100,7 @@ This is compatible with any jsp additions.
                             Partner's Name(s):
                         </td>
                         <td>
-                            <input type="text" name="00"  />
+                            <input type="text" name="00" <% if (checks.getData(0,0) != null){out.print("value=\"" + checks.getData(0,0) + "\"");}%> />
                         </td>
                     </tr>
                     <tr>
@@ -117,7 +117,7 @@ This is compatible with any jsp additions.
                             Unknown Number:
                         </td>
                         <td>
-                            <input type="text" name="10"  />
+                            <input type="text" name="10" <% if (checks.getData(1,0) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> />
                         </td>
                     </tr>
                     <tr>
@@ -158,19 +158,19 @@ This is compatible with any jsp additions.
                                 Bromthymol blue
                             </td>
                             <td>
-                                <input type="text" name="20"  />
+                                <input type="text" name="20" <% if (checks.getData(2,0) != null){out.print("value=\"" + checks.getData(2,0) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="21"  />
+                                <input type="text" name="21" <% if (checks.getData(2,1) != null){out.print("value=\"" + checks.getData(2,1) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="22"  />
+                                <input type="text" name="22" <% if (checks.getData(2,2) != null){out.print("value=\"" + checks.getData(2,2) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="23"  />
+                                <input type="text" name="23" <% if (checks.getData(2,3) != null){out.print("value=\"" + checks.getData(2,3) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="24"  />
+                                <input type="text" name="24" <% if (checks.getData(2,4) != null){out.print("value=\"" + checks.getData(2,4) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
@@ -207,19 +207,19 @@ This is compatible with any jsp additions.
                                 Alizarin yellow
                             </td>
                             <td>
-                                <input type="text" name="30"  />
+                                <input type="text" name="30" <% if (checks.getData(3,0) != null){out.print("value=\"" + checks.getData(3,0) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="31"  />
+                                <input type="text" name="31" <% if (checks.getData(3,1) != null){out.print("value=\"" + checks.getData(3,1) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="32"  />
+                                <input type="text" name="32" <% if (checks.getData(3,2) != null){out.print("value=\"" + checks.getData(3,2) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="33"  />
+                                <input type="text" name="33" <% if (checks.getData(3,3) != null){out.print("value=\"" + checks.getData(3,3) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="34"  />
+                                <input type="text" name="34" <% if (checks.getData(3,4) != null){out.print("value=\"" + checks.getData(3,4) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
@@ -256,19 +256,19 @@ This is compatible with any jsp additions.
                                 Phenol red
                             </td>
                             <td>
-                                <input type="text" name="40"  />
+                                <input type="text" name="40" <% if (checks.getData(4,0) != null){out.print("value=\"" + checks.getData(4,0) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="41"  />
+                                <input type="text" name="41" <% if (checks.getData(4,1) != null){out.print("value=\"" + checks.getData(4,1) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="42"  />
+                                <input type="text" name="42" <% if (checks.getData(4,2) != null){out.print("value=\"" + checks.getData(4,2) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="43"  />
+                                <input type="text" name="43" <% if (checks.getData(4,3) != null){out.print("value=\"" + checks.getData(4,3) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="44"  />
+                                <input type="text" name="44" <% if (checks.getData(4,4) != null){out.print("value=\"" + checks.getData(4,4) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
@@ -305,19 +305,19 @@ This is compatible with any jsp additions.
                                 Unknown
                             </td>
                             <td>
-                                <input type="text" name="50"  />
+                                <input type="text" name="50" <% if (checks.getData(5,0) != null){out.print("value=\"" + checks.getData(5,0) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="51"  />
+                                <input type="text" name="51" <% if (checks.getData(5,1) != null){out.print("value=\"" + checks.getData(5,1) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="52"  />
+                                <input type="text" name="52" <% if (checks.getData(5,2) != null){out.print("value=\"" + checks.getData(5,2) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="53"  />
+                                <input type="text" name="53" <% if (checks.getData(5,3) != null){out.print("value=\"" + checks.getData(5,3) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="54"  />
+                                <input type="text" name="54" <% if (checks.getData(5,4) != null){out.print("value=\"" + checks.getData(5,4) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
@@ -375,13 +375,13 @@ This is compatible with any jsp additions.
                                 Test for Ni<sup>2+</sup>
                             </td>
                             <td>
-                                <input type="text" name="60"  />
+                                <input type="text" name="60" <% if (checks.getData(6,0) != null){out.print("value=\"" + checks.getData(6,0) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="61"  />
+                                <input type="text" name="61" <% if (checks.getData(6,1) != null){out.print("value=\"" + checks.getData(6,1) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="62"  />
+                                <input type="text" name="62" <% if (checks.getData(6,2) != null){out.print("value=\"" + checks.getData(6,2) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
@@ -408,13 +408,13 @@ This is compatible with any jsp additions.
                                 Test for SO<sub>4</sub><sup>2-</sup>
                             </td>
                             <td>
-                                <input type="text" name="70"  />
+                                <input type="text" name="70" <% if (checks.getData(7,0) != null){out.print("value=\"" + checks.getData(7,0) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="71"  />
+                                <input type="text" name="71" <% if (checks.getData(7,1) != null){out.print("value=\"" + checks.getData(7,1) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="72"  />
+                                <input type="text" name="72" <% if (checks.getData(7,2) != null){out.print("value=\"" + checks.getData(7,2) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
@@ -441,13 +441,13 @@ This is compatible with any jsp additions.
                                 Ion(s) Present
                             </td>
                             <td>
-                                <input type="text" name="80"  />
+                                <input type="text" name="80" <% if (checks.getData(8,0) != null){out.print("value=\"" + checks.getData(8,0) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="81"  />
+                                <input type="text" name="81" <% if (checks.getData(8,1) != null){out.print("value=\"" + checks.getData(8,1) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="82"  />
+                                <input type="text" name="82" <% if (checks.getData(8,2) != null){out.print("value=\"" + checks.getData(8,2) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
