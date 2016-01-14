@@ -1,7 +1,87 @@
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="Labs.lab1_5Checks" %>
 <!DOCTYPE html>
 <!--
 This is compatible with any jsp additions. 
 -->
+<%!
+    int dataX = 12;
+    int dataY = 2;
+    String button = "";
+    boolean initial = true;
+    lab1_5Checks checks = new lab1_5Checks(dataX, dataY, "yccs_chemistrylab1_5");
+   
+    public void getData(HttpServletRequest request)
+    {
+        for (int i = 0; i < dataX; i++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {                
+                checks.setData(i, j, request.getParameter("" + i + j));
+            }
+        }
+    }
+ %>
+ <%
+	User u = ctx.getUser();
+	Course c = ctx.getCourse();
+
+    button = request.getParameter("button");
+ 
+    if (initial)
+    {
+        button = "";
+            
+        //set type
+        for (int i = 0; i < dataX; i++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {
+                checks.setType(i, j,"double");
+            }
+        }     
+        initial = false;
+    }
+    
+    if (button != null)
+    {
+        if (button.equals("Clear"))
+        { 
+            checks.clear();
+        }
+        else if (button.equals("Save"))
+        {
+            //get data from form
+            getData(request);
+             
+            //perform save
+            checks.save();
+        }
+        else if (button.equals("Check"))
+        {
+            //get data from form
+            getData(request);
+             
+            //perform checks
+            checks.check();
+        }
+        else if (button.equals("Submit"))
+        {
+            //get data from form
+            getData(request);
+             
+            //perform save
+            checks.save();
+            
+            //perform submit
+            checks.submit(ctx);
+        }
+        else
+        {
+            button = "";
+        }
+    }
+ %>
 <html>
     <head>
         <title>Lab 5: Determination of the Percent by Weight of Lead</title>
