@@ -1,15 +1,13 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Labs.lab1_5Checks" %>
+<%@ page import="Labs.lab0_5Checks" %>
+
 <!DOCTYPE html>
-<!--
-This is compatible with any jsp additions. 
--->
 <%!
     int dataX = 12;
     int dataY = 2;
     String button = "";
     boolean initial = true;
-    lab1_5Checks checks = new lab1_5Checks(dataX, dataY, "yccs_chemistrylab1_5");
+    lab0_5Checks checks = new lab0_5Checks(dataX, dataY, "yccs_chemistrylab0_5");
    
     public void getData(HttpServletRequest request)
     {
@@ -23,8 +21,8 @@ This is compatible with any jsp additions.
     }
  %>
  <%
-	User u = ctx.getUser();
-	Course c = ctx.getCourse();
+	//User u = ctx.getUser();
+	//Course c = ctx.getCourse();
 
     button = request.getParameter("button");
  
@@ -74,7 +72,7 @@ This is compatible with any jsp additions.
             checks.save();
             
             //perform submit
-            checks.submit(ctx);
+            //checks.submit(ctx);
         }
         else
         {
@@ -85,6 +83,7 @@ This is compatible with any jsp additions.
 <html>
     <head>
         <title>Lab 5: Determination of the Percent by Weight of Lead</title>
+        <link rel="stylesheet" href="labs_css.css">
     </head>
     <body>
         <fieldset>

@@ -82,7 +82,7 @@
     <head>
         <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
         <title>Lab 3</title>
-        <link rel="stylesheet" href="/css/styles.css">
+       <link rel="stylesheet" href="labs_css.css">
         <style>
             div{
                 border:1px solid black;

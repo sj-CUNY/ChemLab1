@@ -82,6 +82,7 @@
 <html>
     <head>
         <title>Lab 4: Ionic and Covalent Compounds</title>
+        <link rel="stylesheet" href="labs_css.css">
     </head>
     <body>
         <fieldset>

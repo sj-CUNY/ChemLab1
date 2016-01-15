@@ -83,9 +83,10 @@
 <html>
     <head>
         <title>Lab 2: Volume Measurements and the Determination of Density</title>
+        <link rel="stylesheet" href="labs_css.css">
     </head>
     <body>
-        <fieldset>
+        <fieldset class="fieldset-auto-width">
             <legend>Lab 2: Volume Measurements and the Determination of Density</legend>
             <form method="POST" action="lab0_2.jsp">
                 <fieldset>

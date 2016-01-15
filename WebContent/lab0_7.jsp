@@ -94,6 +94,7 @@
 <html>
     <head>
         <title>Lab 7: Volumetric Determination of an Unknown Chloride</title>
+        <link rel="stylesheet" href="labs_css.css">
     </head>
     <body>
         <fieldset>

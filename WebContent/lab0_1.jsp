@@ -99,7 +99,7 @@
             Lab 1: Weighing Measurements: The Balance
     	</title>
     	<link rel="stylesheet" href="labs_css.css">
-            <datalist id="units" >
+        <datalist id="units" >
             <option value="g" >g</option>	
             <option value="mg" >mg</option>
             <option value="kg" >kg</option>
@@ -117,7 +117,7 @@
         </datalist>	
     </head>
     <body>
-    	<fieldset>
+    	<fieldset class="fieldset-auto-width">
             <legend>Lab 1: Weighing Measurements: The Balance</legend>
             <form method="POST" action="lab0_1.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}">
             <fieldset>

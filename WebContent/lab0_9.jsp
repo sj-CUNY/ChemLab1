@@ -82,6 +82,7 @@
 <html>
     <head>
         <title>Lab 9: Thermochemistry: Determination of the Heat of Neutralization</title>
+        <link rel="stylesheet" href="labs_css.css">
     </head>
     <body>
         <fieldset>

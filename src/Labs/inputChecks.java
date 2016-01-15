@@ -44,27 +44,6 @@ public class inputChecks {
         //tempData = load.loadData(labname);
         //initData(tempData);
     }
-
-    /*
-    public inputChecks(int X, int Y, String labname, Context ctx)
-    {
-        dataX = X;
-        dataY = Y;
-        //load = new DataLoader(labname);
-        //save = new DataPersister(ctx, labname);
-        
-        data = new String[dataX][dataY];
-        type = new String[dataX][dataY];
-        error = new String[dataX][dataY];
-        key = new String[dataX][dataY];
-        grade = new double[dataX][dataY];
-
-        
-        String tempData;
-        //tempData = load.loadData(labname);
-        //initData(tempData);
-    }
-*/
     
     private void initData(String tempData)
     {

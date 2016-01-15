@@ -83,6 +83,7 @@
 <html>
     <head>
         <title>Lab 8: Determination of Molecular Weight by Gas Density Measurements</title>
+        <link rel="stylesheet" href="labs_css.css">
     </head>
     <body>
         <fieldset>
