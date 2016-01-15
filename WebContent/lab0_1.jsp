@@ -128,7 +128,7 @@
                             Unknown number of metal rod:
                         </th>
                         <th>
-                            <input type="text" name="00" <% //if (checks.getData(0,0) != null){out.print("value=\"" + checks.getData(0,0) + "\"");}%> />
+                            <input type="text" name="00" <% if (checks.getData(0,0) != null){out.print("value=\"" + checks.getData(0,0) + "\"");}%> />
                         </th>
                     </tr>
                     <tr>
@@ -136,7 +136,7 @@
                         </th>
                         <th>
                             <div style="color: red" >
-                                <% //if (checks.getError(0,0) != null){out.print(checks.getError(0, 0));} %>
+                                <% if (checks.getError(0,0) != null){out.print(checks.getError(0, 0));} %>
                             </div>
                         </th>
                     </tr>
@@ -145,7 +145,7 @@
                             Unknown number of metal wire:
                         </th>
                         <th>
-                            <input type="text" name="10" <% //if (checks.getData(1,0) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> />
+                            <input type="text" name="10" <% if (checks.getData(1,0) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> />
                         </th>
                     </tr>
                     <tr>

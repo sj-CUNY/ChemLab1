@@ -7,7 +7,7 @@
     int dataY = 2;
     String button = "";
     boolean initial = true;
-    lab0_5Checks checks = new lab0_5Checks(dataX, dataY, "yccs_chemistrylab0_5");
+    lab0_5Checks checks = new lab0_5Checks(dataX, dataY);
    
     public void getData(HttpServletRequest request)
     {
@@ -294,10 +294,12 @@
                             </td>
                         </tr>
                     </table>
+                    <%--
                     <div>
                         <textarea rows="4" cols="50">Sample Calculation
                         </textarea>
                     </div>
+                    --%>
                     <table>
                         <tr>
                             <td>
@@ -400,10 +402,12 @@
                             </td>
                         </tr>
                     </table>
+                    <%--
                     <div>
                         <textarea rows="4" cols="50">Sample Calculation
                         </textarea>
                     </div>
+                    --%>
                 </fieldset>
                 <div style="text-align: center">
                     <input type="submit" name="button" value="Check" />
