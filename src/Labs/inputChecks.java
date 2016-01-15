@@ -440,6 +440,31 @@ public class inputChecks {
         return decPlace;
     }
     
+    protected String setToDecPlaces(String in, int places)
+    {
+        int i = 0;
+        
+        //find .
+        while (i < in.length() && in.charAt(i) != '.')
+        {
+            i++;
+        }
+        
+        //shorten it
+        while (in.length() - (i + 1) > places)
+        {
+            in = in.substring(0,in.length() - 2);
+        }
+        
+        //pad it
+        while(in.length() - (i + 1) < places)
+        {
+            in += "0";
+        }
+        
+        return in;
+    }
+    
     protected void gradeLab()
     {
         //compare data to key

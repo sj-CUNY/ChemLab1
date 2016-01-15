@@ -20,26 +20,12 @@ public class lab0_1Checks extends inputChecks
                 
                 if ((i > 1 && i < 4) && j == 0)
                 {
-                    if (getDecPlaces(i,j) == 3)
-                    {
-                        setKey(i,j,getData(i,j));
-                    }
-                    else
-                    {
-                        setKey(i,j,"WRONG");
-                    }
+                    setKey(i,j,setToDecPlaces(getData(i,j),3));
                 }
                 
                 if ((i > 3 && i < 10) && j == 0)
                 {
-                    if (getDecPlaces(i,j) == 4)
-                    {
-                        setKey(i,j,getData(i,j));
-                    }
-                    else
-                    {
-                        setKey(i,j,"WRONG");
-                    }
+                    setKey(i,j,setToDecPlaces(getData(i,j),4));
                 }
                 
                 if ((i > 1 && i < 12) && j == 1)
