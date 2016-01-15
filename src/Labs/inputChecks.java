@@ -1,7 +1,7 @@
 package Labs;
 
-import blackboard.data.course.CourseMembership;
-import blackboard.platform.context.Context;
+//import blackboard.data.course.CourseMembership;
+//import blackboard.platform.context.Context;
 
 public class inputChecks {
     
@@ -12,18 +12,17 @@ public class inputChecks {
     protected String type[][];
     protected String error[][];    
     protected String key[][];
-    protected double weight[][];
     protected double grade[][];
     
-    DataLoader load;
-    DataPersister save;
+    //DataLoader load;
+    //DataPersister save;
 
     public inputChecks(String labname)
     {
         dataX = 0;
         dataY = 0;
-        load = new DataLoader(labname);
-        save = new DataPersister(labname);
+       // load = new DataLoader(labname);
+        //save = new DataPersister(labname);
         
     }
     
@@ -31,41 +30,41 @@ public class inputChecks {
     {
         dataX = X;
         dataY = Y;
-        load = new DataLoader(labname);
-        save = new DataPersister(labname);
+        //load = new DataLoader(labname);
+        //save = new DataPersister(labname);
         
         data = new String[dataX][dataY];
         type = new String[dataX][dataY];
         error = new String[dataX][dataY];
         key = new String[dataX][dataY];
-        weight = new double[dataX][dataY];
         grade = new double[dataX][dataY];
 
         
         String tempData;
-        tempData = load.loadData(labname);
-        initData(tempData);
+        //tempData = load.loadData(labname);
+        //initData(tempData);
     }
 
+    /*
     public inputChecks(int X, int Y, String labname, Context ctx)
     {
         dataX = X;
         dataY = Y;
-        load = new DataLoader(labname);
-        save = new DataPersister(ctx, labname);
+        //load = new DataLoader(labname);
+        //save = new DataPersister(ctx, labname);
         
         data = new String[dataX][dataY];
         type = new String[dataX][dataY];
         error = new String[dataX][dataY];
         key = new String[dataX][dataY];
-        weight = new double[dataX][dataY];
         grade = new double[dataX][dataY];
 
         
         String tempData;
-        tempData = load.loadData(labname);
-        initData(tempData);
+        //tempData = load.loadData(labname);
+        //initData(tempData);
     }
+*/
     
     private void initData(String tempData)
     {
@@ -97,7 +96,6 @@ public class inputChecks {
                 type[i][j] = "";
                 error[i][j] = "";
                 key[i][j] = "";
-                weight[i][j] = 0.0;
                 grade[i][j] = 0.0;
             }
         } 
@@ -160,7 +158,7 @@ public class inputChecks {
             }
         }
          //call function
-        save.saveData(theString);
+        //save.saveData(theString);
     }
     
     public void check()
@@ -175,13 +173,17 @@ public class inputChecks {
                     error[i][j] = "";
 
                     //check based on type
-                    if (type[i][j].equals("unit"))
+                    if (type[i][j].equals("Unit"))
                     {
                         unitStandard(i,j);
                     }
-                    if (type[i][j].equals("double"))
+                    if (type[i][j].equals("Double"))
                     {
                         doubleStandard(i,j);
+                    }
+                    if (type[i][j].equals("Integer"))
+                    {
+                        integerStandard(i,j);
                     }
                 }
                 else
@@ -222,7 +224,7 @@ public class inputChecks {
         }
     }
     
-    public void submit(Context ctx)
+    public void submit()//Context ctx)
     {
         //call save and then save grade
         save();
@@ -243,10 +245,10 @@ public class inputChecks {
         }
 
         //call function
-        save.saveGrade(theString);
+        //save.saveGrade(theString);
 
         //set submitted
-        save.submitted(ctx);
+        //save.submitted(ctx);
     }
     
     protected void unitStandard (int x, int y)
@@ -359,6 +361,22 @@ public class inputChecks {
             }
         }
     }
+    
+    protected void integerStandard (int x, int y)
+    {
+        String temp = data[x][y];
+        
+                
+        for(int i = 0; i < temp.length(); i++)
+        {
+            if ((int)temp.charAt(i) < 48 || (int)temp.charAt(i) > 57)
+            {
+                error[x][y] = "Invalid character: '" + temp.charAt(i) + "'";
+                data[x][y] = "";
+                return;
+            }
+        }
+    }
 
     protected int getSigFigs (int x, int y)
     {
@@ -402,13 +420,45 @@ public class inputChecks {
                 }
             }
 
-            // for testing only! error[x][y] += "" + sigFigs;
             return sigFigs;
         }
         else
         {
             return (-1);
         }
+    }
+    
+    protected int getDecPlaces (int x, int y)
+    {
+        int decPlace = -1;
+        String num = data[x][y];
+        
+        if (num != null && num.length() != 0)
+        {
+            //prime decPlace
+            decPlace = 0;
+            
+            //move past everything leading .
+            int i = 0;
+            while (num.charAt(i) != '.' && i < num.length())
+            {
+               i++;
+            }
+            
+            //move past .
+            if (num.charAt(i) == '.' && i < num.length())
+            {
+                i++;
+            }
+            
+            //add dec places
+            while (i < num.length())
+            {
+                decPlace ++;
+            }
+            
+        }
+        return decPlace;
     }
     
     protected void gradeLab()
@@ -419,11 +469,19 @@ public class inputChecks {
             for (int j = 0; j < dataY; j++)
             {
                 if (data[i][j] != null && key[i][j] != null)
-                {   
-                    if (data[i][j].equals(key[i][j]) || key[i][j].equals("*"))
+                {
+                    if (key[i][j].equals("WRONG"))
                     {
-                        grade[i][j] = weight[i][j];
-                    }                
+                        grade[i][j] = 0;
+                    }
+                    else if (data[i][j].equals(key[i][j]) || key[i][j].equals("*"))
+                    {
+                        grade[i][j] = 1;
+                    }
+                    else
+                    {
+                        grade[i][j] = 0;
+                    }
                 }
             }        
         }
