@@ -1,5 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Labs.lab1Checks" %>
+<%@ page import="Labs.lab0_4Checks" %>
 
 <!DOCTYPE html>
 <%!
@@ -8,7 +8,7 @@
     String button = "";
     boolean initial = true;
     
-    lab1Checks checks = new lab1Checks(dataX, dataY, "ycdb_chemistrylab4");
+    lab0_4Checks checks = new lab0_4Checks(dataX, dataY);
     
     public void getData(HttpServletRequest request)
     {
@@ -83,9 +83,27 @@
     <head>
         <title>Lab 4: Ionic and Covalent Compounds</title>
         <link rel="stylesheet" href="labs_css.css">
+        <datalist id="color" >
+            <option value="clear" >clear</option>	
+            <option value="blue" >blue</option>
+            <option value="red" >red</option>
+            <option value="green" >green</option>
+            <option value="opaque" >opaque</option>
+            <option value="white" >white</option>
+            <option value="black" >black</option>
+        </datalist>
+        <datalist id="light" >
+            <option value="light" >light</option>	
+            <option value="no light" >no light</option>
+            <option value="dim light" >dim light</option>
+        </datalist>
+        <datalist id="iorc" >
+            <option value="ionic" >ionic</option>	
+            <option value="covalent" >covalent</option>
+        </datalist>
     </head>
     <body>
-        <fieldset>
+        <fieldset class="fieldset-auto-width">
             <legend>Lab 4: Ionic and Covalent Compounds</legend>
             <form method="POST" action="lab0_4.jsp">
                 <fieldset>
@@ -109,13 +127,13 @@
                                 Solution A:
                             </td>
                             <td>
-                                <input type="text" name="00" <% if (checks.getData(0,0) != null){out.print("value=\"" + checks.getData(0,0) + "\"");}%> />
+                                <input list="color" name="00" <% if (checks.getData(0,0) != null){out.print("value=\"" + checks.getData(0,0) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="01" <% if (checks.getData(0,1) != null){out.print("value=\"" + checks.getData(0,1) + "\"");}%> />
+                                <input list="light" name="01" <% if (checks.getData(0,1) != null){out.print("value=\"" + checks.getData(0,1) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="02" <% if (checks.getData(0,2) != null){out.print("value=\"" + checks.getData(0,2) + "\"");}%> />
+                                <input list="iorc" name="02" <% if (checks.getData(0,2) != null){out.print("value=\"" + checks.getData(0,2) + "\"");}%> size="10"/>
                             </td>
                         </tr>
                         <tr>
@@ -142,13 +160,13 @@
                                 Solution B:
                             </td>
                             <td>
-                                <input type="text" name="10" <% if (checks.getData(1,0) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> />
+                                <input list="color" name="10" <% if (checks.getData(1,0) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="11" <% if (checks.getData(1,1) != null){out.print("value=\"" + checks.getData(1,1) + "\"");}%> />
+                                <input list="light" name="11" <% if (checks.getData(1,1) != null){out.print("value=\"" + checks.getData(1,1) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="12"  <% if (checks.getData(1,2) != null){out.print("value=\"" + checks.getData(1,2) + "\"");}%>/>
+                                <input list="iorc" name="12" <% if (checks.getData(1,2) != null){out.print("value=\"" + checks.getData(1,2) + "\"");}%> size="10"/>
                             </td>
                         </tr>
                         <tr>
@@ -175,13 +193,13 @@
                                 Solution C:
                             </td>
                             <td>
-                                <input type="text" name="20" <% if (checks.getData(2,0) != null){out.print("value=\"" + checks.getData(2,0) + "\"");}%> />
+                                <input list="color" name="20" <% if (checks.getData(2,0) != null){out.print("value=\"" + checks.getData(2,0) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="21" <% if (checks.getData(2,1) != null){out.print("value=\"" + checks.getData(2,1) + "\"");}%> />
+                                <input list="light" name="21" <% if (checks.getData(2,1) != null){out.print("value=\"" + checks.getData(2,1) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="22" <% if (checks.getData(2,2) != null){out.print("value=\"" + checks.getData(2,2) + "\"");}%> />
+                                <input list="iorc" name="22" <% if (checks.getData(2,2) != null){out.print("value=\"" + checks.getData(2,2) + "\"");}%> size="10"/>
                             </td>
                         </tr>
                         <tr>
@@ -208,13 +226,13 @@
                                 Solution D:
                             </td>
                             <td>
-                                <input type="text" name="30" <% if (checks.getData(3,0) != null){out.print("value=\"" + checks.getData(3,0) + "\"");}%> />
+                                <input list="color" name="30" <% if (checks.getData(3,0) != null){out.print("value=\"" + checks.getData(3,0) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="31" <% if (checks.getData(3,1) != null){out.print("value=\"" + checks.getData(3,1) + "\"");}%> />
+                                <input list="light" name="31" <% if (checks.getData(3,1) != null){out.print("value=\"" + checks.getData(3,1) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="32" <% if (checks.getData(3,2) != null){out.print("value=\"" + checks.getData(3,2) + "\"");}%> />
+                                <input list="iorc" name="32" <% if (checks.getData(3,2) != null){out.print("value=\"" + checks.getData(3,2) + "\"");}%> size="10"/>
                             </td>
                         </tr>
                         <tr>

@@ -86,7 +86,7 @@
         <link rel="stylesheet" href="labs_css.css">
     </head>
     <body>
-        <fieldset>
+        <fieldset class="fieldset-auto-width">
             <legend>Lab 5: Determination of the Percent by Weight of Lead</legend>
             <form method="POST" action=""><!--add destination in action field-->
                 <table>

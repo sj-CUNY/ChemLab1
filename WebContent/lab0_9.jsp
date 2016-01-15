@@ -85,7 +85,7 @@
         <link rel="stylesheet" href="labs_css.css">
     </head>
     <body>
-        <fieldset>
+        <fieldset class="fieldset-auto-width">
             <legend>Lab 9: Thermochemistry: Determination of the Heat of Neutralization</legend>
             <form method="POST" action=""><!--add destination in action field-->
                 <fieldset>
