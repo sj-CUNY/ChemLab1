@@ -12,6 +12,21 @@ public class lab0_8Checks extends inputChecks
     @Override
     protected void buildKey()
     {
-        //TODO
+        for (int i = 0; i < dataX; i ++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {
+                if (data[i][j] != null && !data[i][j].equals(""))
+                {
+                    setKey(i,j,"*");
+                    
+                    //TODO
+                }
+                else
+                {
+                    setKey(i,j,"WRONG");
+                }
+            }
+        }
     }
 }

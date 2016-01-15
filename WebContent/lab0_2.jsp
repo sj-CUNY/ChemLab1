@@ -507,6 +507,15 @@
                                     <input type="text" name="160" <% if (checks.getData(16,0) != null){out.print("value=\"" + checks.getData(16,0) + "\"");}%> />
                                 </td>
                             </tr>
+                            <tr>
+                                <td>
+                                </td>
+                                <td>
+                                    <div style="color: red" >
+                                        <% if (checks.getError(16,1) != null){out.print(checks.getError(16, 1));} %>
+                                    </div>
+                                </td>
+                            </tr>
                         </table>
                     </fieldset>
                 </fieldset>

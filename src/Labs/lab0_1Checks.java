@@ -19,7 +19,7 @@ public class lab0_1Checks extends inputChecks
                 if (data[i][j] != null && !data[i][j].equals(""))
                 {
                     setKey(i,j,"*");
-
+                    
                     if ((i > 1 && i < 4) && j == 0)
                     {
                         setKey(i,j,setToDecPlaces(getData(i,j),3));
