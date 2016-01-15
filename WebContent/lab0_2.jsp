@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 
 <%!
-    int dataX = 16;
+    int dataX = 17;
     int dataY = 2;
     String button = "";
     boolean initial = true;
@@ -499,16 +499,16 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>
+                                    Density of unknown liquid (slope of the line resulting from the plot of M versus V):
+                                </td>
+                                <td>
+                                    <input type="text" name="160" <% if (checks.getData(16,0) != null){out.print("value=\"" + checks.getData(16,0) + "\"");}%> />
+                                </td>
+                            </tr>
                         </table>
                     </fieldset>
-                    <div>
-                        Density of unknown liquid (slope of the line resulting from the plot of M versus V):
-                        <!-- add jsp tag -->
-                    </div>
-                    <div>
-                        Show calculation of density (slope):
-                        <!-- add jsp tag -->
-                    </div>
                 </fieldset>
                 <div style="text-align: center">
                     <input type="submit" name="button" value="Check" />
