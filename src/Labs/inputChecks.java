@@ -477,17 +477,22 @@ public class inputChecks {
                     if (key[i][j].equals("WRONG"))
                     {
                         grade[i][j] = 0;
-                        error[i][j] += "X";
+                        if (error[i][j].equals(""))
+                        {
+                            error[i][j] += "X";
+                        }
                     }
                     else if (data[i][j].equals(key[i][j]) || key[i][j].equals("*"))
                     {
                         grade[i][j] = 1;
-                        error[i][j] += "+";
                     }
                     else
                     {
                         grade[i][j] = 0;
-                        error[i][j] += "X";
+                        if (error[i][j].equals(""))
+                        {
+                            error[i][j] += "X";
+                        }
                     }
                 }
             }        
