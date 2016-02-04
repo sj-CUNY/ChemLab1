@@ -76,6 +76,9 @@ public class lab0_1Checks extends inputChecks
                 {
                     setKey(i,j,"WRONG");
                 }
+                
+                //for testing only!
+                setError(i,j,getError(i,j) + " <*> " + getKey(i,j));
             }
         }
     }
