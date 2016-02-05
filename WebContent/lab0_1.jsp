@@ -1,5 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Labs.inputChecks, Labs.lab0_1Checks" %>
+<%@ page import="Labs.lab0_1Checks" %>
 
 <!DOCTYPE html>
 <%!

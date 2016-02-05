@@ -1,5 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Labs.lab2_9Checks" %>
+<%@ page import="Labs.lab1_9Checks" %>
 <!DOCTYPE html>
 <!--
 This is compatible with any jsp additions. 
@@ -9,7 +9,7 @@ This is compatible with any jsp additions.
     int dataY = 3;
     String button = "";
     boolean initial = true;
-    lab2_9Checks checks = new lab2_9Checks(dataX, dataY, "yccs_chemistrylab2_9");
+    lab1_9Checks checks = new lab1_9Checks(dataX, dataY);
    
     public void getData(HttpServletRequest request)
     {
@@ -25,8 +25,8 @@ This is compatible with any jsp additions.
  %>
  <%
 
-	User u = ctx.getUser();
-	Course c = ctx.getCourse();
+	//User u = ctx.getUser();
+	//Course c = ctx.getCourse();
 
     button = request.getParameter("button");
  
@@ -78,7 +78,7 @@ This is compatible with any jsp additions.
             checks.save();
             
             //perform submit
-            checks.submit(ctx);
+            //checks.submit(ctx);
         }
         else
         {
