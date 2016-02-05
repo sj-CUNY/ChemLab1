@@ -7,3 +7,5 @@ changes to file names rather than changing code.
 # error report
 Lab 7 has an error in the jsp, final row should be only present in 1 column (this is an 
 average of the 3 samples)
+Lab 7 also missing unit column included with correct answers in spreadsheet from 
+foster, is this missing, or an intented exclusion?
