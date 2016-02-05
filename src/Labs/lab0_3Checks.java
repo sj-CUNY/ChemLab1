@@ -21,6 +21,8 @@ public class lab0_3Checks extends inputChecks
                     setKey(i,j,"*");
                     
                     //TODO
+                    //Waiting on formula schema from Mahmudul
+                    
                 }
                 else
                 {

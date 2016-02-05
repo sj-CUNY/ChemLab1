@@ -69,7 +69,8 @@ public class lab0_1Checks extends inputChecks
                     {
                         double temp = Double.parseDouble(getData(9,0)) - 
                                 Double.parseDouble(getData(8,0));
-                        setKey(i, j,"" + temp); 
+                        
+                        setKey(i, j,setToDecPlaces("" + temp, 4)); 
                     }
                 }
                 else

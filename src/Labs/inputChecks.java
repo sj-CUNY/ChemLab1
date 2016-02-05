@@ -356,11 +356,16 @@ public class inputChecks {
             }
         }
     }
-
+    
     protected int getSigFigs (int x, int y)
     {
+        return getSigFigs(getData(x,y));
+    }
+
+    protected int getSigFigs (String in)
+    {
         int sigFigs = 0;
-        String num = data[x][y];
+        String num = in;
         int length;
         
         if (num != null && num.length() != 0)
@@ -409,8 +414,13 @@ public class inputChecks {
     
     protected int getDecPlaces (int x, int y)
     {
+        return getDecPlaces(getData(x,y));
+    }
+    
+    protected int getDecPlaces (String in)
+    {
         int decPlace = -1;
-        String num = data[x][y];
+        String num = in;
         
         if (num != null && num.length() != 0)
         {
@@ -442,7 +452,7 @@ public class inputChecks {
     
     protected String setToDecPlaces(String in, int places)
     {
-        int i = 0;
+        /*int i = 0;
         
         //find .
         while (i < in.length() && in.charAt(i) != '.')
@@ -451,18 +461,24 @@ public class inputChecks {
         }
         
         //shorten it
-        while (in.length() - (i + 1) > places)
+        while (getDecPlaces(in) > places)
         {
             in = in.substring(0,in.length() - 2);
         }
         
         //pad it
-        while(in.length() - (i + 1) < places)
+        while(getDecPlaces(in) < places)
         {
             in += "0";
         }
         
         return in;
+        */
+        String format = "%." + places + "f";
+        
+         String.format( format, Double.parseDouble(in));
+         
+         return in;
     }
     
     protected void gradeLab()
@@ -489,7 +505,7 @@ public class inputChecks {
                     else
                     {
                         grade[i][j] = 0;
-                        if (error[i][j].equals(""))
+                        //if (error[i][j].equals(""))
                         {
                             error[i][j] += "X";
                         }
