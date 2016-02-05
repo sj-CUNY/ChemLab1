@@ -65,9 +65,9 @@ public class lab1_2Checks extends inputChecks
                      
                      if (i==11 && j == 0 )
                     {
-                        double temp = Double.parseDouble(getData(10,0)) +
+                        double temp = (Double.parseDouble(getData(10,0)) +
                                 Double.parseDouble(getData(10,1)) +
-                                Double.parseDouble(getData(10,2)) / 3;
+                                Double.parseDouble(getData(10,2))) / 3;
                                               
                         setKey(i, j,"" + temp); 
                     }
