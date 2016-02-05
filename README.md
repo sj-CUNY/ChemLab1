@@ -4,3 +4,6 @@ and 1 for chem2) and Y is the number of the lab. This is mostly to test commit, 
 # update
 Changed to 0, and 1 (rather than 1 and 2) makes a bit more sense, i've made all the 
 changes to file names rather than changing code.
+# error report
+Lab 7 has an error in the jsp, final row should be only present in 1 column (this is an 
+average of the 3 samples)
