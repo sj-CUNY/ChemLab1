@@ -1,75 +1,29 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<<<<<<< HEAD:WebContent/lab4.jsp
-<%@ page import="Labs.lab1Checks" %>
-<%@ page import="blackboard.platform.context.Context" %>
-<%@ page import="blackboard.platform.context.ContextManager" %>
-<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
-<%@ page import="blackboard.data.user.User" %>
-<%@ page import="blackboard.data.course.*" %>
-<%@ page import="blackboard.persist.course.*" %>
-<%@ page import="blackboard.platform.persistence.PersistenceService" %>
-<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
-<%@ page import="blackboard.persist.BbPersistenceManager"%>
- <%@ page import="blackboard.persist.*"%>
- 
-<%@ page import="blackboard.data.gradebook.Lineitem" %>
-<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
- 
- <%@ taglib uri="/bbUI" prefix="bbUI" %> 
- <%@ taglib uri="/bbData" prefix="bbData"%> 
- <%@ taglib uri="/bbNG" prefix="bbNG"%>
- <bbNG:learningSystemPage 
-	title="LAB 4"
-	ctxId="ctx">
+<%@ page import="Labs.lab0_4Checks" %>
 
-	<bbNG:pageHeader>
-		<bbNG:breadcrumbBar environment="COURSE"
-			navItem="course_plugin_manage" >
-				<bbNG:breadcrumb title="Home" href="lab4.jsp?course_id=@X@course.id@X@&user_id=@X@user.pk_string@X@" />
-			<bbNG:breadcrumb> Lab 4 </bbNG:breadcrumb>
-		</bbNG:breadcrumbBar>
-		<bbNG:pageTitleBar>
-			Welcome to to Chem 109 Lab 4
-		</bbNG:pageTitleBar>
-	</bbNG:pageHeader>
-
-=======
-<%@ page import="Labs.lab1_4Checks" %>
->>>>>>> mhasan4-master:WebContent/lab1_4.jsp
 <!DOCTYPE html>
-<!--
-This is compatible with any jsp additions. 
--->
 <%!
     int dataX = 4;
     int dataY = 3;
     String button = "";
     boolean initial = true;
-<<<<<<< HEAD:WebContent/lab4.jsp
     
-    lab1Checks checks = new lab1Checks(dataX, dataY, "ycdb_chemistrylab4");
+    lab0_4Checks checks = new lab0_4Checks(dataX, dataY);
     
-=======
-    lab1_4Checks checks = new lab1_4Checks(dataX, dataY, "yccs_chemistrylab1_4");
-   
->>>>>>> mhasan4-master:WebContent/lab1_4.jsp
     public void getData(HttpServletRequest request)
     {
         for (int i = 0; i < dataX; i++)
         {
             for (int j = 0; j < dataY; j++)
-            {                
+            {
                 checks.setData(i, j, request.getParameter("" + i + j));
             }
         }
     }
  %>
- <%
-	User u = ctx.getUser();
-	Course c = ctx.getCourse();
-
+ <%     
     button = request.getParameter("button");
- 
+    
     if (initial)
     {
         button = "";
@@ -81,21 +35,22 @@ This is compatible with any jsp additions.
             {
                 checks.setType(i, j,"text");
             }
-        }     
+        }
+        
         initial = false;
     }
     
     if (button != null)
     {
         if (button.equals("Clear"))
-        { 
+        {
             checks.clear();
         }
         else if (button.equals("Save"))
         {
             //get data from form
             getData(request);
-             
+            
             //perform save
             checks.save();
         }
@@ -103,7 +58,7 @@ This is compatible with any jsp additions.
         {
             //get data from form
             getData(request);
-             
+            
             //perform checks
             checks.check();
         }
@@ -111,12 +66,12 @@ This is compatible with any jsp additions.
         {
             //get data from form
             getData(request);
-             
+            
             //perform save
             checks.save();
             
             //perform submit
-            checks.submit(ctx);
+            //checks.submit(ctx);
         }
         else
         {
@@ -127,11 +82,30 @@ This is compatible with any jsp additions.
 <html>
     <head>
         <title>Lab 4: Ionic and Covalent Compounds</title>
+        <link rel="stylesheet" href="labs_css.css">
+        <datalist id="color" >
+            <option value="clear" >clear</option>	
+            <option value="blue" >blue</option>
+            <option value="red" >red</option>
+            <option value="green" >green</option>
+            <option value="opaque" >opaque</option>
+            <option value="white" >white</option>
+            <option value="black" >black</option>
+        </datalist>
+        <datalist id="light" >
+            <option value="light" >light</option>	
+            <option value="no light" >no light</option>
+            <option value="dim light" >dim light</option>
+        </datalist>
+        <datalist id="iorc" >
+            <option value="ionic" >ionic</option>	
+            <option value="covalent" >covalent</option>
+        </datalist>
     </head>
     <body>
-        <fieldset>
+        <fieldset class="fieldset-auto-width">
             <legend>Lab 4: Ionic and Covalent Compounds</legend>
-            <form method="POST" action=""><!--add destination in action field-->
+            <form method="POST" action="lab0_4.jsp">
                 <fieldset>
                     <legend>I. DATA and RESULTS</legend>
                     <table>
@@ -153,17 +127,22 @@ This is compatible with any jsp additions.
                                 Solution A:
                             </td>
                             <td>
-                                <input type="text" name="00" <% if (checks.getData(0,1) != null){out.print("value=\"" + checks.getData(0,1) + "\"");}%> />
+                                <input list="color" name="00" <% if (checks.getData(0,0) != null){out.print("value=\"" + checks.getData(0,0) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="01" <% if (checks.getData(0,2) != null){out.print("value=\"" + checks.getData(0,2) + "\"");}%> />
+                                <input list="light" name="01" <% if (checks.getData(0,1) != null){out.print("value=\"" + checks.getData(0,1) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="02" <% if (checks.getData(0,3) != null){out.print("value=\"" + checks.getData(0,3) + "\"");}%> />
+                                <input list="iorc" name="02" <% if (checks.getData(0,2) != null){out.print("value=\"" + checks.getData(0,2) + "\"");}%> size="10"/>
                             </td>
                         </tr>
                         <tr>
                             <td>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                    <% if (checks.getError(0,0) != null){out.print(checks.getError(0, 0));} %>
+                                </div>
                             </td>
                             <td>
                                 <div style="color: red" >
@@ -175,24 +154,19 @@ This is compatible with any jsp additions.
                                     <% if (checks.getError(0,2) != null){out.print(checks.getError(0, 2));} %>
                                 </div>
                             </td>
-                            <td>
-                                <div style="color: red" >
-                                    <% if (checks.getError(0,3) != null){out.print(checks.getError(0, 3));} %>
-                                </div>
-                            </td>
                         </tr>
                         <tr>
                             <td>
                                 Solution B:
                             </td>
                             <td>
-                                <input type="text" name="10" <% if (checks.getData(1,0) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> />
+                                <input list="color" name="10" <% if (checks.getData(1,0) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="11" <% if (checks.getData(1,1) != null){out.print("value=\"" + checks.getData(1,1) + "\"");}%> />
+                                <input list="light" name="11" <% if (checks.getData(1,1) != null){out.print("value=\"" + checks.getData(1,1) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="12"  <% if (checks.getData(1,2) != null){out.print("value=\"" + checks.getData(1,2) + "\"");}%>/>
+                                <input list="iorc" name="12" <% if (checks.getData(1,2) != null){out.print("value=\"" + checks.getData(1,2) + "\"");}%> size="10"/>
                             </td>
                         </tr>
                         <tr>
@@ -219,13 +193,13 @@ This is compatible with any jsp additions.
                                 Solution C:
                             </td>
                             <td>
-                                <input type="text" name="20" <% if (checks.getData(2,0) != null){out.print("value=\"" + checks.getData(2,0) + "\"");}%> />
+                                <input list="color" name="20" <% if (checks.getData(2,0) != null){out.print("value=\"" + checks.getData(2,0) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="21" <% if (checks.getData(2,1) != null){out.print("value=\"" + checks.getData(2,1) + "\"");}%> />
+                                <input list="light" name="21" <% if (checks.getData(2,1) != null){out.print("value=\"" + checks.getData(2,1) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="22" <% if (checks.getData(2,2) != null){out.print("value=\"" + checks.getData(2,2) + "\"");}%> />
+                                <input list="iorc" name="22" <% if (checks.getData(2,2) != null){out.print("value=\"" + checks.getData(2,2) + "\"");}%> size="10"/>
                             </td>
                         </tr>
                         <tr>
@@ -252,13 +226,13 @@ This is compatible with any jsp additions.
                                 Solution D:
                             </td>
                             <td>
-                                <input type="text" name="30" <% if (checks.getData(3,0) != null){out.print("value=\"" + checks.getData(3,0) + "\"");}%> />
+                                <input list="color" name="30" <% if (checks.getData(3,0) != null){out.print("value=\"" + checks.getData(3,0) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="31" <% if (checks.getData(3,1) != null){out.print("value=\"" + checks.getData(3,1) + "\"");}%> />
+                                <input list="light" name="31" <% if (checks.getData(3,1) != null){out.print("value=\"" + checks.getData(3,1) + "\"");}%> size="10"/>
                             </td>
                             <td>
-                                <input type="text" name="32" <% if (checks.getData(3,2) != null){out.print("value=\"" + checks.getData(3,2) + "\"");}%> />
+                                <input list="iorc" name="32" <% if (checks.getData(3,2) != null){out.print("value=\"" + checks.getData(3,2) + "\"");}%> size="10"/>
                             </td>
                         </tr>
                         <tr>
@@ -293,4 +267,3 @@ This is compatible with any jsp additions.
         </fieldset>
     </body>
 </html>
-</bbNG:learningSystemPage>
