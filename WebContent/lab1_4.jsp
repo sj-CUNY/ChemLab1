@@ -1,4 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<<<<<<< HEAD:WebContent/lab4.jsp
 <%@ page import="Labs.lab1Checks" %>
 <%@ page import="blackboard.platform.context.Context" %>
 <%@ page import="blackboard.platform.context.ContextManager" %>
@@ -32,32 +33,43 @@
 		</bbNG:pageTitleBar>
 	</bbNG:pageHeader>
 
+=======
+<%@ page import="Labs.lab1_4Checks" %>
+>>>>>>> mhasan4-master:WebContent/lab1_4.jsp
 <!DOCTYPE html>
 <!--
-For Deven: this is compatible for your jsp additions. 
+This is compatible with any jsp additions. 
 -->
 <%!
     int dataX = 4;
     int dataY = 3;
     String button = "";
     boolean initial = true;
+<<<<<<< HEAD:WebContent/lab4.jsp
     
     lab1Checks checks = new lab1Checks(dataX, dataY, "ycdb_chemistrylab4");
     
+=======
+    lab1_4Checks checks = new lab1_4Checks(dataX, dataY, "yccs_chemistrylab1_4");
+   
+>>>>>>> mhasan4-master:WebContent/lab1_4.jsp
     public void getData(HttpServletRequest request)
     {
         for (int i = 0; i < dataX; i++)
         {
             for (int j = 0; j < dataY; j++)
-            {
+            {                
                 checks.setData(i, j, request.getParameter("" + i + j));
             }
         }
     }
  %>
- <%     
+ <%
+	User u = ctx.getUser();
+	Course c = ctx.getCourse();
+
     button = request.getParameter("button");
-    
+ 
     if (initial)
     {
         button = "";
@@ -69,22 +81,21 @@ For Deven: this is compatible for your jsp additions.
             {
                 checks.setType(i, j,"text");
             }
-        }
-        
+        }     
         initial = false;
     }
     
     if (button != null)
     {
         if (button.equals("Clear"))
-        {
+        { 
             checks.clear();
         }
         else if (button.equals("Save"))
         {
             //get data from form
             getData(request);
-            
+             
             //perform save
             checks.save();
         }
@@ -92,7 +103,7 @@ For Deven: this is compatible for your jsp additions.
         {
             //get data from form
             getData(request);
-            
+             
             //perform checks
             checks.check();
         }
@@ -100,7 +111,7 @@ For Deven: this is compatible for your jsp additions.
         {
             //get data from form
             getData(request);
-            
+             
             //perform save
             checks.save();
             

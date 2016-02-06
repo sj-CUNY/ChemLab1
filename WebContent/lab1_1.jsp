@@ -1,60 +1,32 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Labs.lab1Checks" %>
-<%@ page import="blackboard.platform.context.Context" %>
-<%@ page import="blackboard.platform.context.ContextManager" %>
-<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
-<%@ page import="blackboard.data.user.User" %>
-<%@ page import="blackboard.data.course.*" %>
-<%@ page import="blackboard.persist.course.*" %>
-<%@ page import="blackboard.platform.persistence.PersistenceService" %>
-<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
-<%@ page import="blackboard.persist.BbPersistenceManager"%>
- <%@ page import="blackboard.persist.*"%>
- 
-<%@ page import="blackboard.data.gradebook.Lineitem" %>
-<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
- 
- <%@ taglib uri="/bbUI" prefix="bbUI" %> 
- <%@ taglib uri="/bbData" prefix="bbData"%> 
- <%@ taglib uri="/bbNG" prefix="bbNG"%>
- <bbNG:learningSystemPage 
-	title="LAB 1"
-	ctxId="ctx">
-
-	<bbNG:pageHeader>
-		<bbNG:breadcrumbBar environment="COURSE"
-			navItem="course_plugin_manage" >
-				<bbNG:breadcrumb title="Home" href="index.jsp?course_id=@X@course.id@X@&user_id=@X@user.pk_string@X@" />
-			<bbNG:breadcrumb> Lab 1 </bbNG:breadcrumb>
-		</bbNG:breadcrumbBar>
-		<bbNG:pageTitleBar>
-			Welcome to to Chem 109 Lab 1
-		</bbNG:pageTitleBar>
-	</bbNG:pageHeader>
-
-
+<%@ page import="Labs.lab1_1Checks" %>
 <!DOCTYPE html>
+<!--
+This is compatible with any jsp additions. 
+-->
 <%!
     int dataX = 12;
     int dataY = 3;
     String button = "";
     boolean initial = true;
+<<<<<<< HEAD:WebContent/index.jsp
     lab1Checks checks = new lab1Checks(dataX, dataY, "ycdb_chemistrylab1");
+=======
+    lab1_1Checks checks = new lab1_1Checks(dataX, dataY, "yccs_chemistrylab1_1");
+>>>>>>> mhasan4-master:WebContent/lab1_1.jsp
    
     public void getData(HttpServletRequest request)
     {
         for (int i = 0; i < dataX; i++)
         {
             for (int j = 0; j < dataY; j++)
-            {
-                
+            {                
                 checks.setData(i, j, request.getParameter("" + i + j));
             }
         }
     }
  %>
  <%
-
 	User u = ctx.getUser();
 	Course c = ctx.getCourse();
 
@@ -78,17 +50,15 @@
                     checks.setType(i, j,"double");
                 }
             }
-        }
-        
+        }     
         initial = false;
     }
     
     if (button != null)
     {
         if (button.equals("Clear"))
-        {
-             
-        	checks.clear();
+        { 
+            checks.clear();
         }
         else if (button.equals("Save"))
         {
@@ -123,7 +93,6 @@
         }
     }
  %>
- 
 <html>
     <head>
     	<title>
@@ -148,16 +117,9 @@
         </datalist>	
     </head>
     <body>
-    <p>User Information</p> 
- 	<p style="margin-left:10px">Name: <%= u.getUserName()%>  <br />  
- 			Student Id: <%= u.getId().toExternalString()%> <br />  
- 			Batch UID: <%= u.getBatchUid()%><br /> 			 
- 	</p> 
- 	
-    
     	<fieldset>
             <legend>Lab 1: Weighing Measurements: The Balance</legend>
-            <form method="POST" action="index.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}">
+            <form method="POST" action="index.jsp">
             <fieldset>
                 <legend>Basic info</legend>
                 <table>
@@ -469,7 +431,7 @@
                     </tr>
                     <tr>
 			<td>
-                            Weighing paper and sodium chloride
+                            Weighing paper & sodium chloride
 			</td>
 			<td>
                             <input type="text" name="90" <% if (checks.getData(9,0) != null){out.print("value=\"" + checks.getData(9,0) + "\"");}%> />
@@ -500,7 +462,7 @@
                             </div>
                         </td>
                     </tr>
-                    
+                    </tr>
 		</table>
             </fieldset>
             <br>
@@ -553,6 +515,7 @@
                             </div>
                         </td>
                     </tr>
+                    </tr>
                     <tr>
                         <td>
                             Weight of sodium chloride sample 
@@ -588,7 +551,8 @@
                             </div>
                         </td>
                     </tr>
- 		</table>
+                    </tr>
+		</table>
             </fieldset>
             <br>
             <div style="text-align: center">
@@ -603,6 +567,3 @@
     <br>
     </body>
 </html>
-
-</bbNG:learningSystemPage>
- 

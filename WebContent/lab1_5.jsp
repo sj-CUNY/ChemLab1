@@ -1,46 +1,15 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Labs.lab1Checks" %>
-<%@ page import="blackboard.platform.context.Context" %>
-<%@ page import="blackboard.platform.context.ContextManager" %>
-<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
-<%@ page import="blackboard.data.user.User" %>
-<%@ page import="blackboard.data.course.*" %>
-<%@ page import="blackboard.persist.course.*" %>
-<%@ page import="blackboard.platform.persistence.PersistenceService" %>
-<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
-<%@ page import="blackboard.persist.BbPersistenceManager"%>
- <%@ page import="blackboard.persist.*"%>
- 
-<%@ page import="blackboard.data.gradebook.Lineitem" %>
-<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
- 
- <%@ taglib uri="/bbUI" prefix="bbUI" %> 
- <%@ taglib uri="/bbData" prefix="bbData"%> 
- <%@ taglib uri="/bbNG" prefix="bbNG"%>
- <bbNG:learningSystemPage 
-	title="LAB 8"
-	ctxId="ctx">
-
-	<bbNG:pageHeader>
-		<bbNG:breadcrumbBar environment="COURSE"
-			navItem="course_plugin_manage" >
-				<bbNG:breadcrumb title="Home" href="lab8.jsp?course_id=@X@course.id@X@&user_id=@X@user.pk_string@X@" />
-			<bbNG:breadcrumb> Lab 8 </bbNG:breadcrumb>
-		</bbNG:breadcrumbBar>
-		<bbNG:pageTitleBar>
-			Welcome to to Chem 109 Lab 8
-		</bbNG:pageTitleBar>
-	</bbNG:pageHeader>
+<%@ page import="Labs.lab1_5Checks" %>
 <!DOCTYPE html>
 <!--
-For Deven: this is compatible for your jsp additions. 
+This is compatible with any jsp additions. 
 -->
 <%!
-    int dataX = 10;
-    int dataY = 3;
+    int dataX = 12;
+    int dataY = 2;
     String button = "";
     boolean initial = true;
-    lab1Checks checks = new lab1Checks(dataX, dataY, "ycdb_chemistrylab8");
+    lab1_5Checks checks = new lab1_5Checks(dataX, dataY, "yccs_chemistrylab1_5");
    
     public void getData(HttpServletRequest request)
     {
@@ -115,19 +84,19 @@ For Deven: this is compatible for your jsp additions.
  %>
 <html>
     <head>
-        <title>Lab 8: Determination of Molecular Weight by Gas Density Measurements</title>
+        <title>Lab 5: Determination of the Percent by Weight of Lead</title>
     </head>
     <body>
         <fieldset>
-            <legend>Lab 8: Determination of Molecular Weight by Gas Density Measurements</legend>
+            <legend>Lab 5: Determination of the Percent by Weight of Lead</legend>
             <form method="POST" action=""><!--add destination in action field-->
                 <table>
                     <tr>
                         <td>
-                            Unknown number:
+                            Unknown Number:
                         </td>
                         <td>
-                            <input type="text" name="00"  />
+                            <input type="text" name="00" <% if (checks.getData(0,0) != null){out.print("value=\"" + checks.getData(0,0) + "\"");}%> />
                         </td>
                     </tr>
                     <tr>
@@ -135,7 +104,7 @@ For Deven: this is compatible for your jsp additions.
                         </td>
                         <td>
                             <div style="color: red" >
-                            <% if (checks.getError(0,0) != null){out.print(checks.getError(0, 0));} %>
+                                <% if (checks.getError(0,0) != null){out.print(checks.getError(0, 0));} %>
                             </div>
                         </td>
                     </tr>
@@ -144,30 +113,24 @@ For Deven: this is compatible for your jsp additions.
                     <legend>DATA</legend>
                     <table>
                         <tr>
-                            <th>
-                            </th>
-                            <th>
+                            <td>
+                            </td>
+                            <td>
                                 Sample 1
-                            </th>
-                            <th>
+                            </td>
+                            <td>
                                 Sample 2
-                            </th>
-                            <th>
-                                Sample 3
-                            </th>
+                            </td>
                         </tr>
                         <tr>
                             <td>
-                                Weight of flask + wire + stopper
+                                Weight of weighing paper + unknown
                             </td>
                             <td>
-                                <input type="text" name="10"  />
+                                <input type="text" name="10" <% if (checks.getData(1,0) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="11"  />
-                            </td>
-                            <td>
-                                <input type="text" name="12"  />
+                                <input type="text" name="11" <% if (checks.getData(1,1) != null){out.print("value=\"" + checks.getData(1,1) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
@@ -175,32 +138,24 @@ For Deven: this is compatible for your jsp additions.
                             </td>
                             <td>
                                 <div style="color: red" >
-                                <% if (checks.getError(1,0) != null){out.print(checks.getError(1, 0));} %>
+                                    <% if (checks.getError(1,0) != null){out.print(checks.getError(1, 0));} %>
                                 </div>
                             </td>
                             <td>
                                 <div style="color: red" >
-                                <% if (checks.getError(1,1) != null){out.print(checks.getError(1, 1));} %>
-                                </div>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(1,2) != null){out.print(checks.getError(1, 2));} %>
+                                    <% if (checks.getError(1,1) != null){out.print(checks.getError(1, 1));} %>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                Weight of flask + wire + stopper + condensed vapor
+                                Weight of weighing paper
                             </td>
                             <td>
-                                <input type="text" name="20"  />
+                                <input type="text" name="20" <% if (checks.getData(2,0) != null){out.print("value=\"" + checks.getData(2,0) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="21"  />
-                            </td>
-                            <td>
-                                <input type="text" name="22"  />
+                                <input type="text" name="21" <% if (checks.getData(2,1) != null){out.print("value=\"" + checks.getData(2,1) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
@@ -208,32 +163,24 @@ For Deven: this is compatible for your jsp additions.
                             </td>
                             <td>
                                 <div style="color: red" >
-                                <% if (checks.getError(2,0) != null){out.print(checks.getError(2, 0));} %>
+                                    <% if (checks.getError(2,0) != null){out.print(checks.getError(2, 0));} %>
                                 </div>
                             </td>
                             <td>
                                 <div style="color: red" >
-                                <% if (checks.getError(2,1) != null){out.print(checks.getError(2, 1));} %>
-                                </div>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(2,2) != null){out.print(checks.getError(2, 2));} %>
+                                    <% if (checks.getError(2,1) != null){out.print(checks.getError(2, 1));} %>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                Temperature of boiling water
+                                Weight of sample
                             </td>
                             <td>
-                                <input type="text" name="30"  />
+                                <input type="text" name="30" <% if (checks.getData(3,0) != null){out.print("value=\"" + checks.getData(3,0) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="31"  />
-                            </td>
-                            <td>
-                                <input type="text" name="32"  />
+                                <input type="text" name="31" <% if (checks.getData(3,1) != null){out.print("value=\"" + checks.getData(3,1) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
@@ -241,32 +188,24 @@ For Deven: this is compatible for your jsp additions.
                             </td>
                             <td>
                                 <div style="color: red" >
-                                <% if (checks.getError(3,0) != null){out.print(checks.getError(3, 0));} %>
+                                    <% if (checks.getError(3,0) != null){out.print(checks.getError(3, 0));} %>
                                 </div>
                             </td>
                             <td>
                                 <div style="color: red" >
-                                <% if (checks.getError(3,1) != null){out.print(checks.getError(3, 1));} %>
-                                </div>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(3,2) != null){out.print(checks.getError(3, 2));} %>
+                                    <% if (checks.getError(3,1) != null){out.print(checks.getError(3, 1));} %>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                Atmospheric pressure (mmHg)
+                                Weight of filter paper + PbCrO<sub>4</sub> after drying
                             </td>
                             <td>
-                                <input type="text" name="40"  />
+                                <input type="text" name="40" <% if (checks.getData(4,0) != null){out.print("value=\"" + checks.getData(4,0) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="41"  />
-                            </td>
-                            <td>
-                                <input type="text" name="42"  />
+                                <input type="text" name="41" <% if (checks.getData(4,1) != null){out.print("value=\"" + checks.getData(4,1) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
@@ -274,32 +213,24 @@ For Deven: this is compatible for your jsp additions.
                             </td>
                             <td>
                                 <div style="color: red" >
-                                <% if (checks.getError(4,0) != null){out.print(checks.getError(4, 0));} %>
+                                    <% if (checks.getError(4,0) != null){out.print(checks.getError(4, 0));} %>
                                 </div>
                             </td>
                             <td>
                                 <div style="color: red" >
-                                <% if (checks.getError(4,1) != null){out.print(checks.getError(4, 1));} %>
-                                </div>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(4,2) != null){out.print(checks.getError(4, 2));} %>
+                                    <% if (checks.getError(4,1) != null){out.print(checks.getError(4, 1));} %>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                Volume of flask
+                                Weight of filter paper
                             </td>
                             <td>
-                                <input type="text" name="50"  />
+                                <input type="text" name="50" <% if (checks.getData(5,0) != null){out.print("value=\"" + checks.getData(5,0) + "\"");}%> />
                             </td>
                             <td>
-                                <input type="text" name="51"  />
-                            </td>
-                            <td>
-                                <input type="text" name="52"  />
+                                <input type="text" name="51" <% if (checks.getData(5,1) != null){out.print("value=\"" + checks.getData(5,1) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
@@ -307,37 +238,51 @@ For Deven: this is compatible for your jsp additions.
                             </td>
                             <td>
                                 <div style="color: red" >
-                                <% if (checks.getError(5,0) != null){out.print(checks.getError(5, 0));} %>
+                                    <% if (checks.getError(5,0) != null){out.print(checks.getError(5, 0));} %>
                                 </div>
                             </td>
                             <td>
                                 <div style="color: red" >
-                                <% if (checks.getError(5,1) != null){out.print(checks.getError(5, 1));} %>
+                                    <% if (checks.getError(5,1) != null){out.print(checks.getError(5, 1));} %>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Weight of PbCrO<sub>4</sub>
+                            </td>
+                            <td>
+                                <input type="text" name="60" <% if (checks.getData(6,0) != null){out.print("value=\"" + checks.getData(6,0) + "\"");}%> />
+                            </td>
+                            <td>
+                                <input type="text" name="61" <% if (checks.getData(6,1) != null){out.print("value=\"" + checks.getData(6,1) + "\"");}%> />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                    <% if (checks.getError(6,0) != null){out.print(checks.getError(6, 0));} %>
                                 </div>
                             </td>
                             <td>
                                 <div style="color: red" >
-                                <% if (checks.getError(5,2) != null){out.print(checks.getError(5, 2));} %>
+                                    <% if (checks.getError(6,1) != null){out.print(checks.getError(6, 1));} %>
                                 </div>
                             </td>
                         </tr>
                     </table>
-                </fieldset>
+                </fieldset>                    
                 <fieldset>
                     <legend>RESULTS</legend>
                     <table>
                         <tr>
                             <td>
-                                Weight of condensed vapor
+                                % Pb in PbCrO<sub>4</sub>
                             </td>
                             <td>
-                                <input type="text" name="60"  />
-                            </td>
-                            <td>
-                                <input type="text" name="61"  />
-                            </td>
-                            <td>
-                                <input type="text" name="62"  />
+                                <input type="text" name="70" <% if (checks.getData(7,0) != null){out.print("value=\"" + checks.getData(7,0) + "\"");}%> />
                             </td>
                         </tr>
                         <tr>
@@ -345,112 +290,121 @@ For Deven: this is compatible for your jsp additions.
                             </td>
                             <td>
                                 <div style="color: red" >
-                                <% if (checks.getError(6,0) != null){out.print(checks.getError(6, 0));} %>
+                                    <% if (checks.getError(7,0) != null){out.print(checks.getError(7, 0));} %>
                                 </div>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(6,1) != null){out.print(checks.getError(6, 1));} %>
-                                </div>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(6,2) != null){out.print(checks.getError(6, 2));} %>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Moles of vapor present
-                            </td>
-                            <td>
-                                <input type="text" name="70"  />
-                            </td>
-                            <td>
-                                <input type="text" name="71"  />
-                            </td>
-                            <td>
-                                <input type="text" name="72"  />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(7,0) != null){out.print(checks.getError(7, 0));} %>
-                                </div>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(7,1) != null){out.print(checks.getError(7, 1));} %>
-                                </div>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(7,2) != null){out.print(checks.getError(7, 2));} %>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Molecular weight
-                            </td>
-                            <td>
-                                <input type="text" name="80"  />
-                            </td>
-                            <td>
-                                <input type="text" name="81"  />
-                            </td>
-                            <td>
-                                <input type="text" name="82"  />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(8,0) != null){out.print(checks.getError(8, 0));} %>
-                                </div>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(8,1) != null){out.print(checks.getError(8, 1));} %>
-                                </div>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(8,2) != null){out.print(checks.getError(8, 2));} %>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Average molecular weight
-                            </td>
-                            <td>
-                                <input type="text" name="90"  />
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                            </td>
-                            <td>
-                                <div style="color: red" >
-                                <% if (checks.getError(9,0) != null){out.print(checks.getError(9, 0));} %>
-                                </div>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
                             </td>
                         </tr>
                     </table>
+                    <div>
+                        <textarea rows="4" cols="50">Sample Calculation
+                        </textarea>
+                    </div>
+                    <table>
+                        <tr>
+                            <td>
+                                Weight of Pb in PbCrO<sub>4</sub> precipitate 
+                            </td>
+                            <td>
+                                <input type="text" name="80" <% if (checks.getData(8,0) != null){out.print("value=\"" + checks.getData(8,0) + "\"");}%> />
+                            </td>
+                            <td>
+                                <input type="text" name="81" <% if (checks.getData(8,1) != null){out.print("value=\"" + checks.getData(8,1) + "\"");}%> />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                    <% if (checks.getError(8,0) != null){out.print(checks.getError(8, 0));} %>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                    <% if (checks.getError(8,1) != null){out.print(checks.getError(8, 1));} %>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Weight of original sample
+                            </td>
+                            <td>
+                                <input type="text" name="90" <% if (checks.getData(9,0) != null){out.print("value=\"" + checks.getData(9,0) + "\"");}%> />
+                            </td>
+                            <td>
+                                <input type="text" name="91" <% if (checks.getData(9,1) != null){out.print("value=\"" + checks.getData(9,1) + "\"");}%> />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                    <% if (checks.getError(9,0) != null){out.print(checks.getError(9, 0));} %>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                    <% if (checks.getError(9,1) != null){out.print(checks.getError(9, 1));} %>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                % Pb in unknown sample
+                            </td>
+                            <td>
+                                <input type="text" name="100" <% if (checks.getData(10,0) != null){out.print("value=\"" + checks.getData(10,0) + "\"");}%> />
+                            </td>
+                            <td>
+                                <input type="text" name="101" <% if (checks.getData(10,1) != null){out.print("value=\"" + checks.getData(10,1) + "\"");}%> />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                    <% if (checks.getError(10,0) != null){out.print(checks.getError(10, 0));} %>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                    <% if (checks.getError(10,1) != null){out.print(checks.getError(10, 1));} %>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Average % Pb
+                            </td>
+                            <td>
+                                <input type="text" name="110" <% if (checks.getData(11,0) != null){out.print("value=\"" + checks.getData(11,0) + "\"");}%> />
+                            </td>
+                            <td>
+                                <input type="text" name="111" <% if (checks.getData(11,1) != null){out.print("value=\"" + checks.getData(11,1) + "\"");}%> />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                    <% if (checks.getError(11,0) != null){out.print(checks.getError(11, 0));} %>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="color: red" >
+                                    <% if (checks.getError(11,1) != null){out.print(checks.getError(11, 1));} %>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div>
+                        <textarea rows="4" cols="50">Sample Calculation
+                        </textarea>
+                    </div>
                 </fieldset>
                 <div style="text-align: center">
                     <input type="submit" name="button" value="Check" />
@@ -461,6 +415,6 @@ For Deven: this is compatible for your jsp additions.
                 <br>
             </form>
         </fieldset>
+        <br>
     </body>
 </html>
-</bbNG:learningSystemPage>

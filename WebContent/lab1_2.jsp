@@ -1,4 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<<<<<<< HEAD:WebContent/lab2.jsp
 <%@ page import="Labs.lab1Checks" %>
 <%@ page import="blackboard.platform.context.Context" %>
 <%@ page import="blackboard.platform.context.ContextManager" %>
@@ -14,6 +15,10 @@
 <%@ page import="blackboard.data.gradebook.Lineitem" %>
 <%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
  
+=======
+<%@ page import="Labs.lab1_2Checks" %>
+
+>>>>>>> mhasan4-master:WebContent/lab1_2.jsp
  <%@ taglib uri="/bbUI" prefix="bbUI" %> 
  <%@ taglib uri="/bbData" prefix="bbData"%> 
  <%@ taglib uri="/bbNG" prefix="bbNG"%>
@@ -34,7 +39,7 @@
 
 <!DOCTYPE html>
 <!--
-For Deven: this is compatible for your jsp additions. 
+This is compatible with any jsp additions. 
 -->
 <%!
     int dataX = 16;
@@ -42,7 +47,11 @@ For Deven: this is compatible for your jsp additions.
     String button = "";
     boolean initial = true;
     
+<<<<<<< HEAD:WebContent/lab2.jsp
     lab1Checks checks = new lab1Checks(dataX, dataY, "ycdb_chemistrylab2");
+=======
+    lab1_2Checks checks = new lab1_2Checks(dataX, dataY, "yccs_chemistrylab1_2");
+>>>>>>> mhasan4-master:WebContent/lab1_2.jsp
     
     public void getData(HttpServletRequest request)
     {
