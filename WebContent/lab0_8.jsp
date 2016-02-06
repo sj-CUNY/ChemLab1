@@ -1,54 +1,13 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<<<<<<< HEAD:WebContent/lab8.jsp
-<%@ page import="Labs.lab1Checks" %>
-<%@ page import="blackboard.platform.context.Context" %>
-<%@ page import="blackboard.platform.context.ContextManager" %>
-<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
-<%@ page import="blackboard.data.user.User" %>
-<%@ page import="blackboard.data.course.*" %>
-<%@ page import="blackboard.persist.course.*" %>
-<%@ page import="blackboard.platform.persistence.PersistenceService" %>
-<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
-<%@ page import="blackboard.persist.BbPersistenceManager"%>
- <%@ page import="blackboard.persist.*"%>
- 
-<%@ page import="blackboard.data.gradebook.Lineitem" %>
-<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
- 
- <%@ taglib uri="/bbUI" prefix="bbUI" %> 
- <%@ taglib uri="/bbData" prefix="bbData"%> 
- <%@ taglib uri="/bbNG" prefix="bbNG"%>
- <bbNG:learningSystemPage 
-	title="LAB 8"
-	ctxId="ctx">
-=======
-<%@ page import="Labs.lab1_8Checks" %>
->>>>>>> mhasan4-master:WebContent/lab1_8.jsp
+<%@ page import="Labs.lab0_8Checks" %>
 
-	<bbNG:pageHeader>
-		<bbNG:breadcrumbBar environment="COURSE"
-			navItem="course_plugin_manage" >
-				<bbNG:breadcrumb title="Home" href="lab8.jsp?course_id=@X@course.id@X@&user_id=@X@user.pk_string@X@" />
-			<bbNG:breadcrumb> Lab 8 </bbNG:breadcrumb>
-		</bbNG:breadcrumbBar>
-		<bbNG:pageTitleBar>
-			Welcome to to Chem 109 Lab 8
-		</bbNG:pageTitleBar>
-	</bbNG:pageHeader>
 <!DOCTYPE html>
-<!--
-This is compatible with any jsp additions. 
--->
 <%!
     int dataX = 10;
     int dataY = 3;
     String button = "";
     boolean initial = true;
-<<<<<<< HEAD:WebContent/lab8.jsp
-    lab1Checks checks = new lab1Checks(dataX, dataY, "ycdb_chemistrylab8");
-=======
-    lab1_8Checks checks = new lab1_8Checks(dataX, dataY, "yccs_chemistrylab1_8");
->>>>>>> mhasan4-master:WebContent/lab1_8.jsp
+    lab0_8Checks checks = new lab0_8Checks(dataX, dataY);
    
     public void getData(HttpServletRequest request)
     {
@@ -62,8 +21,8 @@ This is compatible with any jsp additions.
     }
  %>
  <%
-	User u = ctx.getUser();
-	Course c = ctx.getCourse();
+	//User u = ctx.getUser();
+	//Course c = ctx.getCourse();
 
     button = request.getParameter("button");
  
@@ -113,7 +72,7 @@ This is compatible with any jsp additions.
             checks.save();
             
             //perform submit
-            checks.submit(ctx);
+            //checks.submit(ctx);
         }
         else
         {
@@ -124,9 +83,10 @@ This is compatible with any jsp additions.
 <html>
     <head>
         <title>Lab 8: Determination of Molecular Weight by Gas Density Measurements</title>
+        <link rel="stylesheet" href="labs_css.css">
     </head>
     <body>
-        <fieldset>
+        <fieldset class="fieldset-auto-width">
             <legend>Lab 8: Determination of Molecular Weight by Gas Density Measurements</legend>
             <form method="POST" action=""><!--add destination in action field-->
                 <table>
@@ -135,7 +95,7 @@ This is compatible with any jsp additions.
                             Unknown number:
                         </td>
                         <td>
-                            <input type="text" name="00" <% if (checks.getData(0,0) != null){out.print("value=\"" + checks.getData(0,0) + "\"");}%> />
+                            <input type="text" name="00"  />
                         </td>
                     </tr>
                     <tr>
@@ -169,13 +129,13 @@ This is compatible with any jsp additions.
                                 Weight of flask + wire + stopper
                             </td>
                             <td>
-                                <input type="text" name="10" <% if (checks.getData(1,0) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> />
+                                <input type="text" name="10"  />
                             </td>
                             <td>
-                                <input type="text" name="11" <% if (checks.getData(1,1) != null){out.print("value=\"" + checks.getData(1,1) + "\"");}%> />
+                                <input type="text" name="11"  />
                             </td>
                             <td>
-                                <input type="text" name="12" <% if (checks.getData(1,2) != null){out.print("value=\"" + checks.getData(1,2) + "\"");}%> />
+                                <input type="text" name="12"  />
                             </td>
                         </tr>
                         <tr>
@@ -202,13 +162,13 @@ This is compatible with any jsp additions.
                                 Weight of flask + wire + stopper + condensed vapor
                             </td>
                             <td>
-                                <input type="text" name="20" <% if (checks.getData(2,0) != null){out.print("value=\"" + checks.getData(2,0) + "\"");}%> />
+                                <input type="text" name="20"  />
                             </td>
                             <td>
-                                <input type="text" name="21" <% if (checks.getData(2,1) != null){out.print("value=\"" + checks.getData(2,1) + "\"");}%> />
+                                <input type="text" name="21"  />
                             </td>
                             <td>
-                                <input type="text" name="22" <% if (checks.getData(2,2) != null){out.print("value=\"" + checks.getData(2,2) + "\"");}%> />
+                                <input type="text" name="22"  />
                             </td>
                         </tr>
                         <tr>
@@ -235,13 +195,13 @@ This is compatible with any jsp additions.
                                 Temperature of boiling water
                             </td>
                             <td>
-                                <input type="text" name="30" <% if (checks.getData(3,0) != null){out.print("value=\"" + checks.getData(3,0) + "\"");}%> />
+                                <input type="text" name="30"  />
                             </td>
                             <td>
-                                <input type="text" name="31" <% if (checks.getData(3,1) != null){out.print("value=\"" + checks.getData(3,1) + "\"");}%> />
+                                <input type="text" name="31"  />
                             </td>
                             <td>
-                                <input type="text" name="32" <% if (checks.getData(3,2) != null){out.print("value=\"" + checks.getData(3,2) + "\"");}%> />
+                                <input type="text" name="32"  />
                             </td>
                         </tr>
                         <tr>
@@ -268,13 +228,13 @@ This is compatible with any jsp additions.
                                 Atmospheric pressure (mmHg)
                             </td>
                             <td>
-                                <input type="text" name="40" <% if (checks.getData(4,0) != null){out.print("value=\"" + checks.getData(4,0) + "\"");}%> />
+                                <input type="text" name="40"  />
                             </td>
                             <td>
-                                <input type="text" name="41" <% if (checks.getData(4,1) != null){out.print("value=\"" + checks.getData(4,1) + "\"");}%> />
+                                <input type="text" name="41"  />
                             </td>
                             <td>
-                                <input type="text" name="42" <% if (checks.getData(4,2) != null){out.print("value=\"" + checks.getData(4,2) + "\"");}%> />
+                                <input type="text" name="42"  />
                             </td>
                         </tr>
                         <tr>
@@ -301,13 +261,13 @@ This is compatible with any jsp additions.
                                 Volume of flask
                             </td>
                             <td>
-                                <input type="text" name="50" <% if (checks.getData(5,0) != null){out.print("value=\"" + checks.getData(5,0) + "\"");}%> />
+                                <input type="text" name="50"  />
                             </td>
                             <td>
-                                <input type="text" name="51" <% if (checks.getData(5,1) != null){out.print("value=\"" + checks.getData(5,1) + "\"");}%> />
+                                <input type="text" name="51"  />
                             </td>
                             <td>
-                                <input type="text" name="52" <% if (checks.getData(5,2) != null){out.print("value=\"" + checks.getData(5,2) + "\"");}%> />
+                                <input type="text" name="52"  />
                             </td>
                         </tr>
                         <tr>
@@ -339,13 +299,13 @@ This is compatible with any jsp additions.
                                 Weight of condensed vapor
                             </td>
                             <td>
-                                <input type="text" name="60" <% if (checks.getData(6,0) != null){out.print("value=\"" + checks.getData(6,0) + "\"");}%> />
+                                <input type="text" name="60"  />
                             </td>
                             <td>
-                                <input type="text" name="61" <% if (checks.getData(6,1) != null){out.print("value=\"" + checks.getData(6,1) + "\"");}%> />
+                                <input type="text" name="61"  />
                             </td>
                             <td>
-                                <input type="text" name="62" <% if (checks.getData(6,2) != null){out.print("value=\"" + checks.getData(6,2) + "\"");}%> />
+                                <input type="text" name="62"  />
                             </td>
                         </tr>
                         <tr>
@@ -372,13 +332,13 @@ This is compatible with any jsp additions.
                                 Moles of vapor present
                             </td>
                             <td>
-                                <input type="text" name="70" <% if (checks.getData(7,0) != null){out.print("value=\"" + checks.getData(7,0) + "\"");}%> />
+                                <input type="text" name="70"  />
                             </td>
                             <td>
-                                <input type="text" name="71" <% if (checks.getData(7,1) != null){out.print("value=\"" + checks.getData(7,1) + "\"");}%> />
+                                <input type="text" name="71"  />
                             </td>
                             <td>
-                                <input type="text" name="72" <% if (checks.getData(7,2) != null){out.print("value=\"" + checks.getData(7,2) + "\"");}%> />
+                                <input type="text" name="72"  />
                             </td>
                         </tr>
                         <tr>
@@ -405,13 +365,13 @@ This is compatible with any jsp additions.
                                 Molecular weight
                             </td>
                             <td>
-                                <input type="text" name="80" <% if (checks.getData(8,0) != null){out.print("value=\"" + checks.getData(8,0) + "\"");}%> />
+                                <input type="text" name="80"  />
                             </td>
                             <td>
-                                <input type="text" name="81" <% if (checks.getData(8,1) != null){out.print("value=\"" + checks.getData(8,1) + "\"");}%> />
+                                <input type="text" name="81"  />
                             </td>
                             <td>
-                                <input type="text" name="82" <% if (checks.getData(8,2) != null){out.print("value=\"" + checks.getData(8,2) + "\"");}%> />
+                                <input type="text" name="82"  />
                             </td>
                         </tr>
                         <tr>
@@ -438,7 +398,7 @@ This is compatible with any jsp additions.
                                 Average molecular weight
                             </td>
                             <td>
-                                <input type="text" name="90" <% if (checks.getData(9,0) != null){out.print("value=\"" + checks.getData(9,0) + "\"");}%> />
+                                <input type="text" name="90"  />
                             </td>
                             <td>
                             </td>
@@ -471,4 +431,3 @@ This is compatible with any jsp additions.
         </fieldset>
     </body>
 </html>
-</bbNG:learningSystemPage>

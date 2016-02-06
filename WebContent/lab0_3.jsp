@@ -1,48 +1,88 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<<<<<<< HEAD:WebContent/lab3.jsp
-<%@ page import="Labs.lab1Checks" %>
-<%@ page import="blackboard.platform.context.Context" %>
-<%@ page import="blackboard.platform.context.ContextManager" %>
-<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
-<%@ page import="blackboard.data.user.User" %>
-<%@ page import="blackboard.data.course.*" %>
-<%@ page import="blackboard.persist.course.*" %>
-<%@ page import="blackboard.platform.persistence.PersistenceService" %>
-<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
-<%@ page import="blackboard.persist.BbPersistenceManager"%>
- <%@ page import="blackboard.persist.*"%>
- 
-<%@ page import="blackboard.data.gradebook.Lineitem" %>
-<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
- 
-=======
-<%@ page import="Labs.lab1_3Checks" %>
+<%@ page import="Labs.lab0_3Checks" %>
+<%!
+    int dataX = 74;
+    int dataY = 3;
+    String button = "";
+    boolean initial = true;
     
->>>>>>> mhasan4-master:WebContent/lab1_3.jsp
- <%@ taglib uri="/bbUI" prefix="bbUI" %> 
- <%@ taglib uri="/bbData" prefix="bbData"%> 
- <%@ taglib uri="/bbNG" prefix="bbNG"%>
- <bbNG:learningSystemPage 
-	title="LAB 3"
-	ctxId="ctx">
-
-	<bbNG:pageHeader>
-		<bbNG:breadcrumbBar environment="COURSE"
-			navItem="course_plugin_manage" >
-				<bbNG:breadcrumb title="Home" href="lab3.jsp?course_id=@X@course.id@X@&user_id=@X@user.pk_string@X@" />
-			<bbNG:breadcrumb> Lab 3 </bbNG:breadcrumb>
-		</bbNG:breadcrumbBar>
-		<bbNG:pageTitleBar>
-			Welcome to to Chem 109 Lab 3
-		</bbNG:pageTitleBar>
-	</bbNG:pageHeader>
-
+    lab0_3Checks checks = new lab0_3Checks(dataX, dataY);
+    
+    public void getData(HttpServletRequest request)
+    {
+        for (int i = 0; i < dataX; i++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {
+                checks.setData(i, j, request.getParameter("" + i + j));
+            }
+        }
+    }
+ %>
+ <%     
+    button = request.getParameter("button");
+    
+    if (initial)
+    {
+        button = "";
+            
+        //set type
+        for (int i = 0; i < dataX; i++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {
+                checks.setType(i, j,"double");
+            }
+        }
+        
+        initial = false;
+    }
+    
+    if (button != null)
+    {
+        if (button.equals("Clear"))
+        {
+            checks.clear();
+        }
+        else if (button.equals("Save"))
+        {
+            //get data from form
+            getData(request);
+            
+            //perform save
+            checks.save();
+        }
+        else if (button.equals("Check"))
+        {
+            //get data from form
+            getData(request);
+            
+            //perform checks
+            checks.check();
+        }
+        else if (button.equals("Submit"))
+        {
+            //get data from form
+            getData(request);
+            
+            //perform save
+            checks.save();
+            
+            //perform submit
+            //checks.submit(ctx);
+        }
+        else
+        {
+            button = "";
+        }
+    }
+ %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
         <title>Lab 3</title>
-        <link rel="stylesheet" href="/css/styles.css">
+       <link rel="stylesheet" href="labs_css.css">
         <style>
             div{
                 border:1px solid black;
@@ -490,4 +530,4 @@
         </form>
     </body>
 </html>
-</bbNG:learningSystemPage>
+

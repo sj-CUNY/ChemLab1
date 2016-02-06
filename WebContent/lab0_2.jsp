@@ -1,57 +1,15 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<<<<<<< HEAD:WebContent/lab2.jsp
-<%@ page import="Labs.lab1Checks" %>
-<%@ page import="blackboard.platform.context.Context" %>
-<%@ page import="blackboard.platform.context.ContextManager" %>
-<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
-<%@ page import="blackboard.data.user.User" %>
-<%@ page import="blackboard.data.course.*" %>
-<%@ page import="blackboard.persist.course.*" %>
-<%@ page import="blackboard.platform.persistence.PersistenceService" %>
-<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
-<%@ page import="blackboard.persist.BbPersistenceManager"%>
- <%@ page import="blackboard.persist.*"%>
- 
-<%@ page import="blackboard.data.gradebook.Lineitem" %>
-<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
- 
-=======
-<%@ page import="Labs.lab1_2Checks" %>
-
->>>>>>> mhasan4-master:WebContent/lab1_2.jsp
- <%@ taglib uri="/bbUI" prefix="bbUI" %> 
- <%@ taglib uri="/bbData" prefix="bbData"%> 
- <%@ taglib uri="/bbNG" prefix="bbNG"%>
- <bbNG:learningSystemPage 
-	title="LAB 3"
-	ctxId="ctx">
-
-	<bbNG:pageHeader>
-		<bbNG:breadcrumbBar environment="COURSE"
-			navItem="course_plugin_manage" >
-				<bbNG:breadcrumb title="Home" href="lab2.jsp?course_id=@X@course.id@X@&user_id=@X@user.pk_string@X@" />
-			<bbNG:breadcrumb> Lab 2 </bbNG:breadcrumb>
-		</bbNG:breadcrumbBar>
-		<bbNG:pageTitleBar>
-			Welcome to to Chem 109 Lab 2
-		</bbNG:pageTitleBar>
-	</bbNG:pageHeader>
+<%@ page import="Labs.lab0_2Checks" %>
 
 <!DOCTYPE html>
-<!--
-This is compatible with any jsp additions. 
--->
+
 <%!
-    int dataX = 16;
+    int dataX = 17;
     int dataY = 2;
     String button = "";
     boolean initial = true;
     
-<<<<<<< HEAD:WebContent/lab2.jsp
-    lab1Checks checks = new lab1Checks(dataX, dataY, "ycdb_chemistrylab2");
-=======
-    lab1_2Checks checks = new lab1_2Checks(dataX, dataY, "yccs_chemistrylab1_2");
->>>>>>> mhasan4-master:WebContent/lab1_2.jsp
+    lab0_2Checks checks = new lab0_2Checks(dataX, dataY);
     
     public void getData(HttpServletRequest request)
     {
@@ -114,7 +72,7 @@ This is compatible with any jsp additions.
             checks.save();
             
             //perform submit
-            checks.submit(ctx);
+            //checks.submit(ctx);
         }
         else
         {
@@ -125,11 +83,12 @@ This is compatible with any jsp additions.
 <html>
     <head>
         <title>Lab 2: Volume Measurements and the Determination of Density</title>
+        <link rel="stylesheet" href="labs_css.css">
     </head>
     <body>
-        <fieldset>
+        <fieldset class="fieldset-auto-width">
             <legend>Lab 2: Volume Measurements and the Determination of Density</legend>
-            <form method="POST" action=""><!--add destination in action field-->
+            <form method="POST" action="lab0_2.jsp">
                 <fieldset>
                     <legend>I. DATA</legend>
                     <fieldset>
@@ -540,16 +499,25 @@ This is compatible with any jsp additions.
                                     </div>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>
+                                    Density of unknown liquid (slope of the line resulting from the plot of M versus V):
+                                </td>
+                                <td>
+                                    <input type="text" name="160" <% if (checks.getData(16,0) != null){out.print("value=\"" + checks.getData(16,0) + "\"");}%> />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                </td>
+                                <td>
+                                    <div style="color: red" >
+                                        <% if (checks.getError(16,1) != null){out.print(checks.getError(16, 1));} %>
+                                    </div>
+                                </td>
+                            </tr>
                         </table>
                     </fieldset>
-                    <div>
-                        Density of unknown liquid (slope of the line resulting from the plot of M versus V):
-                        <!-- add jsp tag -->
-                    </div>
-                    <div>
-                        Show calculation of density (slope):
-                        <!-- add jsp tag -->
-                    </div>
                 </fieldset>
                 <div style="text-align: center">
                     <input type="submit" name="button" value="Check" />
@@ -563,4 +531,3 @@ This is compatible with any jsp additions.
         <br>
     </body>
 </html>
-</bbNG:learningSystemPage>

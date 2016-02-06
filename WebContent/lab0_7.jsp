@@ -1,54 +1,13 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<<<<<<< HEAD:WebContent/lab7.jsp
-<%@ page import="Labs.lab1Checks" %>
-<%@ page import="blackboard.platform.context.Context" %>
-<%@ page import="blackboard.platform.context.ContextManager" %>
-<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
-<%@ page import="blackboard.data.user.User" %>
-<%@ page import="blackboard.data.course.*" %>
-<%@ page import="blackboard.persist.course.*" %>
-<%@ page import="blackboard.platform.persistence.PersistenceService" %>
-<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
-<%@ page import="blackboard.persist.BbPersistenceManager"%>
- <%@ page import="blackboard.persist.*"%>
- 
-<%@ page import="blackboard.data.gradebook.Lineitem" %>
-<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
- 
- <%@ taglib uri="/bbUI" prefix="bbUI" %> 
- <%@ taglib uri="/bbData" prefix="bbData"%> 
- <%@ taglib uri="/bbNG" prefix="bbNG"%>
- <bbNG:learningSystemPage 
-	title="LAB 7"
-	ctxId="ctx">
+<%@ page import="Labs.lab0_7Checks" %>
 
-	<bbNG:pageHeader>
-		<bbNG:breadcrumbBar environment="COURSE"
-			navItem="course_plugin_manage" >
-				<bbNG:breadcrumb title="Home" href="lab7.jsp?course_id=@X@course.id@X@&user_id=@X@user.pk_string@X@" />
-			<bbNG:breadcrumb> Lab 7 </bbNG:breadcrumb>
-		</bbNG:breadcrumbBar>
-		<bbNG:pageTitleBar>
-			Welcome to to Chem 109 Lab 7
-		</bbNG:pageTitleBar>
-	</bbNG:pageHeader>
-=======
-<%@ page import="Labs.lab1_7Checks" %>
->>>>>>> mhasan4-master:WebContent/lab1_7.jsp
 <!DOCTYPE html>
-<!--
-This is compatible with any jsp additions. 
--->
 <%!
     int dataX = 13;
     int dataY = 4;
     String button = "";
     boolean initial = true;
-<<<<<<< HEAD:WebContent/lab7.jsp
-    lab1Checks checks = new lab1Checks(dataX, dataY, "ycdb_chemistrylab7");
-=======
-    lab1_7Checks checks = new lab1_7Checks(dataX, dataY, "yccs_chemistrylab1_7");
->>>>>>> mhasan4-master:WebContent/lab1_7.jsp
+    lab0_7Checks checks = new lab0_7Checks(dataX, dataY);
    
     public void getData(HttpServletRequest request)
     {
@@ -64,8 +23,8 @@ This is compatible with any jsp additions.
  %>
  <%
 
-	User u = ctx.getUser();
-	Course c = ctx.getCourse();
+	//User u = ctx.getUser();
+	//Course c = ctx.getCourse();
 
     button = request.getParameter("button");
  
@@ -124,7 +83,7 @@ This is compatible with any jsp additions.
             checks.save();
             
             //perform submit
-            checks.submit(ctx);
+            //checks.submit(ctx);
         }
         else
         {
@@ -135,9 +94,10 @@ This is compatible with any jsp additions.
 <html>
     <head>
         <title>Lab 7: Volumetric Determination of an Unknown Chloride</title>
+        <link rel="stylesheet" href="labs_css.css">
     </head>
     <body>
-        <fieldset>
+        <fieldset class="fieldset-auto-width">
             <legend>Lab 7: Volumetric Determination of an Unknown Chloride</legend>
             <form method="POST" action=""><!--add destination in action field-->
                 <div>
@@ -649,4 +609,3 @@ This is compatible with any jsp additions.
         </fieldset>
     </body>
 </html>
-</bbNG:learningSystemPage>
