@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE xml>
-<manifest>
- <plugin>
+<?xml version= "1.0" encoding ="UTF-8"?>
+     <manifest xmlns= "http://www.blackboard.com/bb-manifest-plugin"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.blackboard.com/bb-manifest-plugin http://fibbba.medu.com/xsd/bb-manifest-plugin.xsd">
+  <plugin>
  <name value="York college Chem 109"/>
  <description value="Testing using blackboard frame"/>
  <handle value="Lab Debug"/>
- <version value="2.12.33"/>
+ <version value="5.0.40"/>
  <requires>
  <bbversion value="9.1"/>
  </requires>
@@ -22,14 +23,14 @@
  <application-defs>
  <application
  can-allow-guest="true" is-course-tool="true" handle="Lab Debug"
- name="Lab 1 Debug">
+ name="Lab Debug">
  <description lang="en_US">
  </description>
  <links>
  <link>
  <type value="tool"/>
  <name value="York college Chem 109"/>
- <url value="welcome.jsp?role=@X@membership.role@X@"/>
+ <url value="welcome.jsp?@X@course.id@X@"/>
  <description value="York college Chem 109."/>
  <icons>
 <listitem value="images/icon.gif"/>
@@ -38,22 +39,15 @@
  <link>
  <type value="course_tool"/>
  <name value="York college Chem 109"/>
- <url value="welcome.jsp?role=@X@membership.role@X@"/>
+ <url value="welcome.jsp?@X@course.id@X@"/>
  <description value="York college Chem 109."/>
  <icons>
 <listitem value="images/icon.gif"/>
 </icons>
 </link>
  </links>
- <ActionMenu>
- <actionControlBar>
- </actionControlBar>
- </ActionMenu>
- </application>
+  </application>
 </application-defs>
-<schema-dirs>
-  <schema-dir dir-name="chemlab"/>
-</schema-dirs>
  <permissions>
  <permission type="persist" name="content" actions="create" />
   <permission type="persist" name="course" actions="load" />
