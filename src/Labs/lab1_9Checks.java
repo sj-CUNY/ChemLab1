@@ -20,7 +20,10 @@ public class lab1_9Checks extends inputChecks
                 {
                     setKey(i,j,"*");
                     
-                    //TODO
+                    if ((i > 0 && i < 26 && i!=15) && (j == 0 || j==1 || j==2))
+                    {
+                        setKey(i,j,setToDecPlaces(getData(i,j),2));
+                    }
                     
                 }
                 else

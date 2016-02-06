@@ -20,7 +20,18 @@ public class lab1_7Checks extends inputChecks
                 {
                     setKey(i,j,"*");
                     
-                    //TODO
+                    if ((i > 0 && i < 5) && (j == 0 || j==1))
+                    {
+                        setKey(i,j,setToDecPlaces(getData(i,j),2));
+                    }
+                    
+                    if (( i > 0 && i < 5) && j == 2)
+                    {
+                        double temp = Double.parseDouble(getData(i,1)) /
+                                Double.parseDouble(getData(i,0));
+                                              
+                        setKey(i, j,"" + temp); 
+                    }
                     
                 }
                 else
