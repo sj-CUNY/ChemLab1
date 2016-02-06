@@ -1,4 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<<<<<<< HEAD:WebContent/lab3.jsp
 <%@ page import="Labs.lab1Checks" %>
 <%@ page import="blackboard.platform.context.Context" %>
 <%@ page import="blackboard.platform.context.ContextManager" %>
@@ -14,6 +15,10 @@
 <%@ page import="blackboard.data.gradebook.Lineitem" %>
 <%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
  
+=======
+<%@ page import="Labs.lab1_3Checks" %>
+    
+>>>>>>> mhasan4-master:WebContent/lab1_3.jsp
  <%@ taglib uri="/bbUI" prefix="bbUI" %> 
  <%@ taglib uri="/bbData" prefix="bbData"%> 
  <%@ taglib uri="/bbNG" prefix="bbNG"%>
