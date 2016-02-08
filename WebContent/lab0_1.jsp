@@ -1,34 +1,56 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="Labs.lab0_1Checks" %>
+<%@ page import="blackboard.platform.context.Context" %>
+<%@ page import="blackboard.platform.context.ContextManager" %>
+<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
+<%@ page import="blackboard.data.user.User" %>
+<%@ page import="blackboard.data.course.*" %>
+<%@ page import="blackboard.persist.course.*" %>
+<%@ page import="blackboard.platform.persistence.PersistenceService" %>
+<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
+<%@ page import="blackboard.persist.BbPersistenceManager"%>
+ <%@ page import="blackboard.persist.*"%>
+ 
+<%@ page import="blackboard.data.gradebook.Lineitem" %>
+<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
+ 
+ <%@ taglib uri="/bbUI" prefix="bbUI" %> 
+ <%@ taglib uri="/bbData" prefix="bbData"%> 
+ <%@ taglib uri="/bbNG" prefix="bbNG"%>
+ <bbNG:learningSystemPage 
+	title="LAB 1"
+	ctxId="ctx">
+
+	<bbNG:pageHeader>
+		<bbNG:breadcrumbBar environment="COURSE"
+			navItem="ycdb-chem109-nav-LabDebug" >
+				<bbNG:breadcrumb title="Home" href="lab0_1.jsp?course_id=@X@course.pk_string@X@&user_id=@X@user.pk_string@X@" />
+			<bbNG:breadcrumb> Lab 1 </bbNG:breadcrumb>
+		</bbNG:breadcrumbBar>
+		<bbNG:pageTitleBar>
+			Welcome to Chem 109 Lab 1
+		</bbNG:pageTitleBar>
+	</bbNG:pageHeader>
+
 
 <!DOCTYPE html>
-<%!
-    int dataX = 12;
-    int dataY = 3;
-    String button = "";
-    boolean initial = true;
-    
-    lab0_1Checks checks = new lab0_1Checks(dataX, dataY);
-   
-    public void getData(HttpServletRequest request)
-    {
-        for (int i = 0; i < dataX; i++)
-        {
-            for (int j = 0; j < dataY; j++)
-            {  
-                checks.setData(i, j, request.getParameter("" + i + j));
-            }
-        }
-    }
- %>
+
  <%
-    button = request.getParameter("button");
+	 int dataX = 12;
+ 	 int dataY = 3;
+
+    lab0_1Checks checks = new lab0_1Checks(ctx, dataX, dataY, "ycdb_chemistrylab1");
  
-    if (initial)
+ 	User u = ctx.getUser(); 
+ 	Course c = ctx.getCourse(); 
+
+ 	String button = request.getParameter("button");
+     if (button == null)
     {
         button = "";
-            
-        //set types
+	    //set types
+         
+         
         checks.setType(0, 0, "String");
         checks.setType(1, 0, "String");
         
@@ -50,47 +72,53 @@
                 }
             }
         }
-        initial = false;
-    }
-    
-    if (button != null)
+     }
+     
+     else
     {
+    	if(button.equals("Save") || button.equals("Check") || button.equals("Submit"))
+    	{
+    		for (int i = 0; i < dataX; i++)
+            {
+                for (int j = 0; j < dataY; j++)
+                {  
+                    checks.setData(i, j, request.getParameter("" + i + j));
+                 }
+            }
+    		
+    	}
         if (button.equals("Clear"))
         {  
             checks.clear();
         }
         else if (button.equals("Save"))
         {
-            //get data from form
-            getData(request);
-             
+              
             //perform save
-            checks.save();
+            checks.save(ctx,"ycdb_chemistrylab1");
         }
         else if (button.equals("Check"))
         {
-            //get data from form
-            getData(request);
-             
+              
             //perform checks
             checks.check();
         }
         else if (button.equals("Submit"))
         {
-            //get data from form
-            getData(request);
-             
+              
             //perform save
-            checks.save();
+            checks.save(ctx, "ycdb_chemistrylab1");
             
             //perform submit
-            checks.submit();
+            checks.submit(ctx,"ycdb_chemistrylab1");
         }
         else
         {
             button = "";
         }
+        button="";
     }
+ 
  %>
  
 <html>
@@ -99,7 +127,7 @@
             Lab 1: Weighing Measurements: The Balance
     	</title>
     	<link rel="stylesheet" href="labs_css.css">
-        <datalist id="units" >
+    <datalist id="units" >
             <option value="g" >g</option>	
             <option value="mg" >mg</option>
             <option value="kg" >kg</option>
@@ -110,16 +138,24 @@
             <option value="km" >km</option>
             <option value="lb" >lb</option>
             <option value="oz" >oz</option>
-            <option value="cm3" >cm<sup>3</sup></option>
+            <option value="cm3" >cm3</option>
             <option value="s" >s</option>
             <option value="in" >in</option>
             <option value="ft" >ft</option>
         </datalist>	
     </head>
     <body>
+    <p>User Information</p>  
+  	<p style="margin-left:10px">Name: <%= u.getUserName()%>  <br />   
+  			Student Id: <%= u.getId().toExternalString()%> <br />   
+  			Batch UID: <%= u.getBatchUid()%><br /> 			  
+  	</p>  
+
+    
     	<fieldset class="fieldset-auto-width">
             <legend>Lab 1: Weighing Measurements: The Balance</legend>
             <form method="POST" action="lab0_1.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}">
+        
             <fieldset>
                 <legend>Basic info</legend>
                 <table>
@@ -565,3 +601,4 @@
     <br>
     </body>
 </html>
+</bbNG:learningSystemPage>

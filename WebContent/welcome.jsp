@@ -31,11 +31,9 @@ blackboard.persist.course.*"
 	ctxId="ctx">
 
 	<bbNG:pageHeader>
-		<bbNG:breadcrumbBar environment="COURSE"
-			navItem="course_plugin_manage" >
+		<bbNG:breadcrumbBar environment="COURSE" >
 				<bbNG:breadcrumb title="Home" href="welcome.jsp?course_id=${ctx.courseId.externalString}" />
-			<bbNG:breadcrumb> Welcome Page </bbNG:breadcrumb>
-		</bbNG:breadcrumbBar>
+ 		</bbNG:breadcrumbBar>
 		<bbNG:pageTitleBar>
 			Welcome to to Chem 109 Choose one of the labs below.
 		</bbNG:pageTitleBar>

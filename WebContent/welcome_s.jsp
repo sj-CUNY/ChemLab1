@@ -31,9 +31,9 @@ blackboard.persist.gradebook.LineitemDbPersister"
 	ctxId="ctx">
 
 	<bbNG:pageHeader>
-		<bbNG:breadcrumbBar environment="COURSE"
-			navItem="course_plugin_manage" >
-				<bbNG:breadcrumb title="Home" href="welcome.jsp?course_id=${ctx.courseId.externalString}" />
+		<bbNG:breadcrumbBar environment="COURSE" navItem="ycdb-chem109-nav-LabDebug" >
+	
+				<bbNG:breadcrumb title="Home" href="welcome_s.jsp?course_id=@X@course.pk_string@X@&user_id=@X@user.pk_string@X@"/>
 			<bbNG:breadcrumb> Welcome Page </bbNG:breadcrumb>
 		</bbNG:breadcrumbBar>
 		<bbNG:pageTitleBar>
@@ -42,108 +42,7 @@ blackboard.persist.gradebook.LineitemDbPersister"
 	</bbNG:pageHeader>
   
 
-<%
-	String button = "";
-
-
-	User u = ctx.getUser();
-	Course c = ctx.getCourse();
-	// get the membership data to determine the User's Role
-	CourseMembership crsMembership = null;
-	CourseMembershipDbLoader crsMembershipLoader = null;
-	PersistenceService bbPm = PersistenceServiceFactory.getInstance() ;
-    BbPersistenceManager bpManager = bbPm.getDbPersistenceManager();
- 
-	String errMsg = null;
-	crsMembershipLoader = (CourseMembershipDbLoader)bpManager.getLoader(CourseMembershipDbLoader.TYPE);
-	
-	try {
-		crsMembership = crsMembershipLoader.loadByCourseAndUserId(c.getId(), u.getId());
-	} catch (KeyNotFoundException e) {
-			// There is no membership record.
-			errMsg = "There is no membership record. Better check this out:" + e;
-	} catch (PersistenceException pe) {
-			// There is no membership record.
-			errMsg = "An error occured while loading the User. Better check this out:" + pe;
-	}
-	CourseMembership.Role crsMembershipRole = crsMembership.getRole();
-	String crsMembershipRoleStr = crsMembershipRole.toString();
-	boolean roleInstructor = false;
- 
-	if (crsMembershipRole == CourseMembership.Role.STUDENT)
-	{
-		roleInstructor = false;
-
-	}
-	 
-%>
-<%
-    button = request.getParameter("button");
- if (button != null && roleInstructor==true)
-    {
-		GradeLogistics gl = new GradeLogistics();
-
-        if (button.equals("ActivateLab1"))
-        {
-   		gl.initGradeLogistics("ycdb_chemistrylab1");
-		gl.makeLineItem("ycdb_chemistrylab1", 100, gl.getContext());
- 
-	 	}
-        else if (button.equals("ActivateLab2"))
-        {
-   		gl.initGradeLogistics("ycdb_chemistrylab2");
-		gl.makeLineItem("ycdb_chemistrylab2", 100, gl.getContext());
- 
-        }
-        else if (button.equals("ActivateLab3"))
-        {
-           	gl.initGradeLogistics("ycdb_chemistrylab3");
-		gl.makeLineItem("ycdb_chemistrylab3", 100, gl.getContext());
- 
-        }
-        else if (button.equals("ActivateLab4"))
-        {
-             	gl.initGradeLogistics("ycdb_chemistrylab4");
-		gl.makeLineItem("ycdb_chemistrylab4", 100, gl.getContext());
- 
-        }
-        else if (button.equals("ActivateLab5"))
-        {
-
- 		gl.initGradeLogistics("ycdb_chemistrylab5");
-		gl.makeLineItem("ycdb_chemistrylab5", 100, gl.getContext());
- 
-        }
-        else if (button.equals("ActivateLab6"))
-        {
-            	gl.initGradeLogistics("ycdb_chemistrylab6");
-		gl.makeLineItem("ycdb_chemistrylab6", 100, gl.getContext());
- 
-        }
-        else if (button.equals("ActivateLab7"))
-        {
-            	gl.initGradeLogistics("ycdb_chemistrylab7");
-		gl.makeLineItem("ycdb_chemistrylab7", 100, gl.getContext());
- 
-        }
-        else if (button.equals("deletelab1"))
-        {
-	   		/*gl.delete("ycdb_chemistrylab1");
-		 	gl.delete("ycdb_chemistrylab2");
-		 	 
-	   		gl.delete("ycdb_chemistrylab3");
-	   		gl.delete("ycdb_chem109_logistics");
-			*/
-			//int val = gl.nextVal("ycdb_chemistrylab1");
-        }
-        else
-        {
-            button = "";
-        }
-    }
-
-
-%>
+  
 <html>
 	<head>
     	<script>
@@ -202,9 +101,10 @@ blackboard.persist.gradebook.LineitemDbPersister"
 <br>
 
 		<body>
+ 	
 		            <div style="text-align: left">
 		
-     <form method="post" action="index.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
+     <form method="post" action="lab0_1.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
         <input type="submit" id="lab1" value="lab 1"/>
     </form>
     
@@ -214,7 +114,7 @@ blackboard.persist.gradebook.LineitemDbPersister"
 <br>
     <div style="text-align: left">
 
-    <form method="post" action="lab2.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
+    <form method="post" action="lab0_2.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
         <input type="submit" id="lab2" value="lab 2"/>
     </form>
     
@@ -222,7 +122,7 @@ blackboard.persist.gradebook.LineitemDbPersister"
 <br>
 <br>
 <br>
-	 <form method="post" action="lab3.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
+	 <form method="post" action="lab0_3.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
         <input type="submit" id="lab3" value="lab 3"/>
     </form>
     

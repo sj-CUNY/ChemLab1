@@ -35,45 +35,33 @@ public class DataPersister {
     String labname = null;
 	Labs labs;
 	
-   public DataPersister(String labname)
+   public DataPersister()
     {
-    	contextManager = ContextManagerFactory.getInstance();
-    	ctx = contextManager.getContext() ;
-    	user = ctx.getUser() ;
-    	labs = new Labs(ctx, labname);
-        userid = user.getId().toExternalString();
-        courseid = ctx.getCourseId().toExternalString();
-    	queryString = new StringBuffer("");
-        //LOGGER.info("init - Userid " + userid);
-        //LOGGER.info("init - Courseid " + courseid);
-    	sb = new StringBuilder();
-    	this.labname = labname;
-//Temporary code for debug
-    // 	GradeLogistics gl = new GradeLogistics(ctx);
-     //	gl.initGradeLogistics(labname);
-
+ 
     }
 	 
    public DataPersister(Context ctx , String labname)
    {
-    this.ctx = ctx ;
-   	user = ctx.getUser() ;
-   	labs = new Labs(ctx, labname);
-       userid = user.getId().toExternalString();
-       courseid = ctx.getCourseId().toExternalString();
-   	queryString = new StringBuffer("");
-       //LOGGER.info("init - Userid " + userid);
-       //LOGGER.info("init - Courseid " + courseid);
-   	sb = new StringBuilder();
-   	this.labname = labname;
-//Temporary code for debug
-    	GradeLogistics gl = new GradeLogistics(ctx);
-    	gl.initGradeLogistics(labname);
+  
+   }
+
+   private void init(Context ctx, String labname)
+   {
+	    this.ctx = ctx ;
+	   	user = ctx.getUser() ;
+	   	labs = new Labs(ctx, labname);
+	       userid = user.getId().toExternalString();
+	       courseid = ctx.getCourseId().toExternalString();
+	   	queryString = new StringBuffer("");
+	       //LOGGER.info("init - Userid " + userid);
+	       //LOGGER.info("init - Courseid " + courseid);
+	   	sb = new StringBuilder();
+	   	this.labname = labname;
 
    }
-   
-	public boolean saveData (String indata) {
+	public boolean saveData (Context ctx, String labname, String indata) {
         boolean saveResult = true;
+        init(ctx,labname);
 		StringBuilder columns = new StringBuilder();
  		StringBuffer queryString = new StringBuffer("");
         ConnectionManager cManager = null;
@@ -297,14 +285,14 @@ public class DataPersister {
 	}
 
 
-	public void submitted( Context ctx) {
+	public void submitted( Context ctx, String labname) {
 		// TODO Auto-generated method stub
 		
 		GradeLogistics gl = new GradeLogistics(ctx);
-		Lineitem l = gl.getLineItem("yccs_chemistrylab1", ctx.getCourseId());
+		Lineitem l = gl.getLineItem(labname, ctx.getCourseId());
 		if (l != null)
 			try {
-				gl.addStudentAttempts("yccs_chemistrylab1", l);
+				gl.addStudentAttempts(ctx, labname, l);
 			} catch (PersistenceException | ValidationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

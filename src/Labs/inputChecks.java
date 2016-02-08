@@ -1,7 +1,10 @@
 package Labs;
 
 //import blackboard.data.course.CourseMembership;
-//import blackboard.platform.context.Context;
+import blackboard.platform.context.Context;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class inputChecks {
     
@@ -14,24 +17,18 @@ public class inputChecks {
     protected String key[][];
     protected double grade[][];
     
-    //DataLoader load;
-    //DataPersister save;
+    DataLoader load;
+    DataPersister save;
+	private static final Logger LOGGER = LoggerFactory.getLogger(inputChecks.class.getName());
 
-    public inputChecks(String labname)
-    {
-        dataX = 0;
-        dataY = 0;
-       // load = new DataLoader(labname);
-        //save = new DataPersister(labname);
-        
-    }
+ 
     
-    public inputChecks(int X, int Y, String labname)
+    public inputChecks(Context ctx, int X, int Y, String labname)
     {
         dataX = X;
         dataY = Y;
-        //load = new DataLoader(labname);
-        //save = new DataPersister(labname);
+        load = new DataLoader();
+        save = new DataPersister();
         
         data = new String[dataX][dataY];
         type = new String[dataX][dataY];
@@ -41,8 +38,9 @@ public class inputChecks {
 
         
         String tempData;
-        //tempData = load.loadData(labname);
-        //initData(tempData);
+        tempData = load.loadData(labname);
+        LOGGER.info("tempData " + tempData + " labname " + labname);
+        initData(tempData);
     }
     
     private void initData(String tempData)
@@ -120,7 +118,7 @@ public class inputChecks {
         return key[x][y];
     }
     
-    public void save()
+    public void save(Context ctx, String labname)
     {
         //build string of data to save
         String theString = "";
@@ -137,7 +135,7 @@ public class inputChecks {
             }
         }
          //call function
-        //save.saveData(theString);
+        save.saveData(ctx, labname, theString);
     }
     
     public void check()
@@ -203,10 +201,10 @@ public class inputChecks {
         }
     }
     
-    public void submit()//Context ctx)
+    public void submit(Context ctx, String labname)
     {
         //call save and then save grade
-        save();
+        save(ctx, labname);
 
         //build string of grade to save
         String theString = "";
@@ -224,10 +222,10 @@ public class inputChecks {
         }
 
         //call function
-        //save.saveGrade(theString);
+        save.saveGrade(theString);
 
         //set submitted
-        //save.submitted(ctx);
+        save.submitted(ctx, labname);
     }
     
     protected void unitStandard (int x, int y)

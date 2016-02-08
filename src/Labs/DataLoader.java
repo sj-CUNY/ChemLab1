@@ -16,9 +16,9 @@ import blackboard.db.ConnectionNotAvailableException;
 public class DataLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class.getName());
 	String labname = null;
-    public DataLoader(String labname)
+    public DataLoader()
     {
-    	this.labname = labname;
+     
     	
     }
 	public String loadData(String labname) {
@@ -48,13 +48,13 @@ public class DataLoader {
 			ResultSet rSet = selectQuery.executeQuery();
  			
 			ResultSetMetaData rsMetaData = rSet.getMetaData();
- 			//LOGGER.info( "column count is: " + rsMetaData.getColumnCount());
+ 			LOGGER.info( "column count is: " + rsMetaData.getColumnCount());
 
 			if (rSet.next() && userid.equals(rSet.getString(2))){
-				//LOGGER.info("user id is " + userid + " rSet string at 1 is: " + rSet.getString(1));
+				LOGGER.info("user id is " + userid + " rSet string at 1 is: " + rSet.getString(1));
 				sb = labSpecificFix(rSet, rsMetaData,labname);
 			}
-			//LOGGER.info("user id is " + userid + " selectQuery is: " + selectQuery.toString());
+			LOGGER.info("user id is " + userid + " selectQuery is: " + selectQuery.toString());
 			
 			rSet.close();
 			selectQuery.close();
@@ -72,18 +72,18 @@ public class DataLoader {
 		}
 		
 		String returnData = sb.toString();
-		
+		LOGGER.info("returnData " + returnData);
 		return returnData;
 	}
 	
 	private StringBuilder labSpecificFix(ResultSet rSet,
 		ResultSetMetaData rsMetaData, String labname) throws SQLException {
 		StringBuilder s = new StringBuilder();
-		if(labname.contains("yccs_chemistrylab1"))
+		if(labname.contains("ycdb_chemistrylab1"))
 		{
 			s = lab1Fix(rSet, rsMetaData, labname);
 		}
-		return s;
+		return s;		
 	}
 	private StringBuilder lab1Fix(ResultSet rSet, ResultSetMetaData rsMeta,   String labname) throws SQLException {
 		// TODO Auto-generated method stub
@@ -101,10 +101,13 @@ public class DataLoader {
 		
 			while(rsMeta.getColumnName(j).contains("GRADE"))
 				++j;
+			if(rSet!=null && rSet.getString(j)!=null)
+			{
+				sb.append(rSet.getString(j).trim());
 			
-			sb.append(rSet.getString(j).trim());
-			//LOGGER.info("sb looks like: " + sb.toString());
-			++count;
+				LOGGER.info("sb looks like: " + sb.toString());
+				++count;
+			}
 			if (count < 36)
 			sb.append(", ");
 			 
@@ -114,7 +117,7 @@ public class DataLoader {
 		LOGGER.info("loadData returns this " + sb.toString());
 		return sb;
 	}
-	public String loadGrades() {
+	public String loadGrades(String labname) {
 		Labs lab = new Labs(labname);
 		StringBuilder sb = new StringBuilder();
 		StringBuffer queryString = new StringBuffer("");

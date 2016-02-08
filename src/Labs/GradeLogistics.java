@@ -42,6 +42,7 @@ import blackboard.platform.context.ContextManager;
 import blackboard.platform.context.ContextManagerFactory;
 import blackboard.platform.persistence.PersistenceService;
 import blackboard.platform.persistence.PersistenceServiceFactory;
+import blackboard.platform.plugin.PlugInUtil;
  
  
 /**
@@ -52,11 +53,10 @@ public class GradeLogistics {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GradeLogistics.class.getName());
 	private ContextManager contextManager = null;
-	private Context ctx  = null;
-	private User currentUser = null;
+ 	private User currentUser = null;
 	private String currUserId = "";
 	private String courseid = "";
- 	
+ 	/*
 	   public GradeLogistics()
 	   {
 		   
@@ -70,12 +70,11 @@ public class GradeLogistics {
  	       LOGGER.info("init - Userid " + currUserId);
 	       LOGGER.info("init - Courseid " + courseid);
  	   	    
-	   }
+	   }*/
 
 	   public GradeLogistics(Context ctx)
 	   {
-		   this.ctx = ctx; 
-	   	   currentUser = ctx.getUser() ;
+ 	   	   currentUser = ctx.getUser() ;
 	   	
 	       currUserId = currentUser.getId().toExternalString();
 	       courseid = ctx.getCourse().getId().toExternalString();
@@ -165,16 +164,12 @@ public class GradeLogistics {
 	        }
 		   
 	   }
-	   		public void initGradeLogistics(String tablename)
+	   		public void initGradeLogistics(Context ctx, String tablename)
 		{
 		    loadCourseMembership(fetchRoster(ctx), tablename);				
 		}
 
-	   
-		public Context getContext()
-		{
-			return this.ctx;
-		}
+	    
 		private List<CourseMembership> fetchRoster(Context ctx)
 	   {
 			    PersistenceService bpService = PersistenceServiceFactory.getInstance() ;
@@ -291,12 +286,12 @@ public class GradeLogistics {
 			
 		}
 
-		public Id makeLineItem(String labname, int pointsPossible, Context ctx) throws KeyNotFoundException, PersistenceException
+		public Id makeLineItem(String labname, String uri, int pointsPossible, Context ctx) throws KeyNotFoundException, PersistenceException
 		{
 			Lineitem assignment = null;
  			try
 			{
-	    		 String url = "/webapps/YCDB-Lab 20Debug-BBLEARN/index.jsp?course_id="+ctx.getCourseId()+"&"+ctx.getUser().getId();
+	    		 String url = "/webapps/YCDB-LabDebug-BBLEARN/"+uri+"?course_id="+ctx.getCourseId()+"&"+ctx.getUser().getId();
 
 					if (!checkLineItem(labname, ctx.getCourseId()))
 					{
@@ -382,11 +377,7 @@ public class GradeLogistics {
 			return l;
 		}
 		
-		public void addStudentAttempts(String labname, Lineitem lineitem) throws PersistenceException, ValidationException
-		{
-			addStudentAttempts(ctx, labname, lineitem);
-			//addStudentAttempts2(ctx, labname, currentUser.getId());
-		}
+		 
 		/*
 		private void addStudentAttempts2(Context ctx, String labname, Id id) throws PersistenceException, ValidationException
 		{
@@ -416,12 +407,11 @@ public class GradeLogistics {
 		    }
 		    return;
 		}*/
-		private void addStudentAttempts(Context ctx, String labname, Lineitem lineitem) throws KeyNotFoundException, PersistenceException, ValidationException
+		protected void addStudentAttempts(Context ctx, String labname, Lineitem lineitem) throws KeyNotFoundException, PersistenceException, ValidationException
 		{
-			/*
-    	    String url = "/webapps/YCDB-Lab 20Debug-BBLEARN/index.jsp?course_id="+ctx.getCourseId()+"&"+ctx.getUser().getId();
+			
      	    
-    	    l.setAttemptHandlerUrl (url);
+    	    /*l.setAttemptHandlerUrl (url);
     	    */
 			PersistenceService bpService = null;
 			BbPersistenceManager bpManager = null;
@@ -432,7 +422,6 @@ public class GradeLogistics {
 			bpService = PersistenceServiceFactory.getInstance() ;
 			
 			bpManager = bpService.getDbPersistenceManager();
-		    LOGGER.info("addStudentAttept " + labname + " " +  ctx.getRequestUrl());
 		    try
 		    {
 		    	sdb = (ScoreDbPersister) bpManager.getPersister( ScoreDbPersister.TYPE );
@@ -458,9 +447,12 @@ public class GradeLogistics {
 		    	*/
 		    	if (cm.getUserId().toExternalString().equals(ctx.getUserId().toExternalString()))// && cm.getRole() == CourseMembership.Role.STUDENT)
 		    	{
+		    	    String url = PlugInUtil.getUri("ycdb","LabDebug","lab0_1.jsp?course_id="+ctx.getCourseId()+"&"+ctx.getUser().getId());
+		    	    LOGGER.info("addStudentAttempt " + labname + " " +  url);
+				    
 		    		s = new Score();
 		    		s.setDateAdded();
-		    		lineitem.setAttemptHandlerUrl("https://cunytd.blackboard.com/blackboard/webapps/YCDB-Lab%20Debug-BBLEARN/index.jsp?course_id="+cm.getCourseId().toExternalString()+"&user_id="+cm.getUserId().toExternalString());
+		    		lineitem.setAttemptHandlerUrl(url);
 		    		s.setLineitemId(lineitem.getId());
 		    	//LOGGER.info("Course is " + cm.getCourseId());
  		       	 // 	s.setAttemptId(ctx.getRequestUrl(), Score.AttemptLocation.EXTERNAL );
