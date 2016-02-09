@@ -1,31 +1,49 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="Labs.lab0_2Checks" %>
+<%@ page import="blackboard.platform.context.Context" %>
+<%@ page import="blackboard.platform.context.ContextManager" %>
+<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
+<%@ page import="blackboard.data.user.User" %>
+<%@ page import="blackboard.data.course.*" %>
+<%@ page import="blackboard.persist.course.*" %>
+<%@ page import="blackboard.platform.persistence.PersistenceService" %>
+<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
+<%@ page import="blackboard.persist.BbPersistenceManager"%>
+ <%@ page import="blackboard.persist.*"%>
+ 
+<%@ page import="blackboard.data.gradebook.Lineitem" %>
+<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
+ 
+ <%@ taglib uri="/bbUI" prefix="bbUI" %> 
+ <%@ taglib uri="/bbData" prefix="bbData"%> 
+ <%@ taglib uri="/bbNG" prefix="bbNG"%>
+ <bbNG:learningSystemPage 
+	title="LAB 2"
+	ctxId="ctx">
+
+	<bbNG:pageHeader>
+		<bbNG:breadcrumbBar environment="COURSE"
+			navItem="ycdb-chem109-nav-LabDebug" >
+				<bbNG:breadcrumb title="Home" href="lab0_2.jsp?course_id=@X@course.pk_string@X@&user_id=@X@user.pk_string@X@" />
+			<bbNG:breadcrumb> Lab 2 </bbNG:breadcrumb>
+		</bbNG:breadcrumbBar>
+		<bbNG:pageTitleBar>
+			Welcome to Chem 109 Lab 2
+		</bbNG:pageTitleBar>
+	</bbNG:pageHeader>
 
 <!DOCTYPE html>
 
-<%!
+<%
     int dataX = 17;
     int dataY = 2;
     String button = "";
-    boolean initial = true;
-    
-    lab0_2Checks checks = new lab0_2Checks(dataX, dataY);
-    
-    public void getData(HttpServletRequest request)
-    {
-        for (int i = 0; i < dataX; i++)
-        {
-            for (int j = 0; j < dataY; j++)
-            {
-                checks.setData(i, j, request.getParameter("" + i + j));
-            }
-        }
-    }
- %>
- <%     
+     
+    lab0_2Checks checks = new lab0_2Checks(ctx, dataX, dataY,"ycdb_chemistrylab2");
+      
     button = request.getParameter("button");
     
-    if (initial)
+    if (button == null)
     {
         button = "";
             
@@ -38,47 +56,54 @@
             }
         }
         
-        initial = false;
-    }
+     }
     
-    if (button != null)
+    else 
     {
-        if (button.equals("Clear"))
+    	if(button.equals("Save") || button.equals("Check") || button.equals("Submit"))
+         {
+            for (int i = 0; i < dataX; i++)
+            {
+                for (int j = 0; j < dataY; j++)
+                {
+                    checks.setData(i, j, request.getParameter("" + i + j));
+                }
+            }
+        }
+
+        else if (button.equals("Clear"))
         {
             checks.clear();
         }
-        else if (button.equals("Save"))
+        
+        if (button.equals("Save"))
         {
-            //get data from form
-            getData(request);
-            
+              
             //perform save
-            checks.save();
+            checks.save(ctx,"ycdb_chemistrylab2");
         }
         else if (button.equals("Check"))
         {
             //get data from form
-            getData(request);
-            
+             
             //perform checks
             checks.check();
         }
         else if (button.equals("Submit"))
         {
-            //get data from form
-            getData(request);
-            
+             
             //perform save
-            checks.save();
+            checks.save(ctx,"ycdb_chemistrylab2");
             
             //perform submit
-            //checks.submit(ctx);
+            checks.submit(ctx,"ycdb_chemistrylab2");
         }
         else
         {
             button = "";
         }
     }
+    
  %>
 <html>
     <head>
@@ -531,3 +556,4 @@
         <br>
     </body>
 </html>
+</bbNG:learningSystemPage>

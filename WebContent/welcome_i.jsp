@@ -51,7 +51,7 @@ blackboard.persist.gradebook.LineitemDbPersister"
 	CourseMembershipDbLoader crsMembershipLoader = null;
 	PersistenceService bbPm = PersistenceServiceFactory.getInstance() ;
     BbPersistenceManager bpManager = bbPm.getDbPersistenceManager();
- 
+     
 	String errMsg = null;
 	crsMembershipLoader = (CourseMembershipDbLoader)bpManager.getLoader(CourseMembershipDbLoader.TYPE);
 	
@@ -242,6 +242,7 @@ blackboard.persist.gradebook.LineitemDbPersister"
   	<p style="margin-left:10px">Name: <%= u.getUserName()%>  <br />   
   			Student Id: <%= u.getId().toExternalString()%> <br />   
   			Batch UID: <%= u.getBatchUid()%><br /> 			  
+ 			Course Role: <%= crsMembershipRoleStr%><br />
  	</p>  
 		
 		            <div style="text-align: left">
