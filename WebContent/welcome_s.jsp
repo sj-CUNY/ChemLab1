@@ -12,8 +12,7 @@ blackboard.persist.course.*,
 blackboard.data.gradebook.Lineitem.*,
 blackboard.persist.gradebook.LineitemDbPersister"
  pageEncoding="UTF-8"%> 
- <%@ page import="Labs.Labs" %>
- <%@ page import="Labs.GradeLogistics" %>
+  <%@ page import="Labs.GradeLogistics" %>
  
  <%@ taglib uri="/bbUI" prefix="bbUI" %> 
  <%@ taglib uri="/bbData" prefix="bbData"%> 

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="Labs.lab0_1Checks" %>
+<%@ page import="Labs.Helper" %>
 <%@ page import="blackboard.platform.context.Context" %>
 <%@ page import="blackboard.platform.context.ContextManager" %>
 <%@ page import="blackboard.platform.context.ContextManagerFactory" %>
@@ -38,14 +39,48 @@
  <%
 	 int dataX = 12;
  	 int dataY = 3;
-
-    lab0_1Checks checks = new lab0_1Checks(ctx, dataX, dataY, "ycdb_chemistrylab1");
+ 	
+ 	User u = ctx.getUser();
+ 	String userid = "";
+	lab0_1Checks checks;
+  	String courseid = request.getParameter("course_id");
+  	String button = null;
+	
+  	CourseMembership crsMembership = null;
+	CourseMembershipDbLoader crsMembershipLoader = null;
+	PersistenceService bbPm = PersistenceServiceFactory.getInstance() ;
+    BbPersistenceManager bpManager = bbPm.getDbPersistenceManager();
  
- 	User u = ctx.getUser(); 
- 	Course c = ctx.getCourse(); 
-
- 	String button = request.getParameter("button");
-     if (button == null)
+	String errMsg = null;
+	crsMembershipLoader = (CourseMembershipDbLoader)bpManager.getLoader(CourseMembershipDbLoader.TYPE);
+	
+	try {
+		crsMembership = crsMembershipLoader.loadByCourseAndUserId(ctx.getCourse().getId(), u.getId());
+	} catch (KeyNotFoundException e) {
+			// There is no membership record.
+			errMsg = "There is no membership record. Better check this out:" + e;
+	} catch (PersistenceException pe) {
+			// There is no membership record.
+			errMsg = "An error occured while loading the User. Better check this out:" + pe;
+	}
+	CourseMembership.Role crsMembershipRole = crsMembership.getRole();
+	 
+ 	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR)
+	{
+ 		String cid = request.getParameter("courseMembershipId");
+ 		Helper h = new Helper();
+ 		userid = h.getUserIdFromCourseMembershipId(ctx, cid);	 	
+	}
+	else
+	{
+		userid = u.getId().toExternalString();
+    }
+ 	
+	checks = new lab0_1Checks(ctx, dataX, dataY, "ycdb_chemistrylab1",  userid, courseid);
+	 
+ 	button = request.getParameter("button");
+	
+ 	if (button == null)
     {
         button = "";
 	    //set types
@@ -95,7 +130,7 @@
         {
               
             //perform save
-            checks.save(ctx,"ycdb_chemistrylab1");
+            checks.save("ycdb_chemistrylab1",userid,courseid);
         }
         else if (button.equals("Check"))
         {
@@ -107,10 +142,10 @@
         {
               
             //perform save
-            checks.save(ctx, "ycdb_chemistrylab1");
+            checks.save("ycdb_chemistrylab1",userid,courseid);
             
             //perform submit
-            checks.submit(ctx,"ycdb_chemistrylab1");
+            checks.submit(ctx,"ycdb_chemistrylab1","lab0_1.jsp");
         }
         else
         {
@@ -146,15 +181,14 @@
     </head>
     <body>
     <p>User Information</p>  
-  	<p style="margin-left:10px">Name: <%= u.getUserName()%>  <br />   
-  			Student Id: <%= u.getId().toExternalString()%> <br />   
-  			Batch UID: <%= u.getBatchUid()%><br /> 			  
-  	</p>  
+  	<p style="margin-left:10px">
+   			Student Id: <%= userid%> <br />   
+   	</p>  
 
     
     	<fieldset class="fieldset-auto-width">
             <legend>Lab 1: Weighing Measurements: The Balance</legend>
-            <form method="POST" action="lab0_1.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}">
+            <form method="POST" action="lab0_1.jsp?course_id=${ctx.getCourseId().toExternalString()}&user_id=${ctx.getUserId().toExternalString()}">
         
             <fieldset>
                 <legend>Basic info</legend>

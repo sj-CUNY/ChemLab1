@@ -6,7 +6,7 @@
  <name value="York college Chem 109"/>
  <description value="Testing using blackboard frame"/>
  <handle value="LabDebug"/>
- <version value="5.0.12"/>
+ <version value="5.0.52"/>
  <requires>
  <bbversion value="9.1"/>
  </requires>

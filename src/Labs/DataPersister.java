@@ -9,8 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import blackboard.data.ValidationException;
-import blackboard.data.course.CourseMembership;
-import blackboard.data.gradebook.Lineitem;
+ import blackboard.data.gradebook.Lineitem;
 import blackboard.data.user.User;
 import blackboard.db.BbDatabase;
 import blackboard.db.ConnectionManager;
@@ -18,8 +17,7 @@ import blackboard.db.ConnectionNotAvailableException;
 import blackboard.persist.PersistenceException;
 import blackboard.platform.context.Context;
 import blackboard.platform.context.ContextManager;
-import blackboard.platform.context.ContextManagerFactory;
-
+ 
 public class DataPersister {
    
 	private static final Logger LOGGER = LoggerFactory.getLogger(DataPersister.class.getName() );
@@ -33,8 +31,7 @@ public class DataPersister {
     
 	StringBuffer queryString;
     String labname = null;
-	Labs labs;
-	
+ 	
    public DataPersister()
     {
  
@@ -45,23 +42,18 @@ public class DataPersister {
   
    }
 
-   private void init(Context ctx, String labname)
+   private void init(String labname, String userid, String courseid)
    {
-	    this.ctx = ctx ;
-	   	user = ctx.getUser() ;
-	   	labs = new Labs(ctx, labname);
-	       userid = user.getId().toExternalString();
-	       courseid = ctx.getCourseId().toExternalString();
-	   	queryString = new StringBuffer("");
+   	   	queryString = new StringBuffer("");
 	       //LOGGER.info("init - Userid " + userid);
 	       //LOGGER.info("init - Courseid " + courseid);
 	   	sb = new StringBuilder();
 	   	this.labname = labname;
 
    }
-	public boolean saveData (Context ctx, String labname, String indata) {
+	public boolean saveData (String labname, String indata, String userid, String courseid) {
         boolean saveResult = true;
-        init(ctx,labname);
+        init(labname, userid, courseid);
 		StringBuilder columns = new StringBuilder();
  		StringBuffer queryString = new StringBuffer("");
         ConnectionManager cManager = null;
@@ -280,22 +272,19 @@ public class DataPersister {
 
 
 	public void saveGrade(String theString) {
-		// TODO Auto-generated method stub
-		
+ 		
 	}
 
 
-	public void submitted( Context ctx, String labname) {
-		// TODO Auto-generated method stub
-		
+	public void submitted( Context ctx, String labname, String jspname) {
+ 		
 		GradeLogistics gl = new GradeLogistics(ctx);
 		Lineitem l = gl.getLineItem(labname, ctx.getCourseId());
 		if (l != null)
 			try {
-				gl.addStudentAttempts(ctx, labname, l);
+				gl.addStudentAttempts(ctx, labname, jspname, l);
 			} catch (PersistenceException | ValidationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+ 				e.printStackTrace();
 			}
 		else
 			LOGGER.error("This should not happen: cant find lineitem for this assignment");

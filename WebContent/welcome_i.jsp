@@ -12,8 +12,7 @@ blackboard.persist.course.*,
 blackboard.data.gradebook.Lineitem.*,
 blackboard.persist.gradebook.LineitemDbPersister"
  pageEncoding="UTF-8"%> 
- <%@ page import="Labs.Labs" %>
- <%@ page import="Labs.GradeLogistics" %>
+  <%@ page import="Labs.GradeLogistics" %>
  
  <%@ taglib uri="/bbUI" prefix="bbUI" %> 
  <%@ taglib uri="/bbData" prefix="bbData"%> 
@@ -128,11 +127,16 @@ blackboard.persist.gradebook.LineitemDbPersister"
         {
 	   		gl.delete("ycdb_chemistrylab1");
 		 	gl.delete("ycdb_chemistrylab2");
-		 	 
-	   		gl.delete("ycdb_chemistrylab3");
+		 	gl.delete("ycdb_chemistrylab3");
 	   		gl.delete("ycdb_chemlab_logistics");
  			
 			//int val = gl.nextVal("ycdb_chemistrylab1");
+        }
+        else if (button.equals("deletelines"))
+        {
+        	gl.deleteLineItem("ycdb_chemistrylab1", c.getId() ); 
+		 	gl.deleteLineItem("ycdb_chemistrylab2", c.getId() ); 
+	   		
         }
         else
         {
@@ -256,7 +260,9 @@ blackboard.persist.gradebook.LineitemDbPersister"
      <form method="post" action="welcome_i.jsp?course_id=${ctx.courseId.externalString}"> 
     	<input type="submit" name="button" id="deletelab1" value="deletelab1"   />
     	</form>
-   
+     <form method="post" action="welcome_i.jsp?course_id=${ctx.courseId.externalString}"> 
+    	<input type="submit" name="button" id="deletelines" value="deletelines"   />
+    	</form>
     	 </div>
 <br>
 <br>
@@ -266,7 +272,7 @@ blackboard.persist.gradebook.LineitemDbPersister"
     <form method="post" action="welcome_i.jsp?course_id=${ctx.courseId.externalString}"> 
 		<input type="submit" name="button" id="ActivateLab2" value="ActivateLab2" />
 	</form>
-	<form method="post" action="lab2.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
+    <form method="post" action="lab0_2.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
         <input type="submit" id="lab2" value="lab 2"/>
     </form>
     
@@ -277,10 +283,7 @@ blackboard.persist.gradebook.LineitemDbPersister"
 	<form method="post" action="welcome_i.jsp?course_id=${ctx.courseId.externalString}"> 
 		<input type="submit" name="button" id="ActivateLab3" value="ActivateLab3"  />
 	</form>
-	<form method="get" action="lab3.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
-        <input type="submit" id="lab3" value="lab 3"/>
-    </form>
-    
+	 
 		
 <br>
 <br>

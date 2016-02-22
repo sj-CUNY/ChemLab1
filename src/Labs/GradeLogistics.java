@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import blackboard.data.ValidationException;
-import blackboard.data.course.Course;
 import blackboard.data.course.CourseMembership;
 import blackboard.data.gradebook.Lineitem;
 import blackboard.data.gradebook.Lineitem.AssessmentLocation;
@@ -32,7 +31,6 @@ import blackboard.persist.BbPersistenceManager;
 import blackboard.persist.Id;
 import blackboard.persist.KeyNotFoundException;
 import blackboard.persist.PersistenceException;
-import blackboard.persist.course.CourseMembershipDbLoader;
 import blackboard.persist.gradebook.LineitemDbLoader;
 import blackboard.persist.gradebook.LineitemDbPersister;
 import blackboard.persist.gradebook.ScoreDbPersister;
@@ -152,41 +150,10 @@ import blackboard.platform.plugin.PlugInUtil;
 	}
 
 	public void initGradeLogistics(Context ctx, String tablename) {
-		loadCourseMembership(ctx, fetchRoster(ctx), tablename);
+		Helper h = new Helper();
+		loadCourseMembership(ctx, h.fetchRoster(ctx), tablename);
 	}
 
-	private List<CourseMembership> fetchRoster(Context ctx) {
-		PersistenceService bpService = PersistenceServiceFactory.getInstance();
-		BbPersistenceManager bpManager = bpService.getDbPersistenceManager();
-		Course courseIdentity = ctx.getCourse();
-
-		// get the course id from the course object
-		Id courseId = courseIdentity.getId();
-
-		// get the membership data to determine the User's Role
-		List<CourseMembership> crsMembership = null;
-		CourseMembershipDbLoader crsMembershipLoader = null;
-		String errMsg = null;
-		// LOGGER.info("Course name : " + courseName);
-		try {
-			crsMembershipLoader = (CourseMembershipDbLoader) bpManager
-					.getLoader(CourseMembershipDbLoader.TYPE);
-			crsMembership = crsMembershipLoader.loadByCourseId(courseId);
-		} catch (KeyNotFoundException e) {
-			// There is no membership record.
-			errMsg = "There is no membership record. Better check this out:"
-					+ e;
-			LOGGER.error(errMsg);
-		} catch (PersistenceException pe) {
-			// There is no membership record.
-			errMsg = "An error occured while loading the User. Better check this out:"
-					+ pe;
-			LOGGER.error(errMsg);
-		}
-
-		return crsMembership;
-
-	}
 
 	private void loadCourseMembership(Context ctx,
 			List<CourseMembership> roster, String labname) {
@@ -268,11 +235,11 @@ import blackboard.platform.plugin.PlugInUtil;
 
 	}
 
-	public Id makeLineItem(String labname, String uri, int pointsPossible,
+	public Id makeLineItem(String labname, String jspname,  int pointsPossible,
 			Context ctx) throws KeyNotFoundException, PersistenceException {
 		Lineitem assignment = null;
 		try {
-			String url = PlugInUtil.getUri("ycdb", "LabDebug", "lab0_1.jsp"); 
+			String url = PlugInUtil.getUri("ycdb", "LabDebug", jspname); 
 			assignment = getLineItem(labname, ctx.getCourseId());
 
 			if (assignment == null) {
@@ -306,10 +273,29 @@ import blackboard.platform.plugin.PlugInUtil;
 			return null;
 	}
  
+	public void deleteLineItem(String labname, Id courseId)
+	{
+		Lineitem l = getLineItem(labname, courseId);
+		if (l == null)
+		{
+			LOGGER.info("Cannot find line item");
+			return;
+		}
+			
+		try {
+			LineitemDbPersister linePersister = LineitemDbPersister.Default.getInstance(); 
+			LOGGER.info("Deleting lineitem="+l.getId());
+			linePersister.deleteById(l.getId());
+
+		} catch (PersistenceException e) {
+ 			e.printStackTrace();
+		}
+		return;
+	}
+	
 	public Lineitem getLineItem(String labname, Id courseId) {
 		PersistenceService bpService = PersistenceServiceFactory.getInstance();
- 		// TODO Auto-generated met
-		BbPersistenceManager bpManager = bpService.getDbPersistenceManager();
+ 		BbPersistenceManager bpManager = bpService.getDbPersistenceManager();
 		LineitemDbLoader loader = null;
 		try {
 			loader = (LineitemDbLoader) bpManager
@@ -317,7 +303,7 @@ import blackboard.platform.plugin.PlugInUtil;
 		} catch (PersistenceException e) {
  			e.printStackTrace();
 		}
-		;
+		
 		List<Lineitem> lItems = null;
 		try {
 			lItems = loader.loadByCourseId(courseId);
@@ -366,30 +352,31 @@ import blackboard.platform.plugin.PlugInUtil;
 	 * bpManager.getPersister( AttemptDbPersister.TYPE ); adb.persist(attempt);
 	 * } } return; }
 	 */
-	protected void addStudentAttempts(Context ctx, String labname,
+	protected void addStudentAttempts(Context ctx, String labname, String jspname,
 			Lineitem lineitem) throws KeyNotFoundException,
 			PersistenceException, ValidationException {
 
 		/*
 		 * l.setAttemptHandlerUrl (url);
 		 */
-		PersistenceService bpService = null;
-		BbPersistenceManager bpManager = null;
-		ScoreDbPersister sdb = null;
-		List<CourseMembership> crsMembership;
+		//PersistenceService bpService = null;
+		//BbPersistenceManager bpManager = null;
+		//ScoreDbPersister sdb = null;
 
-		bpService = PersistenceServiceFactory.getInstance();
+		//bpService = PersistenceServiceFactory.getInstance();
 
-		bpManager = bpService.getDbPersistenceManager();
-		try {
+		//bpManager = bpService.getDbPersistenceManager();
+		/*try {
 			sdb = (ScoreDbPersister) bpManager
 					.getPersister(ScoreDbPersister.TYPE);
 		} catch (PersistenceException pE) {
 			LOGGER.info(pE.getMessage());
 			pE.printStackTrace();
-		}
+		}*/
 
-		crsMembership = fetchRoster(ctx);
+		List<CourseMembership> crsMembership;
+		Helper h = new Helper();
+		crsMembership = h.fetchRoster(ctx);
 		Score s = null;
 		ListIterator<CourseMembership> cList = crsMembership.listIterator();
 		while (cList.hasNext()) {
@@ -409,15 +396,15 @@ import blackboard.platform.plugin.PlugInUtil;
 																// CourseMembership.Role.STUDENT)
 			{
 				String url = PlugInUtil.getUri("ycdb", "LabDebug",
-						"lab0_1.jsp?course_id=" + cm.getCourseId() + "&user_id="
-								+ cm.getUserId());
+						jspname+"?course_id=" + cm.getCourseId().toExternalString() + "&user_id="
+								+ cm.getUserId().toExternalString());
 				LOGGER.info("addStudentAttempt " + labname + " " + url);
 
 				s = new Score();
 				s.setDateAdded();
 				lineitem.setAttemptHandlerUrl(url);
-				lineitem.setAssessmentId("?course_id=" + cm.getCourseId() + "&user_id="
-						+ cm.getUserId(), Lineitem.AssessmentLocation.EXTERNAL);
+				lineitem.setAssessmentId("user_id="
+						+ ctx.getUser().getId().toExternalString(), Lineitem.AssessmentLocation.EXTERNAL);
 
 				s.setLineitemId(lineitem.getId());
 				// LOGGER.info("Course is " + cm.getCourseId());
@@ -437,7 +424,7 @@ import blackboard.platform.plugin.PlugInUtil;
 					attempt.setOutcomeId(outcome.getId());
 				} else {
 					attempt = AttemptDbLoader.Default.getInstance().loadById(
-							outcome.getLastAttemptId());
+							outcome.getLastAttemptId());//highest score etc.
 				}
 
 				// String str =

@@ -1,7 +1,8 @@
 package Labs;
 
 //import blackboard.data.course.CourseMembership;
-import blackboard.platform.context.Context;
+
+ import blackboard.platform.context.Context;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ public class inputChecks {
 
  
     
-    public inputChecks(Context ctx, int X, int Y, String labname)
+    public inputChecks(Context ctx, int X, int Y, String labname, String userid, String courseid)
     {
         dataX = X;
         dataY = Y;
@@ -36,12 +37,13 @@ public class inputChecks {
         key = new String[dataX][dataY];
         grade = new double[dataX][dataY];
 
-        
+         
         String tempData;
-        tempData = load.loadData(labname);
+        tempData = load.loadData(labname, userid, courseid);
         LOGGER.info("tempData " + tempData + " labname " + labname);
         initData(tempData);
     }
+
     
     private void initData(String tempData)
     {
@@ -118,7 +120,7 @@ public class inputChecks {
         return key[x][y];
     }
     
-    public void save(Context ctx, String labname)
+    public void save(String labname, String userid, String courseid)
     {
         //build string of data to save
         String theString = "";
@@ -135,7 +137,7 @@ public class inputChecks {
             }
         }
          //call function
-        save.saveData(ctx, labname, theString);
+        save.saveData(labname, theString, userid, courseid);
     }
     
     public void check()
@@ -201,10 +203,10 @@ public class inputChecks {
         }
     }
     
-    public void submit(Context ctx, String labname)
+    public void submit(Context ctx, String labname, String jspname)
     {
         //call save and then save grade
-        save(ctx, labname);
+        save(labname, ctx.getUserId().toExternalString(), ctx.getCourseId().toExternalString());
 
         //build string of grade to save
         String theString = "";
@@ -225,7 +227,7 @@ public class inputChecks {
         save.saveGrade(theString);
 
         //set submitted
-        save.submitted(ctx, labname);
+        save.submitted(ctx, labname, jspname);
     }
     
     protected void unitStandard (int x, int y)
@@ -372,7 +374,7 @@ public class inputChecks {
 
             //remove leading zeros
             int i = 0;
-            while (num.charAt(i) == '0')
+            while (i< length && num.charAt(i) == '0' )
             {
                i++;
             }

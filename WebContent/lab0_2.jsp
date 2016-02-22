@@ -1,5 +1,6 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="Labs.lab0_2Checks" %>
+<%@ page import="Labs.Helper" %>
 <%@ page import="blackboard.platform.context.Context" %>
 <%@ page import="blackboard.platform.context.ContextManager" %>
 <%@ page import="blackboard.platform.context.ContextManagerFactory" %>
@@ -37,12 +38,48 @@
 <%
     int dataX = 17;
     int dataY = 2;
+	User u = ctx.getUser();
+ 	String userid = "";
+	lab0_2Checks checks;
+  	String courseid = request.getParameter("course_id");
+
     String button = "";
-     
-    lab0_2Checks checks = new lab0_2Checks(ctx, dataX, dataY,"ycdb_chemistrylab2");
-      
-    button = request.getParameter("button");
-    
+   	String c = request.getParameter("course_id");
+ 	
+  	CourseMembership crsMembership = null;
+	CourseMembershipDbLoader crsMembershipLoader = null;
+	PersistenceService bbPm = PersistenceServiceFactory.getInstance() ;
+    BbPersistenceManager bpManager = bbPm.getDbPersistenceManager();
+ 
+	String errMsg = null;
+	crsMembershipLoader = (CourseMembershipDbLoader)bpManager.getLoader(CourseMembershipDbLoader.TYPE);
+	
+	try {
+		crsMembership = crsMembershipLoader.loadByCourseAndUserId(ctx.getCourse().getId(), u.getId());
+	} catch (KeyNotFoundException e) {
+			// There is no membership record.
+			errMsg = "There is no membership record. Better check this out:" + e;
+	} catch (PersistenceException pe) {
+			// There is no membership record.
+			errMsg = "An error occured while loading the User. Better check this out:" + pe;
+	}
+	CourseMembership.Role crsMembershipRole = crsMembership.getRole();
+	 
+ 	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR)
+	{
+ 		String cid = request.getParameter("courseMembershipId");
+ 		Helper h = new Helper();
+ 		userid = h.getUserIdFromCourseMembershipId(ctx, cid);
+ 	 	
+	}
+	else
+	{
+		userid = u.getId().toExternalString();
+	}
+
+	checks = new lab0_2Checks(ctx, dataX, dataY, "ycdb_chemistrylab2",  userid, courseid);
+	button = request.getParameter("button");
+		
     if (button == null)
     {
         button = "";
@@ -80,7 +117,7 @@
         {
               
             //perform save
-            checks.save(ctx,"ycdb_chemistrylab2");
+            checks.save("ycdb_chemistrylab2",userid,courseid);
         }
         else if (button.equals("Check"))
         {
@@ -93,10 +130,10 @@
         {
              
             //perform save
-            checks.save(ctx,"ycdb_chemistrylab2");
+            checks.save("ycdb_chemistrylab2", userid, courseid);
             
             //perform submit
-            checks.submit(ctx,"ycdb_chemistrylab2");
+            checks.submit(ctx,"ycdb_chemistrylab2", "lab0_2.jsp");
         }
         else
         {
@@ -113,7 +150,7 @@
     <body>
         <fieldset class="fieldset-auto-width">
             <legend>Lab 2: Volume Measurements and the Determination of Density</legend>
-            <form method="POST" action="lab0_2.jsp">
+            <form method="POST" action="lab0_2.jsp?course_id=${ctx.getCourseId().toExternalString()}&user_id=${ctx.getUserId().toExternalString()}">
                 <fieldset>
                     <legend>I. DATA</legend>
                     <fieldset>
