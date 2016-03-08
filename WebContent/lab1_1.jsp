@@ -9,7 +9,11 @@ This is compatible with any jsp additions.
     int dataY = 3;
     String button = "";
     boolean initial = true;
+<<<<<<< HEAD:WebContent/index.jsp
+    lab1Checks checks = new lab1Checks(dataX, dataY, "ycdb_chemistrylab1");
+=======
     lab1_1Checks checks = new lab1_1Checks(dataX, dataY, "yccs_chemistrylab1_1");
+>>>>>>> mhasan4-master:WebContent/lab1_1.jsp
    
     public void getData(HttpServletRequest request)
     {

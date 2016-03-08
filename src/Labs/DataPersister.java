@@ -9,8 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import blackboard.data.ValidationException;
-import blackboard.data.course.CourseMembership;
-import blackboard.data.gradebook.Lineitem;
+ import blackboard.data.gradebook.Lineitem;
 import blackboard.data.user.User;
 import blackboard.db.BbDatabase;
 import blackboard.db.ConnectionManager;
@@ -18,8 +17,7 @@ import blackboard.db.ConnectionNotAvailableException;
 import blackboard.persist.PersistenceException;
 import blackboard.platform.context.Context;
 import blackboard.platform.context.ContextManager;
-import blackboard.platform.context.ContextManagerFactory;
-
+ 
 public class DataPersister {
    
 	private static final Logger LOGGER = LoggerFactory.getLogger(DataPersister.class.getName() );
@@ -33,47 +31,29 @@ public class DataPersister {
     
 	StringBuffer queryString;
     String labname = null;
-	Labs labs;
-	
-   public DataPersister(String labname)
+ 	
+   public DataPersister()
     {
-    	contextManager = ContextManagerFactory.getInstance();
-    	ctx = contextManager.getContext() ;
-    	user = ctx.getUser() ;
-    	labs = new Labs(ctx, labname);
-        userid = user.getId().toExternalString();
-        courseid = ctx.getCourseId().toExternalString();
-    	queryString = new StringBuffer("");
-        //LOGGER.info("init - Userid " + userid);
-        //LOGGER.info("init - Courseid " + courseid);
-    	sb = new StringBuilder();
-    	this.labname = labname;
-//Temporary code for debug
-     	GradeLogistics gl = new GradeLogistics(ctx);
-     	gl.initGradeLogistics(labname);
-
+ 
     }
 	 
    public DataPersister(Context ctx , String labname)
    {
-    this.ctx = ctx ;
-   	user = ctx.getUser() ;
-   	labs = new Labs(ctx, labname);
-       userid = user.getId().toExternalString();
-       courseid = ctx.getCourseId().toExternalString();
-   	queryString = new StringBuffer("");
-       //LOGGER.info("init - Userid " + userid);
-       //LOGGER.info("init - Courseid " + courseid);
-   	sb = new StringBuilder();
-   	this.labname = labname;
-//Temporary code for debug
-    	GradeLogistics gl = new GradeLogistics(ctx);
-    	gl.initGradeLogistics(labname);
+  
+   }
+
+   private void init(String labname, String userid, String courseid)
+   {
+   	   	queryString = new StringBuffer("");
+	       //LOGGER.info("init - Userid " + userid);
+	       //LOGGER.info("init - Courseid " + courseid);
+	   	sb = new StringBuilder();
+	   	this.labname = labname;
 
    }
-   
-	public boolean saveData (String indata) {
+	public boolean saveData (String labname, String indata, String userid, String courseid) {
         boolean saveResult = true;
+        init(labname, userid, courseid);
 		StringBuilder columns = new StringBuilder();
  		StringBuffer queryString = new StringBuffer("");
         ConnectionManager cManager = null;
@@ -91,12 +71,14 @@ public class DataPersister {
 			
             if (!(rSet.next()))
             {
+              int pk1 =  h.nextVal(labname);
+               	
             	//We should never hae to insert because the roster should be already uploaded. 
 	            queryString.append("INSERT INTO " +  labname  + " ( ");
 	            columns = h.buildColumnString(rsMeta, "GRADES");
 	           //Insert blank for PK1
 	            queryString.append(columns.toString() + " ) VALUES ( ");      
-	            String qmarks = h.qMarks(columnCount).toString() ; 
+	            String qmarks = h.qMarks(columnCount,0).toString() ; 
 	            
 	  //          LOGGER.info(qmarks);
 	    			
@@ -109,8 +91,7 @@ public class DataPersister {
 				
 	            PreparedStatement insertQuery = conn.prepareStatement(queryString.toString());
 	          //need to change this to unique key
-                String[] temp_t = userid.split("_");
-	            insertQuery.setString(1, temp_t[1].trim());
+  	            insertQuery.setInt(1, pk1);
 	            insertQuery.setString(2, userid);
 	            insertQuery.setString(3, courseid);
 	            
@@ -291,22 +272,19 @@ public class DataPersister {
 
 
 	public void saveGrade(String theString) {
-		// TODO Auto-generated method stub
-		
+ 		
 	}
 
 
-	public void submitted( Context ctx) {
-		// TODO Auto-generated method stub
-		
+	public void submitted( Context ctx, String labname, String jspname) {
+ 		
 		GradeLogistics gl = new GradeLogistics(ctx);
-		Lineitem l = gl.getLineItem("yccs_chemistrylab1", ctx.getCourseId());
+		Lineitem l = gl.getLineItem(labname, ctx.getCourseId());
 		if (l != null)
 			try {
-				gl.addStudentAttempts("yccs_chemistrylab1", l);
+				gl.addStudentAttempts(ctx, labname, jspname, l);
 			} catch (PersistenceException | ValidationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+ 				e.printStackTrace();
 			}
 		else
 			LOGGER.error("This should not happen: cant find lineitem for this assignment");

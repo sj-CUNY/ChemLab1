@@ -1,17 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE xml>
-<manifest>
- <plugin>
- <name value="York college Lab 1 Debugging from blackboard"/>
+<?xml version= "1.0" encoding ="UTF-8"?>
+     <manifest xmlns= "http://www.blackboard.com/bb-manifest-plugin"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.blackboard.com/bb-manifest-plugin http://fibbba.medu.com/xsd/bb-manifest-plugin.xsd">
+  <plugin>
+ <name value="York college Chem 109"/>
  <description value="Testing using blackboard frame"/>
- <handle value="Lab Debug"/>
- <version value="2.11.68"/>
+ <handle value="LabDebug"/>
+ <version value="5.0.52"/>
  <requires>
  <bbversion value="9.1"/>
  </requires>
  <vendor>
- <id value="YCDB"/>
- <name value="York college Lab 1 Debugging from blackboard"/>
+ <id value="ycdb"/>
+ <name value="York college Chem 109"/>
  <url value="http://www.york.cuny.edu"/>
  <description value="Blackboard Lab 1 Debug"/>
  </vendor>
@@ -20,37 +21,32 @@
  <remove value=""/>
  </http-actions>
  <application-defs>
- <application
- can-allow-guest="true" is-course-tool="true" handle="Lab Debug"
- name="Lab 1 Debug">
- <description lang="en_US">
- </description>
+ <application  handle="chem109" type="course" can-allow-guest="true" is-course-tool="true" name="Chemistry 109">
+ <description value="Chem 109"/>
  <links>
  <link>
  <type value="tool"/>
- <name value="Lab 1 Debug"/>
+ <name value="York college Chem 109"/>
  <url value="welcome.jsp?course_id=@X@course.pk_string@X@"/>
- <description value="Lab 1 Debug."/>
- <icons>
-<listitem value="images/icon.gif"/>
-</icons>
+ <description value="York college Chem 109."/>
+ <handle value="LabDebug" />
  </link>
  <link>
  <type value="course_tool"/>
- <name value="Lab 1 Debug"/>
+ <name value="York college Chem 109"/>
+  <handle value="LabDebugt" />
  <url value="welcome.jsp?course_id=@X@course.pk_string@X@"/>
- <description value="Lab 1 Debug."/>
+ <description value="York college Chem 109."/>
  <icons>
 <listitem value="images/icon.gif"/>
 </icons>
 </link>
  </links>
- <ActionMenu>
- <actionControlBar>
- </actionControlBar>
- </ActionMenu>
- </application>
+  </application>
 </application-defs>
+<schema-dirs>
+  <schema-dir dir-name="chemlab"/>
+</schema-dirs>
  <permissions>
  <permission type="persist" name="content" actions="create" />
   <permission type="persist" name="course" actions="load" />
