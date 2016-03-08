@@ -1,0 +1,1 @@
+UserId	CourseId	LineItemId	isActivated	LabName	TableName
