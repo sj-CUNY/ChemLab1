@@ -11,10 +11,8 @@ public class lab0_1Checks extends inputChecks
 	 
         super(ctx, x,y, labname, userid, courseid);
     }
-	
  
-    
-    @Override
+	@Override
     protected void buildKey()
     {
         for (int i = 0; i < dataX; i ++)
@@ -25,26 +23,37 @@ public class lab0_1Checks extends inputChecks
                 {
                     setKey(i,j,"*");
                     
+                    //Quadruple beam balance
                     if ((i > 1 && i < 4) && j == 0)
                     {
-                        setKey(i,j,setToDecPlaces(getData(i,j),3));
+                        //setKey(i,j,setToDecPlaces(getData(i,j),3));
+                    	setKey(i,j,"3");
                     }
-
+                    //Analytical balance
                     if ((i > 3 && i < 10) && j == 0)
                     {
-                        setKey(i,j,setToDecPlaces(getData(i,j),4));
+                        //setKey(i,j,setToDecPlaces(getData(i,j),4));
+                        setKey(i,j,"4");
                     }
-
+                  //Results
+                    /*
+                    if ((i > 9 && i < 12) && j == 0)
+                    {
+                        //setKey(i,j,setToDecPlaces(getData(i,j),4));
+                        setKey(i,j,"4");
+                    }
+                    */
+                    //Unit column
                     if ((i > 1 && i < 12) && j == 1)
                     {
                         setKey(i,j,"g");
                     }
-
+                    //Num of Sig Fig Column
                     if ((i > 1 && i < 12) && j == 2)
                     {
                         setKey(i,j,"" + getSigFigs(i,0));
                     }
-
+                    /*
                     if (i == 8 && j == 0)
                     {
                         if (Double.parseDouble(getData(i,j)) >= Double.parseDouble(getData(9,0)))
@@ -60,31 +69,38 @@ public class lab0_1Checks extends inputChecks
                             setKey(i,j,"WRONG");
                         }
                     }
-
+					*/
+                    //'Results': first column
                     if (i == 10 && j == 0)
                     {
-                        double temp = Double.parseDouble(getData(5,0)) +
+                    	temp = 0;
+                        temp = Double.parseDouble(getData(5,0)) +
                                 Double.parseDouble(getData(6,0)) +
                                 Double.parseDouble(getData(7,0));
                         temp = temp / 3;
-                        setKey(i, j,"" + temp); 
+                        
+                        String temp1 = setDecimalFormat(Double.toString(temp), 4);
+                    	               	
+                        System.out.println("R1: " + temp1);
+                        setKey(i, j, "" + temp1); 
                     }
-
                     if (i == 11 && j == 0)
                     {
-                        double temp = Double.parseDouble(getData(9,0)) - 
+                    	temp = 0;
+                        temp = Double.parseDouble(getData(9,0)) - 
                                 Double.parseDouble(getData(8,0));
-                        
-                        setKey(i, j,setToDecPlaces("" + temp, 4)); 
+                        String temp1 = setDecimalFormat(Double.toString(temp), 4);
+                        System.out.println("R2: " + temp1);
+                        setKey(i, j, "" + temp1);
+                        //setKey(i, j,setToDecPlaces("" + temp, 4)); 
                     }
                 }
                 else
                 {
                     setKey(i,j,"WRONG");
                 }
-                
                 //for testing only!
-                setError(i,j,getError(i,j) + " <*> " + getKey(i,j));
+                //setError(i,j,getError(i,j) + " <*> " + getKey(i,j));
             }
         }
     }
