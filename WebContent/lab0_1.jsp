@@ -198,7 +198,7 @@
                             Unknown number of metal rod:
                         </th>
                         <th>
-                            <input type="text" name="00" <% if (checks.getData(0,0) != null){out.print("value=\"" + checks.getData(0,0) + "\"");}%> />
+                            <input type="number" name="00" <% if (checks.getData(0,0) != null){out.print("value=\"" + checks.getData(0,0) + "\"");}%> />
                         </th>
                     </tr>
                     <tr>
@@ -215,7 +215,7 @@
                             Unknown number of metal wire:
                         </th>
                         <th>
-                            <input type="text" name="10" <% if (checks.getData(1,0) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> />
+                            <input type="number" name="10" <% if (checks.getData(1,0) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> />
                         </th>
                     </tr>
                     <tr>
@@ -262,13 +262,13 @@
                             Metal rod
                         </td>
                         <td>
-                            <input type="text" name="20" <% if (checks.getData(2,0) != null){out.print("value=\"" + checks.getData(2,0) + "\"");}%> />
+                            <input type="number" name="20" <% if (checks.getData(2,0) != null){out.print("value=\"" + checks.getData(2,0) + "\"");}%> />
                         </td>
                         <td>
                             <input list="units" name="21" <% if (checks.getData(2,1) != null){out.print("value=\"" + checks.getData(2,1) + "\"");}%> size="3" />
                         </td>
                         <td>
-                            <input type="text" name="22" <% if (checks.getData(2,2) != null){out.print("value=\"" + checks.getData(2,2) + "\"");}%> />
+                            <input type="number" name="22" <% if (checks.getData(2,2) != null){out.print("value=\"" + checks.getData(2,2) + "\"");}%> />
                         </td>
                     </tr>
                     <tr>
@@ -295,13 +295,13 @@
                             Vial + Sodium chloride
                         </td>
                         <td>
-                            <input type="text" name="30" <% if (checks.getData(3,0) != null){out.print("value=\"" + checks.getData(3,0) + "\"");}%> />
+                            <input type="number" name="30" <% if (checks.getData(3,0) != null){out.print("value=\"" + checks.getData(3,0) + "\"");}%> />
                         </td>
                         <td>
                             <input list="units" name="31" <% if (checks.getData(3,1) != null){out.print("value=\"" + checks.getData(3,1) + "\"");}%> size="3" />
                         </td>
                         <td>
-                            <input type="text" name="32" <% if (checks.getData(3,2) != null){out.print("value=\"" + checks.getData(3,2) + "\"");}%> />
+                            <input type="number" name="32" <% if (checks.getData(3,2) != null){out.print("value=\"" + checks.getData(3,2) + "\"");}%> />
                         </td>
                     </tr>
                     <tr>
@@ -339,13 +339,13 @@
                             Metal rod
                         </td>
                         <td>
-                            <input type="text" name="40" <% if (checks.getData(4,0) != null){out.print("value=\"" + checks.getData(4,0) + "\"");}%> />
+                            <input type="number" name="40" <% if (checks.getData(4,0) != null){out.print("value=\"" + checks.getData(4,0) + "\"");}%> />
                         </td>
                         <td>
                             <input list="units" name="41" <% if (checks.getData(4,1) != null){out.print("value=\"" + checks.getData(4,1) + "\"");}%> size="3" />
                         </td>
                         <td>
-                            <input type="text" name="42" <% if (checks.getData(4,2) != null){out.print("value=\"" + checks.getData(4,2) + "\"");}%> />
+                            <input type="number" name="42" <% if (checks.getData(4,2) != null){out.print("value=\"" + checks.getData(4,2) + "\"");}%> />
                         </td>
                     </tr>
                     <tr>
@@ -372,13 +372,13 @@
                             Metal wire - Trial 1
                         </td>
                         <td>
-                            <input type="text" name="50" <% if (checks.getData(5,0) != null){out.print("value=\"" + checks.getData(5,0) + "\"");}%> />
+                            <input type="number" name="50" <% if (checks.getData(5,0) != null){out.print("value=\"" + checks.getData(5,0) + "\"");}%> required />
                         </td>
                         <td>
                             <input list="units" name="51" <% if (checks.getData(5,1) != null){out.print("value=\"" + checks.getData(5,1) + "\"");}%> size="3" />
                         </td>
                         <td>
-                            <input type="text" name="52" <% if (checks.getData(5,2) != null){out.print("value=\"" + checks.getData(5,2) + "\"");}%> />
+                            <input type="number" name="52" <% if (checks.getData(5,2) != null){out.print("value=\"" + checks.getData(5,2) + "\"");}%> />
                         </td>
                     </tr>
                     <tr>
@@ -405,13 +405,13 @@
                             Trial 2
                         </td>
                         <td>
-                            <input type="text" name="60" <% if (checks.getData(6,0) != null){out.print("value=\"" + checks.getData(6,0) + "\"");}%> />
+                            <input type="number" name="60" <% if (checks.getData(6,0) != null){out.print("value=\"" + checks.getData(6,0) + "\"");}%> required />
                         </td>
                         <td>
                             <input list="units" name="61" <% if (checks.getData(6,1) != null){out.print("value=\"" + checks.getData(6,1) + "\"");}%> size="3" />
                         </td>
                         <td>
-                            <input type="text" name="62" <% if (checks.getData(6,2) != null){out.print("value=\"" + checks.getData(6,2) + "\"");}%> />
+                            <input type="number" name="62" <% if (checks.getData(6,2) != null){out.print("value=\"" + checks.getData(6,2) + "\"");}%> />
                         </td>
                     </tr>
                     <tr>
@@ -438,13 +438,13 @@
                             Trial 3
 			</td>
 			<td>
-                            <input type="text" name="70" <% if (checks.getData(7,0) != null){out.print("value=\"" + checks.getData(7,0) + "\"");}%> />
+                            <input type="number" name="70" <% if (checks.getData(7,0) != null){out.print("value=\"" + checks.getData(7,0) + "\"");}%> required />
                         </td>
                         <td>
                             <input list="units" name="71" <% if (checks.getData(7,1) != null){out.print("value=\"" + checks.getData(7,1) + "\"");}%> size="3" />
                         </td>
                         <td>
-                            <input type="text" name="72" <% if (checks.getData(7,2) != null){out.print("value=\"" + checks.getData(7,2) + "\"");}%> />
+                            <input type="number" name="72" <% if (checks.getData(7,2) != null){out.print("value=\"" + checks.getData(7,2) + "\"");}%> />
                         </td>
                     </tr>
                     <tr>
@@ -471,13 +471,13 @@
                             Weighing paper
 			</td>
 			<td>
-                            <input type="text" name="80" <% if (checks.getData(8,0) != null){out.print("value=\"" + checks.getData(8,0) + "\"");}%> />
+                            <input type="number" name="80" <% if (checks.getData(8,0) != null){out.print("value=\"" + checks.getData(8,0) + "\"");}%> required />
                         </td>
                         <td>
                             <input list="units" name="81" <% if (checks.getData(8,1) != null){out.print("value=\"" + checks.getData(8,1) + "\"");}%> size="3" />
                         </td>
                         <td>
-                            <input type="text" name="82" <% if (checks.getData(8,2) != null){out.print("value=\"" + checks.getData(8,2) + "\"");}%> />
+                            <input type="number" name="82" <% if (checks.getData(8,2) != null){out.print("value=\"" + checks.getData(8,2) + "\"");}%> />
                         </td>
                     </tr>
                     <tr>
@@ -504,13 +504,13 @@
                             Weighing paper and sodium chloride
 			</td>
 			<td>
-                            <input type="text" name="90" <% if (checks.getData(9,0) != null){out.print("value=\"" + checks.getData(9,0) + "\"");}%> />
+                            <input type="number" name="90" <% if (checks.getData(9,0) != null){out.print("value=\"" + checks.getData(9,0) + "\"");}%> required />
                         </td>
                         <td>
                             <input list="units" name="91" <% if (checks.getData(9,1) != null){out.print("value=\"" + checks.getData(9,1) + "\"");}%> size="3" />
                         </td>
                         <td>
-                            <input type="text" name="92" <% if (checks.getData(9,2) != null){out.print("value=\"" + checks.getData(9,2) + "\"");}%> />
+                            <input type="number" name="92" <% if (checks.getData(9,2) != null){out.print("value=\"" + checks.getData(9,2) + "\"");}%> />
                         </td>
                     </tr>
                     <tr>
@@ -557,13 +557,13 @@
                             Average weight of metal wire
                         </td>
                         <td>
-                            <input type="text" name="100" <% if (checks.getData(10,0) != null){out.print("value=\"" + checks.getData(10,0) + "\"");}%> />
+                            <input type="number" name="100" <% if (checks.getData(10,0) != null){out.print("value=\"" + checks.getData(10,0) + "\"");}%> />
                         </td>
                         <td>
                             <input list="units" name="101" <% if (checks.getData(10,1) != null){out.print("value=\"" + checks.getData(10,1) + "\"");}%> size="3" />
                         </td>
                         <td>
-                            <input type="text" name="102" <% if (checks.getData(10,2) != null){out.print("value=\"" + checks.getData(10,2) + "\"");}%> />
+                            <input type="number" name="102" <% if (checks.getData(10,2) != null){out.print("value=\"" + checks.getData(10,2) + "\"");}%> />
                         </td>
                     </tr>
                     <tr>
@@ -592,13 +592,13 @@
                             removed from vial 
                         </td>
 			<td>
-                            <input type="text" name="110" <% if (checks.getData(11,0) != null){out.print("value=\"" + checks.getData(11,0) + "\"");}%> />
+                            <input type="number" name="110" <% if (checks.getData(11,0) != null){out.print("value=\"" + checks.getData(11,0) + "\"");}%> />
                         </td>
                         <td>
                             <input list="units" name="111" <% if (checks.getData(11,1) != null){out.print("value=\"" + checks.getData(11,1) + "\"");}%> size="3" />
                         </td>
                         <td>
-                            <input type="text" name="112" <% if (checks.getData(11,2) != null){out.print("value=\"" + checks.getData(11,2) + "\"");}%> />
+                            <input type="number" name="112" <% if (checks.getData(11,2) != null){out.print("value=\"" + checks.getData(11,2) + "\"");}%> />
                         </td>
                     </tr>
                     <tr>
