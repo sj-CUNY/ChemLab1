@@ -1,14 +1,13 @@
 package Labs;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 import blackboard.platform.context.Context;
 
- 
- 
 public class lab0_1Checks extends inputChecks
 {
 	public lab0_1Checks(Context ctx, int x, int y, String labname, String userid, String courseid)
 	{
-	 
         super(ctx, x,y, labname, userid, courseid);
     }
  
@@ -78,9 +77,7 @@ public class lab0_1Checks extends inputChecks
                                 Double.parseDouble(getData(6,0)) +
                                 Double.parseDouble(getData(7,0));
                         temp = temp / 3;
-                        
-                        String temp1 = setDecimalFormat(Double.toString(temp), 4);
-                    	               	
+                        String temp1 = setDecimalFormat(Double.toString(temp), 4);              	
                         System.out.println("R1: " + temp1);
                         setKey(i, j, "" + temp1); 
                     }
