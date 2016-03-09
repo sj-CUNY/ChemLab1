@@ -122,116 +122,6 @@ public class inputChecks {
         return key[x][y];
     }
     
-    public void save(String labname, String userid, String courseid)
-    {
-        //build string of data to save
-        String theString = "";
-        
-        for (int i = 0; i < dataX; i++)
-        {
-            for (int j = 0; j < dataY; j++)
-            {
-                theString += data[i][j];
-                if (i + j < dataX + dataY - 2)
-                {
-                    theString += ",";
-                }
-            }
-        }
-         //call function
-        save.saveData(labname, theString, userid, courseid);
-    }
-    
-    public void check()
-    {
-        for (int i = 0; i < dataX; i ++)
-        {
-            for (int j = 0; j < dataY; j++)
-            {
-                if (data[i][j] != null && !data[i][j].equals(""))
-                {
-                    //clear previous errors
-                    error[i][j] = "";
-
-                    //check based on type
-                    if (type[i][j].equals("Unit"))
-                    {
-                        unitStandard(i,j);
-                    }
-                    if (type[i][j].equals("Double"))
-                    {
-                        doubleStandard(i,j);
-                    }
-                    if (type[i][j].equals("Integer"))
-                    {
-                        integerStandard(i,j);
-                    }
-                }
-                else
-                {
-                    error[i][j] = "empty";
-                }           
-            }
-        }
-
-        buildKey();
-        gradeLab();
-    }
-
-    public void clear()
-    {
-        for (int i = 0; i < dataX; i ++)
-        {
-            for (int j = 0; j < dataY; j++)
-            {
-                if (data[i][j] != null && !data[i][j].equals(""))
-                {
-                    //clear data
-                    data[i][j] = "";
-                }
-
-                if (error[i][j] != null && !error[i][j].equals(""))
-                {
-                    //clear previous errors
-                    error[i][j] = "";
-                }
-                    
-                if (key[i][j] != null && !key[i][j].equals(""))
-                {
-                    //remove any built key
-                    key[i][j] = "";
-                }
-            }
-        }
-    }
-    
-    public void submit(Context ctx, String labname, String jspname)
-    {
-        //call save and then save grade
-        save(labname, ctx.getUserId().toExternalString(), ctx.getCourseId().toExternalString());
-
-        //build string of grade to save
-        String theString = "";
-        
-        for (int i = 0; i < dataX; i++)
-        {
-            for (int j = 0; j < dataY; j++)
-            {
-                theString += grade[i][j];
-                if (i + j < dataX + dataY - 2)
-                {
-                    theString += ",";
-                }
-            }
-        }
-
-        //call function
-        save.saveGrade(theString);
-
-        //set submitted
-        save.submitted(ctx, labname, jspname);
-    }
-    
     protected void unitStandard (int x, int y)
     {
         String temp;
@@ -363,20 +253,17 @@ public class inputChecks {
     {
         return getSigFigs(getData(x,y));
     }
-
     protected int getSigFigs (String in)
     {
         int sigFigs = 0;
         String num = in;
         int length;
-        
         if (num != null && num.length() != 0)
         {
             length = num.length();
-
             //remove leading zeros
             int i = 0;
-            while (i< length && num.charAt(i) == '0' )
+            while (num.charAt(i) == '0')
             {
                i++;
             }
@@ -405,7 +292,6 @@ public class inputChecks {
                     sigFigs --;
                 }
             }
-
             return sigFigs;
         }
         else
@@ -413,76 +299,142 @@ public class inputChecks {
             return (-1);
         }
     }
-    
     protected int getDecPlaces (int x, int y)
     {
-        return getDecPlaces(getData(x,y));
+        return getDecPlaces(x, getData(x,y));
     }
-    
     protected int getDecPlaces (String in)
     {
-        int decPlace = -1;
-        String num = in;
+    	int decPlace = 0;
+    	String num = in;
         
         if (num != null && num.length() != 0)
         {
-            //prime decPlace
-            decPlace = 0;
+        	//get the decPlace
+            decPlace = (num.length() - num.indexOf(".")) -1;
+        }
+    	return decPlace;
+    }
+    //get check and compare decimal places
+    protected int getDecPlaces (int x, String in)
+    {
+        int decPlace = 0; 
+        String num = in;
+        if (num != null && num.length() != 0)
+        {
+            //get the decPlace
+            decPlace = (num.length() - num.indexOf(".")) -1;
             
+            if(decPlace == 0) 
+            {
+            	//System.out.println(decPlace);
+            	//return decPlace; 
+            }
+            //Quadruple beam balance
+            if ((x > 1 && x < 4) && decPlace != 3)
+            {
+            	//System.out.println(decPlace);
+            	return (-1); 
+            }
+            //Analytical balance
+            if ((x > 3 && x < 10) && decPlace != 4)
+            {
+            	//System.out.println(decPlace);
+            	return (-1);
+            }
+            //Results
+            if ((x > 9 && x < 12) && decPlace != 4)
+            {
+            	//System.out.println(decPlace);
+            	return (-1);
+            }
+            /* hold this part for test
             //move past everything leading .
             int i = 0;
             while (num.charAt(i) != '.' && i < num.length())
             {
                i++;
             }
-            
             //move past .
             if (num.charAt(i) == '.' && i < num.length())
             {
                 i++;
             }
-            
             //add dec places
             while (i < num.length())
             {
                 decPlace ++;
             }
-            
+            */
+            return decPlace;   
         }
-        return decPlace;
+        else
+        {
+        	return (-1);
+        }
     }
-    
     protected String setToDecPlaces(String in, int places)
     {
         /*int i = 0;
-        
         //find .
         while (i < in.length() && in.charAt(i) != '.')
         {
             i++;
         }
-        
         //shorten it
         while (getDecPlaces(in) > places)
         {
             in = in.substring(0,in.length() - 2);
         }
-        
         //pad it
         while(getDecPlaces(in) < places)
         {
             in += "0";
         }
-        
         return in;
         */
         String format = "%." + places + "f";
-        
-         String.format( format, Double.parseDouble(in));
-         
-         return in;
+        String.format( format, Double.parseDouble(in));
+        return in;
     }
-    
+    //check and set the decimal format for 3 or 4
+    protected String setDecimalFormat(String in, int places)
+    {
+    	String format = "#.";
+    	for(int i=0; i < places; i++)
+    	{
+    		format = format + "#";
+    	}
+    	DecimalFormat df = new DecimalFormat(format);
+    	df.setRoundingMode(RoundingMode.HALF_UP);
+    	Double temp = Double.parseDouble(in);
+    	Double temp1 = temp.doubleValue(); 
+    	String s = df.format(temp1);
+    	StringBuilder s1 = new StringBuilder(s);
+    	int decimalPlace = getDecPlaces(s);
+    	//for lab:1 result part only (apply with only 4 decimal values)
+    	if (decimalPlace == 3)
+    	{
+    		s1.append("0");
+    		s = s1.toString();
+    	}
+    	else if (decimalPlace == 2)
+    	{
+    		s1.append("00");
+    		s = s1.toString();
+    	}
+    	else if (decimalPlace == 1 && in.charAt(in.length() - 1) != '0')
+    	{
+    		s1.append("000");
+    		s = s1.toString();
+    	}
+    	else if (decimalPlace == 1 && in.charAt(in.length() - 1) == '0'  )
+    	{
+    		s1.append(".0000");
+    		s = s1.toString();
+    	}
+    	return s;
+    }
     protected void gradeLab()
     {
         //compare data to key
@@ -500,9 +452,35 @@ public class inputChecks {
                             error[i][j] += "X";
                         }
                     }
-                    else if (data[i][j].equals(key[i][j]) || key[i][j].equals("*"))
+                    else if (j != 0 && data[i][j].equals(key[i][j]) || key[i][j].equals("*"))
                     {
-                        grade[i][j] = 1;
+                    	grade[i][j] = 1;
+                    } 
+                    //Weight column
+                    else if (j == 0 && (i > 1 && i < 10))
+                    {
+                    	String d = Integer.toString(getDecPlaces(i,getData(i,0)));
+                    	
+                        if(d.equals(key[i][0]))
+                        {
+                        	grade[i][0] = 1;
+                        }
+                        else
+                        {
+                        	grade[i][j] = 0;
+                        	error[i][j] += "X";
+                        }
+                    }
+                    //Results
+                    else if ((j == 0 && i > 9 && i < 12) && Double.compare(Double.parseDouble(data[i][j]), Double.parseDouble(key[i][j])) == 0 )
+                    {
+                    	grade[i][0] = 1;
+                    }
+                    //Results: Error 	
+                    else if ((j == 0 && i > 9 && i < 12) && Double.compare(Double.parseDouble(data[i][j]), Double.parseDouble(key[i][j])) != 0)
+                    {
+                    	grade[i][0] = 0;
+                    	error[i][j] += "X("+ setDecimalFormat(key[i][j], 4) +")";
                     }
                     else
                     {
@@ -515,6 +493,116 @@ public class inputChecks {
                 }
             }        
         }
+    }
+    
+    public void save(String labname, String userid, String courseid)
+    {
+        //build string of data to save
+        String theString = "";
+        
+        for (int i = 0; i < dataX; i++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {
+                theString += data[i][j];
+                if (i + j < dataX + dataY - 2)
+                {
+                    theString += ",";
+                }
+            }
+        }
+         //call function
+        save.saveData(labname, theString, userid, courseid);
+    }
+    
+    public void check()
+    {
+        for (int i = 0; i < dataX; i ++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {
+                if (data[i][j] != null && !data[i][j].equals(""))
+                {
+                    //clear previous errors
+                    error[i][j] = "";
+
+                    //check based on type
+                    if (type[i][j].equals("Unit"))
+                    {
+                        unitStandard(i,j);
+                    }
+                    if (type[i][j].equals("Double"))
+                    {
+                        doubleStandard(i,j);
+                    }
+                    if (type[i][j].equals("Integer"))
+                    {
+                        integerStandard(i,j);
+                    }
+                }
+                else
+                {
+                    error[i][j] = "empty";
+                }           
+            }
+        }
+
+        buildKey();
+        gradeLab();
+    }
+
+    public void clear()
+    {
+        for (int i = 0; i < dataX; i ++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {
+                if (data[i][j] != null && !data[i][j].equals(""))
+                {
+                    //clear data
+                    data[i][j] = "";
+                }
+
+                if (error[i][j] != null && !error[i][j].equals(""))
+                {
+                    //clear previous errors
+                    error[i][j] = "";
+                }
+                    
+                if (key[i][j] != null && !key[i][j].equals(""))
+                {
+                    //remove any built key
+                    key[i][j] = "";
+                }
+            }
+        }
+    }
+    
+    public void submit(Context ctx, String labname, String jspname)
+    {
+        //call save and then save grade
+        save(labname, ctx.getUserId().toExternalString(), ctx.getCourseId().toExternalString());
+
+        //build string of grade to save
+        String theString = "";
+        
+        for (int i = 0; i < dataX; i++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {
+                theString += grade[i][j];
+                if (i + j < dataX + dataY - 2)
+                {
+                    theString += ",";
+                }
+            }
+        }
+
+        //call function
+        save.saveGrade(theString);
+
+        //set submitted
+        save.submitted(ctx, labname, jspname);
     }
 
     protected void buildKey()
