@@ -6,7 +6,7 @@
  <name value="York college Chem 109"/>
  <description value="Testing using blackboard frame"/>
  <handle value="LabDebug"/>
- <version value="5.0.52"/>
+ <version value="5.0.60"/>
  <requires>
  <bbversion value="9.1"/>
  </requires>
@@ -51,10 +51,10 @@
  <permission type="persist" name="content" actions="create" />
   <permission type="persist" name="course" actions="load" />
  <permission type="persist" name="coursemembership" actions="load"/>	             
- <permission type="persist" name="Attempt" actions="create,load,persist" />
-  <permission type="persist" name="Outcome" actions="create,load,modify"/>
+ <permission type="persist" name="Attempt" actions="create,load,persist,delete" />
+  <permission type="persist" name="Outcome" actions="create,load,modify,delete"/>
  <permission type="persist" name="OutcomeDefinition" actions="create,load,persist"/>	             
- <permission type="persist" name="OutcomeDefinitionCategory" actions="create,modify, load persist"/>
+ <permission type="persist" name="OutcomeDefinitionCategory" actions="create,modify, load, persist"/>
  <permission type="persist" name="OutcomeDefinitionScale" actions="create,delete,load,persist" />
  <permission type="persist" name="OutcomeDefinitionScaleSymbol" actions="create,delete,load,persist" />      
  <permission type="persist" name="user" actions="create,modify,delete" />

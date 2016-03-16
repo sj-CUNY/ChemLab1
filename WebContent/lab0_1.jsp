@@ -1,5 +1,6 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="Labs.lab0_1Checks" %>
+<%@ page import="Labs.GradeLogistics" %>
 <%@ page import="Labs.Helper" %>
 <%@ page import="blackboard.platform.context.Context" %>
 <%@ page import="blackboard.platform.context.ContextManager" %>
@@ -147,6 +148,15 @@
             //perform submit
             checks.submit(ctx,"ycdb_chemistrylab1","lab0_1.jsp");
         }
+        else if (button.equals("ClearAttempt"))
+        {
+         	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR)
+         	{
+    			GradeLogistics gl = new GradeLogistics();
+
+        		checks.clearAttempt(ctx, userid,"ycdb_chemistrylab1");
+         	}
+        }
         else
         {
             button = "";
@@ -178,6 +188,16 @@
             <option value="in" >in</option>
             <option value="ft" >ft</option>
         </datalist>	
+        <script>
+     	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR) 
+     		{
+     			var d = document.getElementById("btns");
+     			var b = document.createElement("BUTTON")
+      		    var t = document.createTextNode("ClearAttempt");
+     		    b.appendChild(t);
+				d.appendChild(b);
+     		}
+        </script>
     </head>
     <body>
     <p>User Information</p>  
@@ -623,11 +643,13 @@
  		</table>
             </fieldset>
             <br>
-            <div style="text-align: center">
-                <input type="submit" name="button" value="Check" />
+            <div style="text-align: center" id="btns">
+                <input type="submit" name="button" value="Check" id="check"/>
                 <input type="submit" name="button" value="Clear" />
                 <input type="submit" name="button" value="Save" />
                 <input type="submit" name="button" value="Submit" />
+                <input type="submit" name="button" value="ClearAttempt" id="CA"/>
+
             </div>
             <br>
             </form>

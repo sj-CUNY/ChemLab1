@@ -9,11 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import blackboard.data.ValidationException;
- import blackboard.data.gradebook.Lineitem;
+import blackboard.data.gradebook.Lineitem;
 import blackboard.data.user.User;
 import blackboard.db.BbDatabase;
 import blackboard.db.ConnectionManager;
 import blackboard.db.ConnectionNotAvailableException;
+import blackboard.persist.Id;
 import blackboard.persist.PersistenceException;
 import blackboard.platform.context.Context;
 import blackboard.platform.context.ContextManager;
@@ -278,7 +279,7 @@ public class DataPersister {
 
 	public void submitted( Context ctx, String labname, String jspname) {
  		
-		GradeLogistics gl = new GradeLogistics(ctx);
+		GradeLogistics gl = new GradeLogistics();
 		Lineitem l = gl.getLineItem(labname, ctx.getCourseId());
 		if (l != null)
 			try {
@@ -290,5 +291,20 @@ public class DataPersister {
 			LOGGER.error("This should not happen: cant find lineitem for this assignment");
 	 
 		 
+	}
+
+	protected void clearAttempt(Context ctx, String uid, String labname) {
+		// TODO Auto-generated method stub
+		GradeLogistics gl = new GradeLogistics();
+		Lineitem l = gl.getLineItem(labname, ctx.getCourseId());
+		if (l != null)
+			try {
+				gl.clearAttempt(ctx, uid, l);
+			} catch (PersistenceException | ValidationException e) {
+ 				e.printStackTrace();
+			}
+		else
+			LOGGER.error("This should not happen: cant find lineitem for this assignment");
+
 	}
 }

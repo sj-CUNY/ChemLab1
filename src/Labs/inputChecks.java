@@ -2,7 +2,8 @@ package Labs;
 
 //import blackboard.data.course.CourseMembership;
 
- import blackboard.platform.context.Context;
+ import blackboard.persist.Id;
+import blackboard.platform.context.Context;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -517,6 +518,10 @@ public class inputChecks {
 
     protected void buildKey()
     {
+    }
+    public void clearAttempt(Context ctx, String uid, String labname)
+    {
+    	save.clearAttempt(ctx, uid, labname);
     }
 }
     

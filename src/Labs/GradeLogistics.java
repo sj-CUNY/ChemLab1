@@ -33,6 +33,7 @@ import blackboard.persist.KeyNotFoundException;
 import blackboard.persist.PersistenceException;
 import blackboard.persist.gradebook.LineitemDbLoader;
 import blackboard.persist.gradebook.LineitemDbPersister;
+import blackboard.persist.gradebook.ScoreDbLoader;
 import blackboard.persist.gradebook.ScoreDbPersister;
 import blackboard.platform.context.Context;
 import blackboard.platform.persistence.PersistenceService;
@@ -63,7 +64,7 @@ import blackboard.platform.plugin.PlugInUtil;
 	 * }
 	 */
 
-	public GradeLogistics(Context ctx) {
+	public GradeLogistics() {
 
 	}
 
@@ -352,101 +353,118 @@ import blackboard.platform.plugin.PlugInUtil;
 	 * bpManager.getPersister( AttemptDbPersister.TYPE ); adb.persist(attempt);
 	 * } } return; }
 	 */
-	protected void addStudentAttempts(Context ctx, String labname, String jspname,
-			Lineitem lineitem) throws KeyNotFoundException,
-			PersistenceException, ValidationException {
 
-		/*
-		 * l.setAttemptHandlerUrl (url);
-		 */
-		//PersistenceService bpService = null;
-		//BbPersistenceManager bpManager = null;
-		//ScoreDbPersister sdb = null;
+	private CourseMembership getCourseMembership(Context ctx, Id userId) {
+		// TODO Auto-generated method stub
+		return getCourseMembership(ctx,userId.toExternalString());
+	}
 
-		//bpService = PersistenceServiceFactory.getInstance();
+	private CourseMembership getCourseMembership(Context ctx, String uid)
+   {
+	   List<CourseMembership> crsMembership; 
+	   Helper h = new Helper();
+	   crsMembership = h.fetchRoster(ctx);
+	   ListIterator<CourseMembership> cList = crsMembership.listIterator();
+	   CourseMembership cm = null;
+	   while (cList.hasNext()) 
+	   {
 
-		//bpManager = bpService.getDbPersistenceManager();
-		/*try {
-			sdb = (ScoreDbPersister) bpManager
-					.getPersister(ScoreDbPersister.TYPE);
-		} catch (PersistenceException pE) {
-			LOGGER.info(pE.getMessage());
-			pE.printStackTrace();
-		}*/
-
-		List<CourseMembership> crsMembership;
-		Helper h = new Helper();
-		crsMembership = h.fetchRoster(ctx);
-		Score s = null;
-		ListIterator<CourseMembership> cList = crsMembership.listIterator();
-		while (cList.hasNext()) {
-			CourseMembership cm = cList.next();
-			/*
-			 * if (cm != null) LOGGER.info("cm addStudentAttept userid " +
-			 * cm.getUserId().toExternalString()); if(ctx != null) if
-			 * (ctx.getUser() != null)
-			 * LOGGER.info("ctx addStudentAttept userid " +
-			 * ctx.getUserId().toExternalString());
-			 * LOGGER.info("Membership size " + crsMembership.size());
-			 */
-			if (cm.getUserId().toExternalString()
-					.equals(ctx.getUserId().toExternalString()))// &&
+		   cm = cList.next();
+		   if (cm.getUserId().toExternalString()
+					.equals(uid))// &&
 																// cm.getRole()
 																// ==
 																// CourseMembership.Role.STUDENT)
 			{
-				String url = PlugInUtil.getUri("ycdb", "LabDebug",
+			  break;
+			}
+	   }
+	   return cm;
+   }
+   protected void clearAttempt(Context ctx, String uid, 	
+                Lineitem lineitem) throws KeyNotFoundException,
+            	PersistenceException, ValidationException 
+   {
+	   Score s = null;
+ 	   CourseMembership cm = getCourseMembership(ctx, uid);
+ 	   LOGGER.info("clearStudentAttempt for " + cm.getId().toExternalString() + " lineitem " + lineitem.getId().toExternalString());
+ 	   s = ScoreDbLoader.Default.getInstance().loadByCourseMembershipIdAndLineitemId(cm.getId(), lineitem.getId());
+ 	  if (s == null)
+	   {	
+ 		 LOGGER.info("clearStudentAttempt - NO score to clear");
+	   }
+ 	  else
+ 	  {
+ 		/* Outcome outcome = s.getOutcome(); 
+ 		 Attempt attempt = AttemptDbLoader.Default.getInstance().loadById(
+					outcome.getLastAttemptId());
+    	  AttemptDbPersister.Default.getInstance().deleteById(attempt.getId());
+*/
+ 		 ScoreDbPersister.Default.getInstance().deleteById(s.getId());
+  		 LOGGER.info("clearedStudentAttempt - success");
+
+ 	  }
+	   
+   }
+	protected void addStudentAttempts(Context ctx, String labname, String jspname,
+			Lineitem lineitem) throws KeyNotFoundException,
+			PersistenceException, ValidationException 
+	{
+ 		Score s = null;
+  		CourseMembership cm = getCourseMembership(ctx, ctx.getUserId());
+		 	
+		String url = PlugInUtil.getUri("ycdb", "LabDebug",
 						jspname+"?course_id=" + cm.getCourseId().toExternalString() + "&user_id="
 								+ cm.getUserId().toExternalString());
-				LOGGER.info("addStudentAttempt " + labname + " " + url);
-
-				s = new Score();
-				s.setDateAdded();
-				lineitem.setAttemptHandlerUrl(url);
-				lineitem.setAssessmentId("user_id="
-						+ ctx.getUser().getId().toExternalString(), Lineitem.AssessmentLocation.EXTERNAL);
-
-				s.setLineitemId(lineitem.getId());
-				// LOGGER.info("Course is " + cm.getCourseId());
-				 
-				s.setCourseMembershipId(cm.getId());
-				ScoreDbPersister.Default.getInstance().persist(s);
-
-				Outcome outcome = s.getOutcome();
-				Attempt attempt;
-
-				if (outcome.getAttemptCount() == 0) {
-					attempt = outcome.createAttempt();
-					if (attempt == null) {
-						throw new IllegalStateException(
-								"could not create attempt");
-					}
-					attempt.setOutcomeId(outcome.getId());
-				} else {
-					attempt = AttemptDbLoader.Default.getInstance().loadById(
-							outcome.getLastAttemptId());//highest score etc.
-				}
-
-				// String str =
-				// "<%@ taglib uri=\"/bbUI\" prefix=\"bbUI\" %><html><head><title>Submitted Text</head><body><c:url value=\"/blackboard/webapps/YCDB-Lab%20Debug-BBLEARN/index.jsp?course_id="+cm.getCourseId().toExternalString()+"&user_id="+cm.getUserId().toExternalString()+"/></body></html>";
-				// FormattedText fText = new
-				// FormattedText(str,FormattedText.Type.HTML);
-
-				attempt.setStatus(Attempt.Status.NEEDS_GRADING);
-				attempt.setAttemptedDate(Calendar.getInstance());
-				AttemptDbPersister.Default.getInstance().persist(attempt);
-
-				break;
-			}
+	   LOGGER.info("addStudentAttempt " + labname + " " + url);
+	   s = ScoreDbLoader.Default.getInstance().loadByCourseMembershipIdAndLineitemId(cm.getId(), lineitem.getId());
+	   if (s == null)
+	   {	
+		  s = new Score();
+		  s.setDateAdded();
 		}
-		/*
-		 * try { if (s != null) { sdb.persist(s); LOGGER.info("Storing score " +
-		 * s.getAttemptId()); } } catch(PersistenceException pE) {
-		 * LOGGER.info(pE.getMessage()); pE.printStackTrace(); }
-		 * catch(ValidationException vE) { LOGGER.info(vE.getMessage());
-		 * vE.printStackTrace(); }
-		 */
+
+		Outcome outcome = s.getOutcome();
+		Attempt attempt;
+
+		if (outcome.getAttemptCount() == 0) 
+		{
+		    lineitem.setAttemptHandlerUrl(url);
+			lineitem.setAssessmentId("user_id="
+			      			+ ctx.getUser().getId().toExternalString(), Lineitem.AssessmentLocation.EXTERNAL);
+
+			s.setLineitemId(lineitem.getId());
+			// LOGGER.info("Course is " + cm.getCourseId());
+					 
+			s.setCourseMembershipId(cm.getId());
+
+			attempt = outcome.createAttempt();
+			if (attempt == null) 
+			{
+				throw new IllegalStateException(
+								"could not create attempt");
+			}
+			attempt.setOutcomeId(outcome.getId());
+
+			attempt.setStatus(Attempt.Status.NEEDS_GRADING);
+			attempt.setAttemptedDate(Calendar.getInstance());
+			AttemptDbPersister.Default.getInstance().persist(attempt);
+			s.setAttemptId(attempt.getId(), Score.AttemptLocation.EXTERNAL);
+ 			ScoreDbPersister.Default.getInstance().persist(s);
+			LOGGER.info("New attempt created");
+
+
+		} 
+		else 
+		{
+			attempt = AttemptDbLoader.Default.getInstance().loadById(
+							outcome.getLastAttemptId());//highest score etc.
+			LOGGER.info("Cannot create duplicate attempts");
+					
+		}
+
 		return;
 	}
 
-}
+
+  }
