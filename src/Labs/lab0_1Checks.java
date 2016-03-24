@@ -72,22 +72,22 @@ public class lab0_1Checks extends inputChecks
                     //'Results': first column
                     if (i == 10 && j == 0)
                     {
-                    	temp = 0;
+                    	Double temp = 0.0;
                         temp = Double.parseDouble(getData(5,0)) +
                                 Double.parseDouble(getData(6,0)) +
                                 Double.parseDouble(getData(7,0));
                         temp = temp / 3;
                         String temp1 = setDecimalFormat(Double.toString(temp), 4);              	
-                        System.out.println("R1: " + temp1);
+                        //System.out.println("R1: " + temp1);
                         setKey(i, j, "" + temp1); 
                     }
                     if (i == 11 && j == 0)
                     {
-                    	temp = 0;
-                        temp = Double.parseDouble(getData(9,0)) - 
-                                Double.parseDouble(getData(8,0));
+                    	Double temp = 0.0;
+                        temp = Double.parseDouble(getData(8,0)) - 
+                                Double.parseDouble(getData(9,0));
                         String temp1 = setDecimalFormat(Double.toString(temp), 4);
-                        System.out.println("R2: " + temp1);
+                        //System.out.println("R2: " + temp1);
                         setKey(i, j, "" + temp1);
                         //setKey(i, j,setToDecPlaces("" + temp, 4)); 
                     }

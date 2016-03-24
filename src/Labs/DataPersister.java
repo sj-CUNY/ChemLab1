@@ -9,11 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import blackboard.data.ValidationException;
- import blackboard.data.gradebook.Lineitem;
+import blackboard.data.gradebook.Lineitem;
 import blackboard.data.user.User;
 import blackboard.db.BbDatabase;
 import blackboard.db.ConnectionManager;
 import blackboard.db.ConnectionNotAvailableException;
+import blackboard.persist.Id;
 import blackboard.persist.PersistenceException;
 import blackboard.platform.context.Context;
 import blackboard.platform.context.ContextManager;
@@ -76,29 +77,25 @@ public class DataPersister {
             	//We should never hae to insert because the roster should be already uploaded. 
 	            queryString.append("INSERT INTO " +  labname  + " ( ");
 	            columns = h.buildColumnString(rsMeta, "GRADES");
-	           //Insert blank for PK1
+	            //Insert blank for PK1
 	            queryString.append(columns.toString() + " ) VALUES ( ");      
 	            String qmarks = h.qMarks(columnCount,0).toString() ; 
 	            
-	  //          LOGGER.info(qmarks);
+	            //LOGGER.info(qmarks);
 	    			
-	            
-	
  	            queryString.append(qmarks);
 	            
-	//            LOGGER.info(queryString.toString());
+ 	            //LOGGER.info(queryString.toString());
 	            
-				
 	            PreparedStatement insertQuery = conn.prepareStatement(queryString.toString());
-	          //need to change this to unique key
+	            //need to change this to unique key
   	            insertQuery.setInt(1, pk1);
 	            insertQuery.setString(2, userid);
 	            insertQuery.setString(3, courseid);
 	            
-		            
 	            for (int i=0; i < tokens.length; i++) {
 	                insertQuery.setString((i + 4), tokens[i]);
-//	                LOGGER.info(tokens[i]);
+	                //LOGGER.info(tokens[i]);
 	            }          
 	            LOGGER.info(insertQuery.toString());
 	            int insertResult = insertQuery.executeUpdate();
@@ -106,14 +103,11 @@ public class DataPersister {
 	            if(insertResult != 1){
 	            	
 	            	saveResult = false ;
-	            	
 	            }
-	            
 	            insertQuery.close();
             }
             else
             {
-
             	queryString.append("UPDATE " + labname + " SET ");
             	int count = 0; 
             	String nextColumn = "";
@@ -135,7 +129,7 @@ public class DataPersister {
                 	 }
             		else
             		{
-            	//		LOGGER.info("query is " + queryString.toString());
+            			//LOGGER.info("query is " + queryString.toString());
             			break;
             		}
             		++count;
@@ -145,20 +139,20 @@ public class DataPersister {
                  //insert where PK1 matches. 
  	            queryString.append(" WHERE " + rsMeta.getColumnName(1) + " = " + rSet.getString(1));
 
-//                 queryString.append(" WHERE " + rsMeta.getColumnName(2) + "= ? AND " + rsMeta.getColumnName(3) + "= ? ");
-	        //    LOGGER.info(queryString.toString());
+ 	            //queryString.append(" WHERE " + rsMeta.getColumnName(2) + "= ? AND " + rsMeta.getColumnName(3) + "= ? ");
+ 	            //LOGGER.info(queryString.toString());
 	
 				
 	            PreparedStatement updateQuery = conn.prepareStatement(queryString.toString());
- 	        /*    LOGGER.info("Input string: " + indata);
+	            /*LOGGER.info("Input string: " + indata);
 	            LOGGER.info("Num columns: " + rsMeta.getColumnCount());
 	            LOGGER.info("Num data: " + tokens.length);
 	            LOGGER.info("Userid: " + userid);
 	            LOGGER.info("Courseid: " + courseid);
- 	         */
+	             */
 	          for (int i=0; i < tokens.length; i++) 
 	           {
-	         //       LOGGER.info("index at " + (i+1) + " token " + tokens[i]);   
+	        	  //LOGGER.info("index at " + (i+1) + " token " + tokens[i]);   
 	                updateQuery.setString((i + 1), tokens[i].trim());
 
 	            }          
@@ -174,11 +168,9 @@ public class DataPersister {
 	            if(updateResult != 1){
 	            	
 	            	saveResult = false ;
-	            	
 	            }
 	            
 	            updateQuery.close();
-            	
             }
         } catch (java.sql.SQLException sE){
         	
@@ -203,12 +195,11 @@ public class DataPersister {
         
         return saveResult;
 	}
-	
-
 
 	public boolean submitGrades (String indata) {
         boolean saveResult = true;
-/*		StringBuffer queryString = new StringBuffer("");
+        /*		
+        StringBuffer queryString = new StringBuffer("");
 		String[] tokens = indata.split(",");
         ConnectionManager cManager = null;
         Connection conn = null;
@@ -270,15 +261,13 @@ public class DataPersister {
 		return saveResult;
 	}
 
-
 	public void saveGrade(String theString) {
  		
 	}
-
-
+	
 	public void submitted( Context ctx, String labname, String jspname) {
  		
-		GradeLogistics gl = new GradeLogistics(ctx);
+		GradeLogistics gl = new GradeLogistics();
 		Lineitem l = gl.getLineItem(labname, ctx.getCourseId());
 		if (l != null)
 			try {
@@ -290,5 +279,20 @@ public class DataPersister {
 			LOGGER.error("This should not happen: cant find lineitem for this assignment");
 	 
 		 
+	}
+
+	protected void clearAttempt(Context ctx, String uid, String labname) {
+		// TODO Auto-generated method stub
+		GradeLogistics gl = new GradeLogistics();
+		Lineitem l = gl.getLineItem(labname, ctx.getCourseId());
+		if (l != null)
+			try {
+				gl.clearAttempt(ctx, uid, l);
+			} catch (PersistenceException | ValidationException e) {
+ 				e.printStackTrace();
+			}
+		else
+			LOGGER.error("This should not happen: cant find lineitem for this assignment");
+
 	}
 }

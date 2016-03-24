@@ -4,7 +4,8 @@ import java.text.DecimalFormat;
 
 //import blackboard.data.course.CourseMembership;
 
- import blackboard.platform.context.Context;
+ import blackboard.persist.Id;
+import blackboard.platform.context.Context;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +17,12 @@ public class inputChecks {
     
     protected String data[][];
     protected String type[][];
-    protected String error[][];    
+    protected String error[][];   
+    protected String isCorrect[][];
     protected String key[][];
     protected double grade[][];
+    protected String errorMsg = "&#10007;"; //✗ (hex: &#x2717; / dec: &#10007;): ballot x
+    protected String correctMsg = "&#10004;"; // ✔ (hex: &#x2714; / dec: &#10004;): heavy check mark
     
     DataLoader load;
     DataPersister save;
@@ -36,6 +40,7 @@ public class inputChecks {
         data = new String[dataX][dataY];
         type = new String[dataX][dataY];
         error = new String[dataX][dataY];
+        isCorrect = new String[dataX][dataY];
         key = new String[dataX][dataY];
         grade = new double[dataX][dataY];
 
@@ -76,6 +81,7 @@ public class inputChecks {
                 
                 type[i][j] = "";
                 error[i][j] = "";
+                isCorrect[i][j] = "";
                 key[i][j] = "";
                 grade[i][j] = 0.0;
             }
@@ -110,6 +116,16 @@ public class inputChecks {
     public String getError(int x, int y)
     {
         return error[x][y];
+    }
+    
+    public void setIsCorrect(int x, int y, String info)
+    {
+    	isCorrect[x][y] = info;
+    }
+    
+    public String getIsCorrect(int x, int y)
+    {
+        return isCorrect[x][y];
     }
     
     public void setKey(int x, int y, String info)
@@ -449,12 +465,13 @@ public class inputChecks {
                         grade[i][j] = 0;
                         if (error[i][j].equals(""))
                         {
-                            error[i][j] += "X";
+                            error[i][j] += errorMsg;
                         }
                     }
                     else if (j != 0 && data[i][j].equals(key[i][j]) || key[i][j].equals("*"))
                     {
                     	grade[i][j] = 1;
+                    	isCorrect[i][j] = correctMsg;
                     } 
                     //Weight column
                     else if (j == 0 && (i > 1 && i < 10))
@@ -464,17 +481,19 @@ public class inputChecks {
                         if(d.equals(key[i][0]))
                         {
                         	grade[i][0] = 1;
+                        	isCorrect[i][j] = correctMsg;
                         }
                         else
                         {
                         	grade[i][j] = 0;
-                        	error[i][j] += "X";
+                        	error[i][j] += errorMsg;
                         }
                     }
                     //Results
                     else if ((j == 0 && i > 9 && i < 12) && Double.compare(Double.parseDouble(data[i][j]), Double.parseDouble(key[i][j])) == 0 )
                     {
                     	grade[i][0] = 1;
+                    	isCorrect[i][j] = correctMsg;
                     }
                     //Results: Error 	
                     else if ((j == 0 && i > 9 && i < 12) && Double.compare(Double.parseDouble(data[i][j]), Double.parseDouble(key[i][j])) != 0)
@@ -487,7 +506,7 @@ public class inputChecks {
                         grade[i][j] = 0;
                         //if (error[i][j].equals(""))
                         {
-                            error[i][j] += "X";
+                            error[i][j] += errorMsg;
                         }
                     }
                 }
@@ -525,6 +544,8 @@ public class inputChecks {
                 {
                     //clear previous errors
                     error[i][j] = "";
+                    //clear previous corrections
+                    isCorrect[i][j] = "";
 
                     //check based on type
                     if (type[i][j].equals("Unit"))
@@ -568,6 +589,12 @@ public class inputChecks {
                     //clear previous errors
                     error[i][j] = "";
                 }
+                
+                if (isCorrect[i][j] != null && !isCorrect[i][j].equals(""))
+                {
+                    //clear previous corrections
+                	isCorrect[i][j] = "";
+                }
                     
                 if (key[i][j] != null && !key[i][j].equals(""))
                 {
@@ -607,6 +634,10 @@ public class inputChecks {
 
     protected void buildKey()
     {
+    }
+    public void clearAttempt(Context ctx, String uid, String labname)
+    {
+    	save.clearAttempt(ctx, uid, labname);
     }
 }
     
