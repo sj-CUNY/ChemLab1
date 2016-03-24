@@ -412,11 +412,19 @@ import blackboard.platform.plugin.PlugInUtil;
 						jspname+"?course_id=" + cm.getCourseId().toExternalString() + "&user_id="
 								+ cm.getUserId().toExternalString());
 	   LOGGER.info("addStudentAttempt " + labname + " " + url);
-	   s = ScoreDbLoader.Default.getInstance().loadByCourseMembershipIdAndLineitemId(cm.getId(), lineitem.getId());
-	   if (s == null)
-	   {	
-		  s = new Score();
-		  s.setDateAdded();
+	   
+	   try{
+		      s = ScoreDbLoader.Default.getInstance().loadByCourseMembershipIdAndLineitemId(cm.getId(), lineitem.getId());
+		      if (s == null) //in case the database driver changes in the future and we start getting s = null if no score is found
+		      {
+		    	  s = new Score();
+		          s.setDateAdded();
+		      }
+			
+	   }catch(KeyNotFoundException k)
+		{
+			s = new Score();
+		    s.setDateAdded();
 		}
 
 		Outcome outcome = s.getOutcome();
