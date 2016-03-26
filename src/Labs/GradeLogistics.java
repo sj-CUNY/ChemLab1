@@ -49,20 +49,6 @@ import blackboard.platform.plugin.PlugInUtil;
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(GradeLogistics.class.getName());
 
-	/*
-	 * public GradeLogistics() {
-	 * 
-	 * contextManager = ContextManagerFactory.getInstance(); ctx =
-	 * contextManager.getContext() ;
-	 * 
-	 * currentUser = ctx.getUser() ;
-	 * 
-	 * currUserId = currentUser.getId().toExternalString(); courseid =
-	 * ctx.getCourse().getId().toExternalString(); LOGGER.info("init - Userid "
-	 * + currUserId); LOGGER.info("init - Courseid " + courseid);
-	 * 
-	 * }
-	 */
 
 	public GradeLogistics() {
 
@@ -328,31 +314,6 @@ import blackboard.platform.plugin.PlugInUtil;
 		return null;
 	}
 
-	/*
-	 * private void addStudentAttempts2(Context ctx, String labname, Id id)
-	 * throws PersistenceException, ValidationException { PersistenceService
-	 * bpService = null; BbPersistenceManager bpManager = null;
-	 * List<CourseMembership> crsMembership ;
-	 * 
-	 * 
-	 * bpService = PersistenceServiceFactory.getInstance() ;
-	 * 
-	 * bpManager = bpService.getDbPersistenceManager(); crsMembership =
-	 * fetchRoster(ctx); Score s = null; ListIterator<CourseMembership> cList =
-	 * crsMembership.listIterator(); while(cList.hasNext()) { CourseMembership
-	 * cm = cList.next(); if
-	 * (cm.getUserId().toExternalString().equals(ctx.getUserId
-	 * ().toExternalString()))// && cm.getRole() ==
-	 * CourseMembership.Role.STUDENT) { Attempt attempt = new Attempt();
-	 * FormattedText fText = new FormattedText(
-	 * "/blackboard/webapps/YCDB-Lab%20Debug-BBLEARN/index.jsp?course_id="
-	 * +cm.getCourseId
-	 * ().toExternalString()+"&user_id="+cm.getUserId().toExternalString
-	 * (),FormattedText.Type.HTML); attempt.setStudentSubmission(fText);
-	 * attempt.setOutcomeId(); AttemptDbPersister adb = (AttemptDbPersister)
-	 * bpManager.getPersister( AttemptDbPersister.TYPE ); adb.persist(attempt);
-	 * } } return; }
-	 */
 
 	private CourseMembership getCourseMembership(Context ctx, Id userId) {
 		// TODO Auto-generated method stub
@@ -371,10 +332,7 @@ import blackboard.platform.plugin.PlugInUtil;
 
 		   cm = cList.next();
 		   if (cm.getUserId().toExternalString()
-					.equals(uid))// &&
-																// cm.getRole()
-																// ==
-																// CourseMembership.Role.STUDENT)
+					.equals(uid))
 			{
 			  break;
 			}
@@ -388,22 +346,25 @@ import blackboard.platform.plugin.PlugInUtil;
 	   Score s = null;
  	   CourseMembership cm = getCourseMembership(ctx, uid);
  	   LOGGER.info("clearStudentAttempt for " + cm.getId().toExternalString() + " lineitem " + lineitem.getId().toExternalString());
+ 	  try{ 
  	   s = ScoreDbLoader.Default.getInstance().loadByCourseMembershipIdAndLineitemId(cm.getId(), lineitem.getId());
  	  if (s == null)
 	   {	
  		 LOGGER.info("clearStudentAttempt - NO score to clear");
 	   }
- 	  else
- 	  {
- 		/* Outcome outcome = s.getOutcome(); 
- 		 Attempt attempt = AttemptDbLoader.Default.getInstance().loadById(
-					outcome.getLastAttemptId());
-    	  AttemptDbPersister.Default.getInstance().deleteById(attempt.getId());
-*/
- 		 ScoreDbPersister.Default.getInstance().deleteById(s.getId());
-  		 LOGGER.info("clearedStudentAttempt - success");
+ 	 else
+	  {
+ 
+		 ScoreDbPersister.Default.getInstance().deleteById(s.getId());
+ 		 LOGGER.info("clearedStudentAttempt - success");
 
+	  }
+ 	  }catch(KeyNotFoundException k)
+ 	  {
+  		 LOGGER.info("clearStudentAttempt - NO score to clear");
+ 		  
  	  }
+ 	  
 	   
    }
 	protected void addStudentAttempts(Context ctx, String labname, String jspname,
@@ -417,13 +378,18 @@ import blackboard.platform.plugin.PlugInUtil;
 						jspname+"?course_id=" + cm.getCourseId().toExternalString() + "&user_id="
 								+ cm.getUserId().toExternalString());
 	   LOGGER.info("addStudentAttempt " + labname + " " + url);
+	   try{
 	   s = ScoreDbLoader.Default.getInstance().loadByCourseMembershipIdAndLineitemId(cm.getId(), lineitem.getId());
 	   if (s == null)
 	   {	
 		  s = new Score();
 		  s.setDateAdded();
 		}
+	   }catch(KeyNotFoundException k){
+			  s = new Score();
+			  s.setDateAdded();
 
+	   }
 		Outcome outcome = s.getOutcome();
 		Attempt attempt;
 
@@ -439,6 +405,7 @@ import blackboard.platform.plugin.PlugInUtil;
 			s.setCourseMembershipId(cm.getId());
 
 			attempt = outcome.createAttempt();
+			
 			if (attempt == null) 
 			{
 				throw new IllegalStateException(
@@ -448,10 +415,11 @@ import blackboard.platform.plugin.PlugInUtil;
 
 			attempt.setStatus(Attempt.Status.NEEDS_GRADING);
 			attempt.setAttemptedDate(Calendar.getInstance());
-			AttemptDbPersister.Default.getInstance().persist(attempt);
-			s.setAttemptId(attempt.getId(), Score.AttemptLocation.EXTERNAL);
+			s.setAttemptId(attempt.getId().toExternalString(), Score.AttemptLocation.EXTERNAL);
  			ScoreDbPersister.Default.getInstance().persist(s);
-			LOGGER.info("New attempt created");
+
+			AttemptDbPersister.Default.getInstance().persist(attempt);
+			LOGGER.info("New attempt created for " + cm.getId().toExternalString());
 
 
 		} 
