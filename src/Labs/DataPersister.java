@@ -83,20 +83,16 @@ public class DataPersister {
 	            
 	  //          LOGGER.info(qmarks);
 	    			
-	            
-	
  	            queryString.append(qmarks);
 	            
 	//            LOGGER.info(queryString.toString());
-	            
-				
+	            				
 	            PreparedStatement insertQuery = conn.prepareStatement(queryString.toString());
 	          //need to change this to unique key
   	            insertQuery.setInt(1, pk1);
 	            insertQuery.setString(2, userid);
 	            insertQuery.setString(3, courseid);
-	            
-		            
+	          		            
 	            for (int i=0; i < tokens.length; i++) {
 	                insertQuery.setString((i + 4), tokens[i]);
 //	                LOGGER.info(tokens[i]);

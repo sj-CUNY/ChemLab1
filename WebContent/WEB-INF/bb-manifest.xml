@@ -3,16 +3,16 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.blackboard.com/bb-manifest-plugin http://fibbba.medu.com/xsd/bb-manifest-plugin.xsd">
   <plugin>
- <name value="York college Chem 109"/>
+ <name value="YC - Chem Labs"/>
  <description value="Testing using blackboard frame"/>
  <handle value="LabDebug"/>
- <version value="5.0.60"/>
+ <version value="1.0.2"/>
  <requires>
  <bbversion value="9.1"/>
  </requires>
  <vendor>
  <id value="ycdb"/>
- <name value="York college Chem 109"/>
+ <name value="YC - Chem Labs"/>
  <url value="http://www.york.cuny.edu"/>
  <description value="Blackboard Lab 1 Debug"/>
  </vendor>
@@ -26,17 +26,17 @@
  <links>
  <link>
  <type value="tool"/>
- <name value="York college Chem 109"/>
+ <name value="YC - Chem Labs"/>
  <url value="welcome.jsp?course_id=@X@course.pk_string@X@"/>
- <description value="York college Chem 109."/>
+ <description value="York college Chem Labs"/>
  <handle value="LabDebug" />
  </link>
  <link>
  <type value="course_tool"/>
- <name value="York college Chem 109"/>
+ <name value="YC - Chem Labs"/>
   <handle value="LabDebugt" />
  <url value="welcome.jsp?course_id=@X@course.pk_string@X@"/>
- <description value="York college Chem 109."/>
+ <description value="York college Chem Labs"/>
  <icons>
 <listitem value="images/icon.gif"/>
 </icons>
