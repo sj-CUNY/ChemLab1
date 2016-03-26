@@ -12,8 +12,7 @@ blackboard.persist.user.*,
 blackboard.data.course.*,
 blackboard.persist.course.*"
  pageEncoding="UTF-8"%> 
- <%@ page import="Labs.Labs" %>
- <%@ page import="Labs.GradeLogistics" %>
+  <%@ page import="Labs.GradeLogistics" %>
  
  <%@ taglib uri="/bbUI" prefix="bbUI" %> 
  <%@ taglib uri="/bbData" prefix="bbData"%> 
@@ -31,11 +30,9 @@ blackboard.persist.course.*"
 	ctxId="ctx">
 
 	<bbNG:pageHeader>
-		<bbNG:breadcrumbBar environment="COURSE"
-			navItem="course_plugin_manage" >
+		<bbNG:breadcrumbBar environment="COURSE" >
 				<bbNG:breadcrumb title="Home" href="welcome.jsp?course_id=${ctx.courseId.externalString}" />
-			<bbNG:breadcrumb> Welcome Page </bbNG:breadcrumb>
-		</bbNG:breadcrumbBar>
+ 		</bbNG:breadcrumbBar>
 		<bbNG:pageTitleBar>
 			Welcome to to Chem 109 Choose one of the labs below.
 		</bbNG:pageTitleBar>

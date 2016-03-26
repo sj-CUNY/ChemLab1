@@ -5,8 +5,8 @@
   <plugin>
  <name value="York college Chem 109"/>
  <description value="Testing using blackboard frame"/>
- <handle value="Lab Debug"/>
- <version value="5.0.40"/>
+ <handle value="LabDebug"/>
+ <version value="5.0.60"/>
  <requires>
  <bbversion value="9.1"/>
  </requires>
@@ -21,25 +21,21 @@
  <remove value=""/>
  </http-actions>
  <application-defs>
- <application
- can-allow-guest="true" is-course-tool="true" handle="Lab Debug"
- name="Lab Debug">
- <description lang="en_US">
- </description>
+ <application  handle="chem109" type="course" can-allow-guest="true" is-course-tool="true" name="Chemistry 109">
+ <description value="Chem 109"/>
  <links>
  <link>
  <type value="tool"/>
  <name value="York college Chem 109"/>
- <url value="welcome.jsp?@X@course.id@X@"/>
+ <url value="welcome.jsp?course_id=@X@course.pk_string@X@"/>
  <description value="York college Chem 109."/>
- <icons>
-<listitem value="images/icon.gif"/>
-</icons>
+ <handle value="LabDebug" />
  </link>
  <link>
  <type value="course_tool"/>
  <name value="York college Chem 109"/>
- <url value="welcome.jsp?@X@course.id@X@"/>
+  <handle value="LabDebugt" />
+ <url value="welcome.jsp?course_id=@X@course.pk_string@X@"/>
  <description value="York college Chem 109."/>
  <icons>
 <listitem value="images/icon.gif"/>
@@ -48,14 +44,17 @@
  </links>
   </application>
 </application-defs>
+<schema-dirs>
+  <schema-dir dir-name="chemlab"/>
+</schema-dirs>
  <permissions>
  <permission type="persist" name="content" actions="create" />
   <permission type="persist" name="course" actions="load" />
  <permission type="persist" name="coursemembership" actions="load"/>	             
- <permission type="persist" name="Attempt" actions="create,load,persist" />
-  <permission type="persist" name="Outcome" actions="create,load,modify"/>
+ <permission type="persist" name="Attempt" actions="create,load,persist,delete" />
+  <permission type="persist" name="Outcome" actions="create,load,modify,delete"/>
  <permission type="persist" name="OutcomeDefinition" actions="create,load,persist"/>	             
- <permission type="persist" name="OutcomeDefinitionCategory" actions="create,modify, load persist"/>
+ <permission type="persist" name="OutcomeDefinitionCategory" actions="create,modify, load, persist"/>
  <permission type="persist" name="OutcomeDefinitionScale" actions="create,delete,load,persist" />
  <permission type="persist" name="OutcomeDefinitionScaleSymbol" actions="create,delete,load,persist" />      
  <permission type="persist" name="user" actions="create,modify,delete" />
