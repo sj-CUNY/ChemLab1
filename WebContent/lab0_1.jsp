@@ -208,7 +208,7 @@
     
     	<fieldset class="fieldset-auto-width">
             <legend>Lab 1: Weighing Measurements: The Balance</legend>
-            <form method="POST" action="lab0_1.jsp?course_id=${ctx.getCourseId().toExternalString()}&user_id=${ctx.getUserId().toExternalString()}">
+            <form method="POST">
         
             <fieldset>
                 <legend>Basic info</legend>
