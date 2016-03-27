@@ -200,10 +200,11 @@
         </script>
     </head>
     <body>
-    <p>User Information</p>  
+    	<p>User Information</p>  
   	<p style="margin-left:10px">
-   			Student Id: <%= userid%> <br />   
-   	</p>  
+  		Name: <%= u.getGivenName()%>  <%= u.getFamilyName() %><br />   
+  		Student Id: <%= u.getId().toExternalString()%> <br />   
+ 	</p>   
 
     
     	<fieldset class="fieldset-auto-width">

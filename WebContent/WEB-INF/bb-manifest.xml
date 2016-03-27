@@ -6,7 +6,7 @@
  <name value="YC - Chem Labs"/>
  <description value="Testing using blackboard frame"/>
  <handle value="LabDebug"/>
- <version value="1.0.2"/>
+ <version value="1.0.26"/>
  <requires>
  <bbversion value="9.1"/>
  </requires>

@@ -79,13 +79,13 @@ pageEncoding="UTF-8"%>
         if (button.equals("ActivateLab1"))
         {
    		gl.initGradeLogistics(ctx, "ycdb_chemistrylab1");
-		gl.makeLineItem("ycdb_chemistrylab1", "lab0_1.jsp", 100, ctx);
+		gl.makeLineItem("ycdb_chemistrylab1", "lab0_1i.jsp", 100, ctx);
  
 	 	}
         else if (button.equals("ActivateLab2"))
         {
    		gl.initGradeLogistics(ctx, "ycdb_chemistrylab2");
-		gl.makeLineItem("ycdb_chemistrylab2", "lab0_2.jsp", 100, ctx);
+		gl.makeLineItem("ycdb_chemistrylab2", "lab0_2i.jsp", 100, ctx);
  
         }
         else if (button.equals("deletelab1"))
@@ -133,7 +133,7 @@ pageEncoding="UTF-8"%>
 	<body>
 	<p>User Information</p>  
   	<p style="margin-left:10px">
-  		Name: <%= u.getUserName()%> <br />   
+  		Name: <%= u.getGivenName()%>  <%= u.getFamilyName() %><br />   
   		Student Id: <%= u.getId().toExternalString()%> <br />   
   		Batch UID: <%= u.getBatchUid()%> <br /> 			  
  		Course Role: <%= crsMembershipRoleStr%> <br />
@@ -142,7 +142,7 @@ pageEncoding="UTF-8"%>
 	<div style="text-align: left">
 		
     <form method="post" action="welcome_i.jsp?course_id=${ctx.courseId.externalString}"> 
-    	<input type="submit" name="button" id="ActivateLab1" value="ActivateLab1"   />
+    	<input type="submit" name="button" id="ActivateLab1" value="ActivateLab1" >
     	</form>
     <form method="post" action="lab0_1i.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
         <input type="submit" id="lab1" value="Lab1"/>

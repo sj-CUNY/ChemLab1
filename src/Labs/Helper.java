@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import blackboard.data.course.Course;
 import blackboard.data.course.CourseMembership;
+import blackboard.data.user.User;
 import blackboard.db.BbDatabase;
 import blackboard.db.ConnectionManager;
 import blackboard.db.ConnectionNotAvailableException;
@@ -42,6 +43,7 @@ public class Helper {
 		
 		
 	}
+
     public String getUserIdFromCourseMembershipId(Context ctx, String userId)
     {
     	String userid = "";
