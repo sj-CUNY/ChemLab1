@@ -146,7 +146,7 @@
             checks.save("ycdb_chemistrylab1",userid,courseid);
             
             //perform submit
-            checks.submit(ctx,"ycdb_chemistrylab1","lab0_1.jsp");
+            checks.submit(ctx,"ycdb_chemistrylab1","lab0_1i.jsp");
         }
         else if (button.equals("ClearAttempt"))
         {

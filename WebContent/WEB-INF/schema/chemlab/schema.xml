@@ -73,7 +73,7 @@
 	  <primary-key name="ycdb_chemistrylab1_pk1" comment="Unique primary key">
        <columnref name="pk1" />
       </primary-key>
-      <index name="ycdb_chemistrylab1_ui1" unique="true">
+      <index name="ycdb_chemistrylab1_ui1" unique="false">
       	<columnref name="UserId"/>
       </index>
   </table>
@@ -142,7 +142,7 @@
 	<primary-key name="ycdb_chemistrylab3_ak1" comment="Unique primary key">
 	        <columnref name="pk1" />
       </primary-key>
-      <index name="ycdb_chemistrylab3_ui1" unique="true">
+      <index name="ycdb_chemistrylab3_ui1" unique="false">
       	<columnref name="UserId"/>
       </index>
   </table>
@@ -213,7 +213,7 @@
 	  <primary-key name="ycdb_chemistrylab2_ak1" comment="Unique primary key">
         <columnref name="pk1" />
       </primary-key>
-      <index name="ycdb_chemistrylab2_ui1" unique="true">
+      <index name="ycdb_chemistrylab2_ui1" unique="false">
       	<columnref name="UserId"/>
       </index>
   </table>
@@ -228,7 +228,7 @@
 	  <primary-key name="ycdb_chem109_logistics_ak1" comment="Unique primary key">
         <columnref name="pk1" />
       </primary-key>
-        <index name="ycdb_chem109_logistics_ui1" unique="true">
+        <index name="ycdb_chem109_logistics_ui1" unique="false">
       	<columnref name="UserId"/>
       </index>
   </table>
