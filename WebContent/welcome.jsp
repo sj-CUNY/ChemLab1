@@ -42,6 +42,21 @@ blackboard.persist.course.*"
 
 	User u = ctx.getUser();;
 	Course c = ctx.getCourse();
+	
+	//get the course name string
+	//check course name string contains YRK01_CHEM
+	String courseName = c.getCourseId();
+	//If not, redirect to message.jsp
+	
+  if(!courseName.contains("YRK01_CHEM"))
+  {	  
+   	String site = new String("message.jsp?course_id="+c.getId().getExternalString());
+   	response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY );
+   	response.setHeader("Location", site); 
+  }
+  else
+  {	  
+	
 	// get the membership data to determine the User's Role
 	CourseMembership crsMembership = null;
 	CourseMembershipDbLoader crsMembershipLoader = null;
@@ -78,5 +93,6 @@ blackboard.persist.course.*"
 		   response.setHeader("Location", site); 
  
 	}
+  }
 %>
 </bbNG:learningSystemPage>

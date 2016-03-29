@@ -269,14 +269,17 @@ public class inputChecks {
     {
         return getSigFigs(getData(x,y));
     }
+
     protected int getSigFigs (String in)
     {
         int sigFigs = 0;
         String num = in;
         int length;
+        
         if (num != null && num.length() != 0)
         {
             length = num.length();
+
             //remove leading zeros
             int i = 0;
             while (num.charAt(i) == '0')
@@ -308,6 +311,7 @@ public class inputChecks {
                     sigFigs --;
                 }
             }
+
             return sigFigs;
         }
         else
@@ -315,10 +319,12 @@ public class inputChecks {
             return (-1);
         }
     }
+    
     protected int getDecPlaces (int x, int y)
     {
         return getDecPlaces(x, getData(x,y));
     }
+    
     protected int getDecPlaces (String in)
     {
     	int decPlace = 0;
@@ -371,11 +377,13 @@ public class inputChecks {
             {
                i++;
             }
+            
             //move past .
             if (num.charAt(i) == '.' && i < num.length())
             {
                 i++;
             }
+            
             //add dec places
             while (i < num.length())
             {
@@ -389,24 +397,29 @@ public class inputChecks {
         	return (-1);
         }
     }
+    
     protected String setToDecPlaces(String in, int places)
     {
         /*int i = 0;
+        
         //find .
         while (i < in.length() && in.charAt(i) != '.')
         {
             i++;
         }
+        
         //shorten it
         while (getDecPlaces(in) > places)
         {
             in = in.substring(0,in.length() - 2);
         }
+        
         //pad it
         while(getDecPlaces(in) < places)
         {
             in += "0";
         }
+        
         return in;
         */
         String format = "%." + places + "f";

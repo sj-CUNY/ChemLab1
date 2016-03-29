@@ -81,6 +81,7 @@ public class lab0_1Checks extends inputChecks
                         //System.out.println("R1: " + temp1);
                         setKey(i, j, "" + temp1); 
                     }
+
                     if (i == 11 && j == 0)
                     {
                     	Double temp = 0.0;
@@ -96,6 +97,7 @@ public class lab0_1Checks extends inputChecks
                 {
                     setKey(i,j,"WRONG");
                 }
+                
                 //for testing only!
                 //setError(i,j,getError(i,j) + " <*> " + getKey(i,j));
             }

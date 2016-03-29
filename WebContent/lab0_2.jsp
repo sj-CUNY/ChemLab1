@@ -150,7 +150,7 @@
     <body>
         <fieldset class="fieldset-auto-width">
             <legend>Lab 2: Volume Measurements and the Determination of Density</legend>
-            <form method="POST" action="lab0_2.jsp?course_id=${ctx.getCourseId().toExternalString()}&user_id=${ctx.getUserId().toExternalString()}">
+            <form method="POST">
                 <fieldset>
                     <legend>I. DATA</legend>
                     <fieldset>

@@ -146,9 +146,9 @@
             checks.save("ycdb_chemistrylab1",userid,courseid);
             
             //perform submit
-            checks.submit(ctx,"ycdb_chemistrylab1","lab0_1.jsp");
+            checks.submit(ctx,"ycdb_chemistrylab1","lab0_1i.jsp");
         }
-		else if (button.equals("ClearAttempt"))
+        else if (button.equals("ClearAttempt"))
         {
          	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR)
          	{
@@ -200,15 +200,16 @@
         </script>
     </head>
     <body>
-    <p>User Information</p>  
+    	<p>User Information</p>  
   	<p style="margin-left:10px">
-   			Student Id: <%= userid%> <br />   
-   	</p>  
+  		Name: <%= u.getGivenName()%>  <%= u.getFamilyName() %><br />   
+  		Student Id: <%= u.getId().toExternalString()%> <br />   
+ 	</p>   
 
     
     	<fieldset class="fieldset-auto-width">
             <legend>Lab 1: Weighing Measurements: The Balance</legend>
-            <form method="POST" action="lab0_1.jsp?course_id=${ctx.getCourseId().toExternalString()}&user_id=${ctx.getUserId().toExternalString()}">
+            <form method="POST">
         
             <fieldset>
                 <legend>Basic info</legend>

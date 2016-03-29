@@ -41,6 +41,8 @@ pageEncoding="UTF-8"%>
 
 	User u = ctx.getUser();
 	Course c = ctx.getCourse();
+	String courseName = c.getCourseId();
+
 	// get the membership data to determine the User's Role
 	CourseMembership crsMembership = null;
 	CourseMembershipDbLoader crsMembershipLoader = null;
@@ -77,13 +79,13 @@ pageEncoding="UTF-8"%>
         if (button.equals("ActivateLab1"))
         {
    		gl.initGradeLogistics(ctx, "ycdb_chemistrylab1");
-		gl.makeLineItem("ycdb_chemistrylab1", "lab0_1.jsp", 100, ctx);
+		gl.makeLineItem("ycdb_chemistrylab1", "lab0_1i.jsp", 100, ctx);
  
 	 	}
         else if (button.equals("ActivateLab2"))
         {
    		gl.initGradeLogistics(ctx, "ycdb_chemistrylab2");
-		gl.makeLineItem("ycdb_chemistrylab2", "lab0_2.jsp", 100, ctx);
+		gl.makeLineItem("ycdb_chemistrylab2", "lab0_2i.jsp", 100, ctx);
  
         }
         else if (button.equals("deletelab1"))
@@ -131,7 +133,7 @@ pageEncoding="UTF-8"%>
 	<body>
 	<p>User Information</p>  
   	<p style="margin-left:10px">
-  		Name: <%= u.getUserName()%> <br />   
+  		Name: <%= u.getGivenName()%>  <%= u.getFamilyName() %><br />   
   		Student Id: <%= u.getId().toExternalString()%> <br />   
   		Batch UID: <%= u.getBatchUid()%> <br /> 			  
  		Course Role: <%= crsMembershipRoleStr%> <br />
@@ -140,26 +142,28 @@ pageEncoding="UTF-8"%>
 	<div style="text-align: left">
 		
     <form method="post" action="welcome_i.jsp?course_id=${ctx.courseId.externalString}"> 
-    	<input type="submit" name="button" id="ActivateLab1" value="Activate Lab 1"   />
+    	<input type="submit" name="button" id="ActivateLab1" value="ActivateLab1" >
     	</form>
     <form method="post" action="lab0_1i.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
-        <input type="submit" id="lab1" value="Lab 1"/>
+        <input type="submit" id="lab1" value="Lab1"/>
     </form>
      <form method="post" action="welcome_i.jsp?course_id=${ctx.courseId.externalString}"> 
-    	<input type="submit" name="button" id="deletelab1" value="Selete Lab 1"   />
+    	<input type="submit" name="button" id="deletelab1" value="deletelab1"   />
     	</form>
      <form method="post" action="welcome_i.jsp?course_id=${ctx.courseId.externalString}"> 
-    	<input type="submit" name="button" id="deletelines" value="Delete Lines"   />
+    	<input type="submit" name="button" id="deletelines" value="deletelines"   />
     	</form>
-    </div>
-	<br>
+    	 </div>
+<br>
+<br>
+<br>
     <div style="text-align: left">
 
     <form method="post" action="welcome_i.jsp?course_id=${ctx.courseId.externalString}"> 
-		<input type="submit" name="button" id="Activate" value="Activate Lab 2" />
+		<input type="submit" name="button" id="ActivateLab2" value="ActivateLab2" />
 	</form>
     <form method="post" action="lab0_2.jsp?course_id=${ctx.courseId.externalString}&user_id=${ctx.userId.externalString}"> 
-        <input type="submit" id="lab2" value="Lab 2"/>
+        <input type="submit" id="lab2" value="lab 2"/>
     </form>
     
 	</div>	

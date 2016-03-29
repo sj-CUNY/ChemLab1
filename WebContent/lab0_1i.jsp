@@ -26,7 +26,7 @@
 	<bbNG:pageHeader>
 		<bbNG:breadcrumbBar environment="COURSE"
 			navItem="ycdb-chem109-nav-LabDebug" >
-				<bbNG:breadcrumb title="Home" href="lab0_1.jsp?course_id=@X@course.pk_string@X@&user_id=@X@user.pk_string@X@" />
+				<bbNG:breadcrumb title="Home" href="lab0_1i.jsp?course_id=@X@course.pk_string@X@&user_id=@X@user.pk_string@X@" />
 			<bbNG:breadcrumb> Lab 1 </bbNG:breadcrumb>
 		</bbNG:breadcrumbBar>
 		<bbNG:pageTitleBar>
@@ -40,8 +40,7 @@
  <%
 	 int dataX = 12;
  	 int dataY = 3;
- 	
- 	User u = ctx.getUser();
+  	User u = ctx.getUser();
  	String userid = "";
 	lab0_1Checks checks;
   	String courseid = request.getParameter("course_id");
@@ -210,7 +209,7 @@
     
     	<fieldset class="fieldset-auto-width">
             <legend>Lab 1: Weighing Measurements: The Balance</legend>
-            <form method="POST" action="lab0_1.jsp?course_id=${ctx.getCourseId().toExternalString()}&user_id=${ctx.getUserId().toExternalString()}">
+            <form method="POST"> 
         
             <fieldset>
                 <legend>Basic info</legend>
