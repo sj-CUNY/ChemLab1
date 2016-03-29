@@ -202,8 +202,8 @@
     <body>
     	<p>User Information</p>  
   	<p style="margin-left:10px">
-  		Name: <%= u.getGivenName()%>  <%= u.getFamilyName() %><br />   
-  		Student Id: <%= u.getId().toExternalString()%> <br />   
+  		Name: <%= u.getGivenName() + " " + u.getFamilyName() %><br />   
+  		Student Id: <%= u.getId().toExternalString()%> <br /> <br />   
  	</p>   
 
     
