@@ -6,16 +6,13 @@
  <%@ taglib uri="/bbNG" prefix="bbNG"%>
  <%@ taglib prefix="ng" uri="/bbNG" %>
   
- <%@ taglib uri="/bbUI" prefix="bbUI" %> 
- <%@ taglib uri="/bbData" prefix="bbData"%> 
- <%@ taglib uri="/bbNG" prefix="bbNG"%>
- <bbNG:learningSystemPage 
+<bbNG:learningSystemPage 
 	title="Welcome To Blackboard Building Block Development - Course Information"
 	ctxId="ctx">
 
 	<bbNG:pageHeader>
 		<bbNG:breadcrumbBar environment="COURSE" navItem="ycdb-chem109-nav-LabDebug" >
-				<bbNG:breadcrumb title="Home" href="welcome_i.jsp?course_id=@X@course.pk_string@X@&user_id=@X@user.pk_string@X@"/>
+			<bbNG:breadcrumb title="Home" href="welcome_i.jsp?course_id=@X@course.pk_string@X@&user_id=@X@user.pk_string@X@"/>
  		</bbNG:breadcrumbBar>
 		<bbNG:pageTitleBar>
 			Permission Denied
@@ -24,13 +21,13 @@
   
 <html>
 	<head>
-  	</head>
-<br>
-<br>
-<br>
-		<body>
+	</head>
+	<br>
+	<br>
+	<br>
+	<body>
 		<p > This tool is available only to York College Chemistry lab courses. </p>
 	</body>	
- </html>
+</html>
 
 </bbNG:learningSystemPage>
