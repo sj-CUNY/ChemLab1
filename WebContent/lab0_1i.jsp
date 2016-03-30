@@ -11,7 +11,7 @@
 <%@ page import="blackboard.platform.persistence.PersistenceService" %>
 <%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
 <%@ page import="blackboard.persist.BbPersistenceManager"%>
- <%@ page import="blackboard.persist.*"%>
+<%@ page import="blackboard.persist.*"%>
  
 <%@ page import="blackboard.data.gradebook.Lineitem" %>
 <%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
@@ -34,12 +34,10 @@
 		</bbNG:pageTitleBar>
 	</bbNG:pageHeader>
 
-
 <!DOCTYPE html>
-
  <%
-	 int dataX = 12;
- 	 int dataY = 3;
+	int dataX = 12;
+ 	int dataY = 3;
   	User u = ctx.getUser();
  	String userid = "";
 	lab0_1Checks checks;
@@ -85,9 +83,8 @@
  	if (button == null)
     {
         button = "";
-	    //set types
-         
-         
+	    
+		//set types
         checks.setType(0, 0, "String");
         checks.setType(1, 0, "String");
         
@@ -126,23 +123,21 @@
     	}
         if (button.equals("Clear"))
         {  
-            checks.clear();
+			//perform clear            
+			checks.clear();
         }
         else if (button.equals("Save"))
-        {
-              
+        {    
             //perform save
             checks.save("ycdb_chemistrylab1",userid,courseid);
         }
         else if (button.equals("Check"))
-        {
-              
+        {      
             //perform checks
             checks.check();
         }
         else if (button.equals("Submit"))
-        {
-              
+        {  
             //perform save
             checks.save("ycdb_chemistrylab1",userid,courseid);
             
@@ -173,7 +168,7 @@
             Lab 1: Weighing Measurements: The Balance
     	</title>
     	<link rel="stylesheet" href="labs_css.css">
-    <datalist id="units" >
+    	<datalist id="units" >
             <option value="g" >g</option>	
             <option value="mg" >mg</option>
             <option value="kg" >kg</option>
@@ -193,23 +188,24 @@
      	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR) 
      		{
      			var d = document.getElementById("btns");
-     			var b = document.createElement("BUTTON")
+     			var b = document.createElement("BUTTON");
       		    var t = document.createTextNode("ClearAttempt");
-     		    b.appendChild(t);
+     		    
+				b.appendChild(t);
 				d.appendChild(b);
      		}
         </script>
     </head>
     <body>
-    <p>User Information</p>  
-  	<p style="margin-left:10px">
+    	<p>User Information</p>  
+  		<p style="margin-left:10px">
    			Student Id: <%= userid%> <br />   
-   	</p>  
+   		</p>  
 
-    
     	<fieldset class="fieldset-auto-width">
             <legend>Lab 1: Weighing Measurements: The Balance</legend>
-            <form method="POST"> 
+            
+			<form method="POST"> 
         
             <fieldset>
                 <legend>Basic info</legend>
@@ -259,7 +255,7 @@
             <br>
             <fieldset>
                 <legend>I. DATA</legend>
-		<table>
+			<table>
                     <tr>
                         <th>
                         </th>
@@ -632,7 +628,7 @@
                         </td>
                     </tr>
                     
-		</table>
+			</table>
             </fieldset>
             <br>
             <fieldset>
@@ -737,7 +733,7 @@
                             </div>
                         </td>
                     </tr>
- 		</table>
+ 			</table>
             </fieldset>
             <br>
             <table>

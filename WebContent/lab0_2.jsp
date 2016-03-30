@@ -10,7 +10,7 @@
 <%@ page import="blackboard.platform.persistence.PersistenceService" %>
 <%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
 <%@ page import="blackboard.persist.BbPersistenceManager"%>
- <%@ page import="blackboard.persist.*"%>
+<%@ page import="blackboard.persist.*"%>
  
 <%@ page import="blackboard.data.gradebook.Lineitem" %>
 <%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
@@ -34,7 +34,6 @@
 	</bbNG:pageHeader>
 
 <!DOCTYPE html>
-
 <%
     int dataX = 17;
     int dataY = 2;
@@ -110,25 +109,22 @@
 
         else if (button.equals("Clear"))
         {
+			//perform clear
             checks.clear();
         }
         
         if (button.equals("Save"))
-        {
-              
+        {     
             //perform save
             checks.save("ycdb_chemistrylab2",userid,courseid);
         }
         else if (button.equals("Check"))
-        {
-            //get data from form
-             
+        { 
             //perform checks
             checks.check();
         }
         else if (button.equals("Submit"))
         {
-             
             //perform save
             checks.save("ycdb_chemistrylab2", userid, courseid);
             
@@ -140,8 +136,8 @@
             button = "";
         }
     }
-    
  %>
+
 <html>
     <head>
         <title>Lab 2: Volume Measurements and the Determination of Density</title>

@@ -34,9 +34,7 @@
 		</bbNG:pageTitleBar>
 	</bbNG:pageHeader>
 
-
 <!DOCTYPE html>
-
  <%
 	 int dataX = 12;
  	 int dataY = 3;
@@ -85,8 +83,6 @@
     {
         button = "";
 	    //set types
-         
-         
         checks.setType(0, 0, "String");
         checks.setType(1, 0, "String");
         
@@ -192,24 +188,25 @@
      	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR) 
      		{
      			var d = document.getElementById("btns");
-     			var b = document.createElement("BUTTON")
+     			var b = document.createElement("BUTTON");
       		    var t = document.createTextNode("ClearAttempt");
-     		    b.appendChild(t);
+     		    
+				b.appendChild(t);
 				d.appendChild(b);
      		}
         </script>
     </head>
     <body>
     	<p>User Information</p>  
-  	<p style="margin-left:10px">
+  		<p style="margin-left:10px">
   		Name: <%= u.getGivenName() + " " + u.getFamilyName() %><br />   
   		Student Id: <%= u.getId().toExternalString()%> <br /> <br />   
- 	</p>   
+ 		</p>   
 
-    
     	<fieldset class="fieldset-auto-width">
             <legend>Lab 1: Weighing Measurements: The Balance</legend>
-            <form method="POST">
+            
+			<form method="POST">
         
             <fieldset>
                 <legend>Basic info</legend>
@@ -253,7 +250,7 @@
             <br>
             <fieldset>
                 <legend>I. DATA</legend>
-		<table>
+			<table>
                     <tr>
                         <th>
                         </th>
@@ -554,7 +551,7 @@
                         </td>
                     </tr>
                     
-		</table>
+			</table>
             </fieldset>
             <br>
             <fieldset>
@@ -641,7 +638,7 @@
                             </div>
                         </td>
                     </tr>
- 		</table>
+ 			</table>
             </fieldset>
             <br>
             <table>
