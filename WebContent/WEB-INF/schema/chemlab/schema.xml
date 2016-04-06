@@ -5,71 +5,103 @@
  	  <column name="UserId" data-type="varchar(30)" nullable="true" identity="true" />
 	  <column name="CourseId" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="NumMetalRod" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="nmrError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="nmrGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="NumMetalWire" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="nmwError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="nmwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="QuadMetalRodMeasure" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="qmrwError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="qmrwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="QuadMetalRodUnit" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="qmruError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="qmruGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="QuadMetalRodSigFig" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="qmrsError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="qmrsGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="QuadVialMeasure" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="qvwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="QuadVialUnit" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="qvuError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="qvuGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="QuadVialSigFig" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="qvsError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="qvsGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="AnalyMetalRodMeasure" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="amrwError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="amrwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="AnalyMetalRodUnit" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amruError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="amruGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="AnalyMetalRodSigFig" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amrsError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="amrsGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="AnalyMetalWireMeasureTrial1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="amww1Error" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="amww1Grade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="AnalyMetalWireUnitTrial1" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amwu1Error" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="amwu1Grade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="AnalyMetalWireSigFigTrial1" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amws1Error" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="amws1Grade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="AnalyMetalWireMeasureTrial2" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="amww2Error" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="amww2Grade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="AnalyMetalWireUnitTrial2" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="amwu2Grade" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amwu2Error" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="AnalyMetalWireSigFigTrial2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amws2Error" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="amws2Grade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="AnalyMetalWireMeasureTrial3" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="amww3Error" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="amww3Grade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="AnalyMetalWireUnitTrial3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amwu3Error" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="amwu3Grade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="AnalyMetalWireSigFigTrial3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amws3Error" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="amws3Grade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="WeighingPaperMeasure" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="wpwError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="wpwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="WeighingPaperUnit" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="wpuError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="wpuGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="WeighingPaperSigFig" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="wpsError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="wpsGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="WeighingPaperNaClMeasure" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="wpncwError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="wpncwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="WeighingPaperNaClUnit" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="wpncuError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="wpncuGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="WeighingPaperNaClSigFig" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="wpncsError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="wpncsGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="AverageMetalWireMeasure" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="amwwError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="amwwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="AverageMetalWireUnit" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amwuError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="amwuGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="AverageMetalWireSigFig" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="amwsError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="amwsGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="NaClMeasure" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="ncwError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="ncwGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="NaClUnit" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="ncuError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="ncuGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="NaClSigFig" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="ncsError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="ncsGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="TimeSubmitted" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="IsSubmitted" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="Total" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <primary-key name="ycdb_chemistrylab1_pk1" comment="Unique primary key">
        <columnref name="pk1" />
       </primary-key>
@@ -83,60 +115,90 @@
 	  <column name="CourseId" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="PartnerNames" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="WeightIronSaltS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="WISS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="WISS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="WeightIronSaltS2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="WISS2Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="WISS2Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="WeightIronSaltS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="WISS3Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="WISS3Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="FinalBuretS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="FBS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="FBS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="FinalBuretS2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="FBS2Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="FBS2Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="FinalBuretS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="FBS3Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="FBS3Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="InitialBuretS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="IBS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="IBS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="InitialBuretS2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="IBS2Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="IBS2Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="InitialBuretS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="IBS3Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="IBS3Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="VolumeEDTAS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="VEDTAS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="VEDTAS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="VolumeEDTAS2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="VEDTAS2Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="VEDTAS2Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="VolumeEDTAS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="VEDTAS3Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="VEDTAS3Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolarityEDTAS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="MEDTAS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MEDTAS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolarityEDTAS2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="MEDTAS2Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MEDTAS2Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolarityEDTAS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="MEDTAS3Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MEDTAS3Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolesTitrationS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="MTS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MTS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolesTitrationS2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="MTS2Error" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="MTS2Grade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="MolesTitrationS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="MTS3Error" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="MTS3Grade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="MolesSampleS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="MSS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MSS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolesSampleS2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="MSS2Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MSS2Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolesSampleS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="MSS3Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MSS3Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolesPerGramSaltS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="MPGSS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MPGSS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolesPerGramSaltS2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="MPGSS2Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MPGSS2Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolesPerGramSaltS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="MPGSS3Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MPGSS3Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="AvgMolesPerGramSalt" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="AMPGSError" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="AMPGSGrade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="AvgMolesPerGramSaltFromLast" data-type="varchar(20)" nullable="true" identify="false"/>		  
+	  <column name="AMPGSFLError" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="AMPGSFLGrade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="RatioMoles" data-type="varchar(20)" nullable="true" identify="false"/> 
+	  <column name="RMError" data-type="varchar(20)" nullable="true" identify="false"/> 
 	  <column name="RMGrade" data-type="varchar(20)" nullable="true" identify="false"/> 
 	  <column name="FormulaCharge" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="FCError" data-type="varchar(20)" nullable="true" identify="false"/> 
+	  <column name="FCGrade" data-type="varchar(20)" nullable="true" identify="false"/> 
+	  <column name="Total" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="TimeSubmitted" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="IsSubmitted" data-type="varchar(20)" nullable="true" identify="false"/>
 	<primary-key name="ycdb_chemistrylab3_ak1" comment="Unique primary key">
@@ -153,61 +215,90 @@
 	  <column name="Student" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="PartnerNames" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="WeightVialSalt" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="WVSError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="WVSGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="WeightVial" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="WVError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="WVGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="WeightSalt" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="WSError" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="WSGrade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="ConcentrationS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="CS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="CS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="ConcentrationS2" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="CS2Grade" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="CS2Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="ConcentrationS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="CS3Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="CS3Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="WeightIronSaltS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="WISS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="WISS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="WeightIronSaltS2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="WISS2Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="WISS2Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="WeightIronSaltS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="WISS3Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="WISS3Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="FinalBuretS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="FBS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="FBS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="FinalBuretS2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="FBS2Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="FBS2Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="FinalBuretS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="FBS3Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="FBS3Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="InitialBuretS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="IBS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="IBS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="InitialBuretS2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="IBS2Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="IBS2Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="InitialBuretS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="IBS3Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="IBS3Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="VolumeS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="VS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="VS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="VolumeS2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="VS2Error" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="VS2Grade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="VolumeS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="VS3Error" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="VS3Grade" data-type="varchar(10)" nullable="true" identify="false"/>
 	  <column name="MolesTitrationS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="MTS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MTS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolesTitrationS2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="MTS2Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MTS2Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolesTitrationS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="MTS3Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MTS3Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolesSampleS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="MSS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MSS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolesSampleS2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="MSS2Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MSS2Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolesSampleS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="MSS3Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MSS3Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolesPerGramSaltS1" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="MPGSS1Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MPGSS1Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolesPerGramSaltS2" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="MPGSS2Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MPGSS2Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MolesPerGramSaltS3" data-type="varchar(10)" nullable="true" identify="false"/>
+	  <column name="MPGSS3Error" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="MPGSS3Grade" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="AvgMolesPerGramSalt" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="AMPGSError" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="AMPGSGrade" data-type="varchar(20)" nullable="true" identify="false"/>
+	  <column name="Total" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="TimeSubmitted" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <column name="IsSubmitted" data-type="varchar(20)" nullable="true" identify="false"/>
 	  <primary-key name="ycdb_chemistrylab2_ak1" comment="Unique primary key">
