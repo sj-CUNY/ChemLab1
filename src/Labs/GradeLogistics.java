@@ -516,8 +516,8 @@ string createLab = " CREATE TABLE chemlab.lab (				//table called lab in the che
          labPK      	VARCHAR(20) PRIMARY KEY,
          LabName      	VARCHAR2(20),
          Meta-Data      VARCHAR2(20))
-   TABLESPACE ;//specify a space to store the table 
-   STORAGE ( INITIAL 50K);"  //specify an amount of storage for the table, if desired.  otherwise, delete this line
+   TABLESPACE //specify a space to store the table 
+   STORAGE ( INITIAL 50K)";  //specify an amount of storage for the table, if desired.  otherwise, delete this line
    
 string createLabData = "CREATE TABLE chemlab.lab_data(
 	labDataPK	VARCHAR(20) PRIMARY KEY,
@@ -528,8 +528,8 @@ string createLabData = "CREATE TABLE chemlab.lab_data(
 	dataset2	STRING
 	dataset3	STRING
 	status		NUMBER(1) DEFAULT 0)
-	TABLESPACE ;//specify a space to store the table 
-   	STORAGE ( INITIAL 50K);"  //specify an amount of storage for the table, if desired.  otherwise, delete this line
+	TABLESPACE //specify a space to store the table 
+   	STORAGE ( INITIAL 50K)";  //specify an amount of storage for the table, if desired.  otherwise, delete this line
    
 
 	     
