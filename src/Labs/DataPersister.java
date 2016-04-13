@@ -52,7 +52,7 @@ public class DataPersister {
 	   	this.labname = labname;
 
    }
-	public boolean saveData (String labname, String indata, String userid, String courseid) {
+	public boolean saveData (String labname, String indata, String userid, String courseid, int type) {
         boolean saveResult = true;
         init(labname, userid, courseid);
 		StringBuilder columns = new StringBuilder();
@@ -273,8 +273,8 @@ public class DataPersister {
  		
 	}
 
-
-	public void submitted( Context ctx, String labname, String jspname) {
+	//submitted funciton - last parameter status=2 is defined in the inputChecks.java->submit() 
+	public void submitted( Context ctx, String labname, String jspname, int status) {
  		
 		GradeLogistics gl = new GradeLogistics();
 		Lineitem l = gl.getLineItem(labname, ctx.getCourseId());

@@ -464,6 +464,8 @@ public class inputChecks {
     	}
     	return s;
     }
+    
+    //checks for correct answers, errors and grades
     protected void gradeLab()
     {
         //compare data to key
@@ -475,7 +477,7 @@ public class inputChecks {
                 {
                     if (key[i][j].equals("WRONG"))
                     {
-                        grade[i][j] = 0;
+                        grade[i][j] = -1; //to subtract from the total grade
                         if (error[i][j].equals(""))
                         {
                             error[i][j] += errorMsg;
@@ -498,7 +500,7 @@ public class inputChecks {
                         }
                         else
                         {
-                        	grade[i][j] = 0;
+                        	grade[i][j] = -2.5; //to subtract from the total grade
                         	error[i][j] += errorMsg;
                         }
                     }
@@ -511,7 +513,7 @@ public class inputChecks {
                     //Results: Error 	
                     else if ((j == 0 && i > 9 && i < 12) && Double.compare(Double.parseDouble(data[i][j]), Double.parseDouble(key[i][j])) != 0)
                     {
-                    	grade[i][0] = 0;
+                    	grade[i][0] = -2.5; //to subtract from the total grade
                     	error[i][j] += "X("+ setDecimalFormat(key[i][j], 4) +")";
                     }
                     else
@@ -527,6 +529,8 @@ public class inputChecks {
         }
     }
     
+    
+    // old function to save the data set
     public void save(String labname, String userid, String courseid)
     {
         //build string of data to save
@@ -544,7 +548,91 @@ public class inputChecks {
             }
         }
          //call function
-        save.saveData(labname, theString, userid, courseid);
+        save.saveData(labname, theString, userid, courseid, 0);
+    }
+    
+    //new function to save the data set
+    public void saveInput(String labname, String userid, String courseid)
+    {
+        //build string of data to save the user data set
+        String theString = "";
+        
+        for (int i = 0; i < dataX; i++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {
+                theString += data[i][j];
+                if (i + j < dataX + dataY - 2)
+                {
+                    theString += ",";
+                }
+            }
+        }
+        //call function
+        save.saveData(labname, theString, userid, courseid, 0); // last parameter is the type = 0 means inputData
+    }
+    
+    //new function to save the error messages
+    public void saveErrorMsgs(String labname, String userid, String courseid)
+    {
+        //build string of data to save the error messages
+        String theString = "";
+        
+        for (int i = 0; i < dataX; i++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {
+                theString += error[i][j];
+                if (i + j < dataX + dataY - 2)
+                {
+                    theString += ",";
+                }
+            }
+        }
+         //call function
+        save.saveData(labname, theString, userid, courseid, 1); // last parameter is the type = 1 means error messages
+    }
+    
+    //new function to save the answer keys
+    public void saveAnswersKeys(String labname, String userid, String courseid)
+    {
+        //build string of data to save the answer keys
+        String theString = "";
+        
+        for (int i = 0; i < dataX; i++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {
+                theString += error[i][j];
+                if (i + j < dataX + dataY - 2)
+                {
+                    theString += ",";
+                }
+            }
+        }
+         //call function
+        save.saveData(labname, theString, userid, courseid, 2); // last parameter is the type = 2 means answer keys
+    }
+    
+  //new function to save the grades
+    public void saveGrades(String labname, String userid, String courseid)
+    {
+        //build string of data to save the grades
+        String theString = "";
+        
+        for (int i = 0; i < dataX; i++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {
+                theString += grade[i][j];
+                if (i + j < dataX + dataY - 2)
+                {
+                    theString += ",";
+                }
+            }
+        }
+         //call function
+        save.saveData(labname, theString, userid, courseid, 3); // last parameter is the type = 3 means grades
     }
     
     public void check()
@@ -620,8 +708,14 @@ public class inputChecks {
     
     public void submit(Context ctx, String labname, String jspname)
     {
-        //call save and then save grade
-        save(labname, ctx.getUserId().toExternalString(), ctx.getCourseId().toExternalString());
+        // call saveInput before saving grade
+    	saveInput(labname, ctx.getUserId().toExternalString(), ctx.getCourseId().toExternalString());
+    	// call saveErrorMsgs function 
+    	saveErrorMsgs(labname, ctx.getUserId().toExternalString(), ctx.getCourseId().toExternalString());
+    	// call saveAnswersKeys function 
+    	saveAnswersKeys(labname, ctx.getUserId().toExternalString(), ctx.getCourseId().toExternalString());
+    	// call saveGrades function 
+    	saveGrades(labname, ctx.getUserId().toExternalString(), ctx.getCourseId().toExternalString());
 
         //build string of grade to save
         String theString = "";
@@ -639,10 +733,10 @@ public class inputChecks {
         }
 
         //call function
-        save.saveGrade(theString);
+        //save.saveGrade(theString);
 
         //set submitted
-        save.submitted(ctx, labname, jspname);
+        save.submitted(ctx, labname, jspname, 2); // last parameter status = 2 means submitted, not graded by instructor 
     }
 
     protected void buildKey()
