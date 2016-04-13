@@ -72,21 +72,21 @@ public class DataPersister {
 
    }
    
-	public boolean saveData (String indata) {
+	public boolean saveData (String courseID, String userID, String labName, String dataset, int type) {
         boolean saveResult = true;
-		StringBuilder columns = new StringBuilder();
+		//StringBuilder columns = new StringBuilder();
  		StringBuffer queryString = new StringBuffer("");
         ConnectionManager cManager = null;
         Connection conn = null;
         StringBuffer debugString = new StringBuffer("");
-        LOGGER.info("Input is " + indata);
+        //LOGGER.info("Input is " + indata);
         try {
         	Helper h = new Helper();
             cManager = BbDatabase.getDefaultInstance().getConnectionManager();
             conn = cManager.getConnection();
-            ResultSet rSet = h.exists(conn, userid, courseid, labname);
+            ResultSet rSet = h.exists(conn, userID, courseID, labName);
 			ResultSetMetaData rsMeta = rSet.getMetaData();
-			int columnCount = rsMeta.getColumnCount();
+			//int columnCount = rsMeta.getColumnCount();
 			String[] tokens = h.removeNull(indata);
 			
             if (!(rSet.next()))
@@ -95,10 +95,10 @@ public class DataPersister {
                	
             	//We should never hae to insert because the roster should be already uploaded. 
 	            queryString.append("INSERT INTO " +  labname  + " ( ");
-	            columns = h.buildColumnString(rsMeta, "GRADES");
+	            //columns = h.buildColumnString(rsMeta, "GRADES");
 	           //Insert blank for PK1
-	            queryString.append(columns.toString() + " ) VALUES ( ");      
-	            String qmarks = h.qMarks(columnCount,0).toString() ; 
+	           // queryString.append(columns.toString() + " ) VALUES ( ");      
+	            //String qmarks = h.qMarks(columnCount,0).toString() ; 
 	            
 	  //          LOGGER.info(qmarks);
 	    			
@@ -134,8 +134,21 @@ public class DataPersister {
             else
             {
 
-            	queryString.append("UPDATE " + labname + " SET ");
-            	int count = 0; 
+            	queryString.append("UPDATE chemlab.lab_data SET ");
+            	if(type==0){
+            		queryString.append("dataset0 = dataset, status = 1");
+            	}
+            	else if(type==1){
+            		queryString.append("dataset1 = dataset, status = 2");
+            	}
+            	else if(type==2){
+            		queryString.append("dataset2 = dataset");
+            	}
+            	else if(type==3){
+            		queryString.append("dataset3 = dataset");
+            	}
+            	queryString.append("WHERE userID==user_pk && labName==labDataPK && courseID==course_pk")
+            	/*int count = 0; 
             	String nextColumn = "";
             	LOGGER.info("token size is " + tokens.length);
     			
@@ -159,11 +172,11 @@ public class DataPersister {
             			break;
             		}
             		++count;
-                     
+                */     
                 }
             	
                  //insert where PK1 matches. 
- 	            queryString.append(" WHERE " + rsMeta.getColumnName(1) + " = " + rSet.getString(1));
+ 	            //queryString.append(" WHERE " + rsMeta.getColumnName(1) + " = " + rSet.getString(1));
 
 //                 queryString.append(" WHERE " + rsMeta.getColumnName(2) + "= ? AND " + rsMeta.getColumnName(3) + "= ? ");
 	        //    LOGGER.info(queryString.toString());
