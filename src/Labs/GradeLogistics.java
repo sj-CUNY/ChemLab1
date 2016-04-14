@@ -523,6 +523,7 @@ string createLabData = "CREATE TABLE chemlab.lab_data(
 	labDataPK	VARCHAR(20) PRIMARY KEY,
 	user_pk		VARCHAR2(20) CONSTRAINT fk_username  FOREIGN KEY userPK,	//"userPK" is a placeholder for the actual key
 	course_pk	VARCHAR2(20) CONSTRAINT fk_course  FOREIGN KEY coursePK,	//same as previous
+	lab_pk		VARCHAR(20) CONSTRAINT fk_chemlab.lab FOREIGN KEY LabName,
 	dataset0	STRING
 	dataset1	STRING
 	dataset2	STRING
