@@ -1,4 +1,8 @@
 /**
+ * Helper.java
+ * 
+ * A class that contains various functions that are repeatedly used by
+ * DataPersister.java and DataLoader.java among other classes.
  * 
  */
 package Labs;
@@ -34,17 +38,15 @@ import blackboard.platform.persistence.PersistenceServiceFactory;
  *
  */
 public class Helper {
-
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(Helper.class.getName() );
     
 	public Helper()
-	{
-		
+	{		
 		
 	}
 
-    public String getUserIdFromCourseMembershipId(Context ctx, String userId)
+    //public String getUserIdFromCourseMembershipId(Context ctx, String userId)
+    public String getUserID(Context ctx, String userId)
     {
     	String userid = "";
     	Helper h = new Helper();
@@ -63,6 +65,7 @@ public class Helper {
     	}
     	return userid;
     }
+    
 	public List<CourseMembership> fetchRoster(Context ctx) {
 		PersistenceService bpService = PersistenceServiceFactory.getInstance();
 		BbPersistenceManager bpManager = bpService.getDbPersistenceManager();
@@ -93,74 +96,77 @@ public class Helper {
 		}
 
 		return crsMembership;
-
 	}
 
-
-	public ResultSet exists(Connection conn, String userid, String courseid, String labname)
-	    {
-			StringBuffer queryString = new StringBuffer("");
-			PreparedStatement selectQuery = null;
-			ResultSet rSet = null;
-	 		
+	//performs a query to see if a specific row exists within the database
+	public ResultSet exists(Connection conn, int labNumber, int userid, String courseid, String tableName)
+	{
+		StringBuffer queryString = new StringBuffer("");
+		PreparedStatement selectQuery = null;
+		ResultSet rSet = null;	 		
 			 
-			queryString.append("SELECT * ");
-			queryString.append("FROM ");
-			queryString.append(labname);
-			queryString.append(" WHERE USERID = ? and COURSEID = ?");
+		queryString.append("SELECT * ");
+		queryString.append("FROM ");
+		queryString.append(tableName);
+		queryString.append(" WHERE user_id = ? AND course_id = ? AND lab_number = ?");
 			//LOGGER.info(queryString.toString());
-			try
-			{
-				selectQuery = conn.prepareStatement(queryString.toString(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);			
-				selectQuery.setString(1, userid);
-				selectQuery.setString(2, courseid);
-				rSet = selectQuery.executeQuery();
-				
-		 	}
-			catch(java.sql.SQLException sE)
-			{
-				LOGGER.info(sE.getMessage());
-				sE.printStackTrace();
-			}
-	    	
-	    	return rSet;
-	    }
-
-
-		public StringBuilder qMarks(int length, int start)
+		try
 		{
-			StringBuilder q = new StringBuilder();
-			for(int i = start; i < length; i++) {
-	             if (i == length-1 )  q.append("? )");
-	            else  q.append(" ?, ");
-	        }
-			return q;
+			selectQuery = conn.prepareStatement(queryString.toString(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);			
+			selectQuery.setInt(1, userid);
+			selectQuery.setString(2, courseid);
+			selectQuery.setInt(3, labNumber);
+			rSet = selectQuery.executeQuery();			
+	 	}
+		catch(java.sql.SQLException sE)
+		{
+			LOGGER.info(sE.getMessage());
+			sE.printStackTrace();
 		}
+	    	
+	   	return rSet;
+	}
 
-		public StringBuilder buildColumnString(ResultSetMetaData rsMeta, String except) throws SQLException {
- 			 StringBuilder columns = new StringBuilder();
+	public StringBuilder qMarks(int length, int start)
+	{
+		StringBuilder q = new StringBuilder();
+		
+		for(int i = start; i < length; i++) {
+			if (i == length-1 )  q.append("? )");
+			else q.append(" ?, ");
+		}
+		
+		return q;
+	}
+		
+	//returns a String of the names of all the columns
+	public StringBuilder buildColumnString(ResultSetMetaData rsMeta, String except) throws SQLException
+	{
+ 		 StringBuilder columns = new StringBuilder();
 
-			int columnCount = rsMeta.getColumnCount();
+		int columnCount = rsMeta.getColumnCount();
+		
+		for (int i = 1; i <= columnCount; i++)
+		{
+			if(!rsMeta.getColumnName(i).contains(except))
+			{
+				columns.append(rsMeta.getColumnName(i));
+					
+				if (i != columnCount)
+					columns.append(",");
+			}
+		}
 			
-			for (int i=1; i <= columnCount ; i++)
-	         {
-				if(!rsMeta.getColumnName(i).contains(except))
-				{
-					columns.append(rsMeta.getColumnName(i));
-					 if (i != columnCount)
-						 columns.append(",");
-				}
-	         }
-			return columns;
-		}
+		return columns;
+	}
 
-//Use this for insert -- 
-		public Object buildColumnString(ResultSetMetaData rsMeta) throws SQLException {
+		//Use this for insert -- 
+		public StringBuilder buildColumnString(ResultSetMetaData rsMeta) throws SQLException {
 			 StringBuilder columns = new StringBuilder();
 
 			 int columnCount = rsMeta.getColumnCount();
 			
-			 for (int i=1; i <= columnCount ; i++)
+			 for (int i = 1; i <= columnCount ; i++)
 	         { 
 				columns.append(rsMeta.getColumnName(i));
 				 if (i != columnCount)
@@ -195,42 +201,44 @@ public class Helper {
 			return token_out;
 		}
 
+   //gets the next value for the primary key in the table
+   public int nextVal(String tableName)
+   {
+	   ConnectionManager cManager = null;
+	   Connection conn = null;
+	   //int value = 101;
+	   int value = 0;
+	   
+	   try {
+		   cManager = BbDatabase.getDefaultInstance().getConnectionManager();
+		   conn = cManager.getConnection();
+		   StringBuffer queryString = new StringBuffer("");
+		   //queryString.append("Select " + labname + "_seq.nextval FROM dual");
+		   queryString.append("SELECT MAX(pk1) FROM " + tableName);
 
-		   public int nextVal(String labname)
-		   {
-			   ConnectionManager cManager = null;
-				Connection conn = null;
-				int value = 101;
- 				 try {
-		            cManager = BbDatabase.getDefaultInstance().getConnectionManager();
-		            conn = cManager.getConnection();
-		            StringBuffer queryString = new StringBuffer("");
-	        	    queryString.append("Select " + labname + "_seq.nextval FROM dual");
-
-	              PreparedStatement query = conn.prepareStatement(queryString.toString());
-	              ResultSet rs = query.executeQuery();
-	              if(rs.next())
-	            	  value = rs.getInt(1);
-	              LOGGER.info("query executed value is " + value);
-				 }
-				catch (java.sql.SQLException sE){
-		        	
-		        	LOGGER.error( sE.getMessage());
-		        	sE.printStackTrace();
+		   PreparedStatement query = conn.prepareStatement(queryString.toString());
+		   ResultSet rs = query.executeQuery();
+		   
+		   if(rs.next())
+			   value = rs.getInt(1) + 1;
+	              
+		   LOGGER.info("query executed value is " + value);
+	   }
+	   catch (java.sql.SQLException sE) {
+		   LOGGER.error( sE.getMessage());
+		   sE.printStackTrace();
 		        		
-				} catch (ConnectionNotAvailableException cE){
+	   } catch (ConnectionNotAvailableException cE){
 		                	
-		        	LOGGER.error( cE.getMessage() );
-		        	cE.printStackTrace();
+		   LOGGER.error( cE.getMessage() );
+		   cE.printStackTrace();
 		           
-		        } finally {
-		            if(conn != null){
-		                cManager.releaseConnection(conn);
-		            }
-		        }
-			   
-			   return value;
+	   } finally {
+		   if(conn != null){
+			   cManager.releaseConnection(conn);
 		   }
-
-	
+	   }
+			   
+	   return value;
+   }	
 }

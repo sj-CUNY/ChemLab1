@@ -1,6 +1,7 @@
 /**
  * 
  */
+
 package Labs;
 
 import java.sql.Connection;
@@ -45,9 +46,7 @@ import blackboard.platform.plugin.PlugInUtil;
  *
  */
  public class GradeLogistics {
-
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(GradeLogistics.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(GradeLogistics.class.getName());
 
 
 	public GradeLogistics() {
@@ -420,8 +419,6 @@ import blackboard.platform.plugin.PlugInUtil;
 
 			AttemptDbPersister.Default.getInstance().persist(attempt);
 			LOGGER.info("New attempt created for " + cm.getId().toExternalString());
-
-
 		} 
 		else 
 		{
@@ -433,6 +430,4 @@ import blackboard.platform.plugin.PlugInUtil;
 
 		return;
 	}
-
-
   }
