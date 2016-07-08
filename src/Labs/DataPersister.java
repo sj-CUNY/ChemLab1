@@ -1,3 +1,10 @@
+/*
+ * DataPersister.java
+ * 
+ * This class is responsible for storing data into the database
+ * that is hosted on Blackboard. 
+ */
+
 package Labs;
 
 import java.sql.Connection;
@@ -22,27 +29,30 @@ import blackboard.platform.context.ContextManager;
 public class DataPersister {
    
 	private static final Logger LOGGER = LoggerFactory.getLogger(DataPersister.class.getName() );
+    /*
+	//ContextManager contextManager; //unused
+	//Context ctx; //unused
+	//User user; //unused
+	//StringBuilder sb; //I'm not sure what the purpose of this is
+    String userid; //stores user ID that's taken from Blackboard
+    String courseid; //stores course ID that's taken from Blackboard
     
-	ContextManager contextManager ;
-	Context ctx ;
-	User user ;
-	StringBuilder sb;
-    String userid ;
-    String courseid;
-    
-	StringBuffer queryString;
+	//StringBuffer queryString; //used to store a query to the database
     String labname = null;
- 	
+ 	*/
+   //empty constructor 
    public DataPersister()
-    {
+   {
  
-    }
-	 
+   }
+   
+   //don't know why this is here
    public DataPersister(Context ctx , String labname)
    {
   
    }
-
+   /*
+   //not sure why this is needed
    private void init(String labname, String userid, String courseid)
    {
    	   	queryString = new StringBuffer("");
@@ -50,32 +60,40 @@ public class DataPersister {
 	       //LOGGER.info("init - Courseid " + courseid);
 	   	sb = new StringBuilder();
 	   	this.labname = labname;
-
-   }
-	public boolean saveData (String labname, String indata, String userid, String courseid) {
-        boolean saveResult = true;
-        init(labname, userid, courseid);
+	   	this.userid = userid;
+	   	this.courseid = courseid;
+   }*/
+   
+   //when user selects "save" from the front end, the data is stored in the database   
+   public boolean saveData(String tableName, int labNumber, int userid, String courseid, String inData) 
+   {
+	   	boolean saveResult = true; //flag that keeps track of data was saved or not
+        //init(labname, userid, courseid);
 		StringBuilder columns = new StringBuilder();
  		StringBuffer queryString = new StringBuffer("");
         ConnectionManager cManager = null;
         Connection conn = null;
         StringBuffer debugString = new StringBuffer("");
-        LOGGER.info("Input is " + indata);
-        try {
+        int status = 0;
+        
+        LOGGER.info("Input is " + inData);
+        
+        try 
+        {
         	Helper h = new Helper();
             cManager = BbDatabase.getDefaultInstance().getConnectionManager();
-            conn = cManager.getConnection();
-            ResultSet rSet = h.exists(conn, userid, courseid, labname);
+            conn = cManager.getConnection(); //establish connection to Blackboard database
+            ResultSet rSet = h.exists(conn, labNumber, userid, courseid, tableName);
 			ResultSetMetaData rsMeta = rSet.getMetaData();
 			int columnCount = rsMeta.getColumnCount();
-			String[] tokens = h.removeNull(indata);
+			//String[] tokens = h.removeNull(indata);//might need to remove this part
 			
-            if (!(rSet.next()))
+			if(!(rSet.next())) //creates a new entry
             {
-              int pk1 =  h.nextVal(labname);
-               	
-            	//We should never hae to insert because the roster should be already uploaded. 
-	            queryString.append("INSERT INTO " +  labname  + " ( ");
+            	int pk1 =  h.nextVal(tableName);
+               	/*
+            	//We should never have to insert because the roster should be already uploaded. 
+	            queryString.append("INSERT INTO " +  tableName  + " ( ");
 	            columns = h.buildColumnString(rsMeta, "GRADES");
 	           //Insert blank for PK1
 	            queryString.append(columns.toString() + " ) VALUES ( ");      
@@ -86,57 +104,77 @@ public class DataPersister {
  	            queryString.append(qmarks);
 	            
 	//            LOGGER.info(queryString.toString());
-	            				
+	            */
+            	
+            	columns = h.buildColumnString(rsMeta);
+            	queryString.append("INSERT INTO " + tableName + " (" 
+            			+ columns.toString() + ") VALUES (");
+            	String qmarks = h.qMarks(columnCount,0).toString();
+            	queryString.append(qmarks);
+            	
 	            PreparedStatement insertQuery = conn.prepareStatement(queryString.toString());
+	            
+	            if(inData != null)
+	            	status = 1;
+	            
 	          //need to change this to unique key
   	            insertQuery.setInt(1, pk1);
-	            insertQuery.setString(2, userid);
-	            insertQuery.setString(3, courseid);
-	          		            
-	            for (int i=0; i < tokens.length; i++) {
+	            insertQuery.setInt(2, labNumber);
+	            insertQuery.setInt(3, userid);
+	            insertQuery.setString(4, courseid);
+	            insertQuery.setInt(5, status);
+	            insertQuery.setString(6, inData);
+	            insertQuery.setString(7, null);
+	            insertQuery.setString(8, null);
+	            insertQuery.setString(9, null);
+	          	/*	            
+	            for(int i = 0; i < tokens.length; i++) {
 	                insertQuery.setString((i + 4), tokens[i]);
 //	                LOGGER.info(tokens[i]);
-	            }          
+	            }   */       
+	            
 	            LOGGER.info(insertQuery.toString());
+	            
 	            int insertResult = insertQuery.executeUpdate();
 	            
-	            if(insertResult != 1){
-	            	
-	            	saveResult = false ;
-	            	
+	            if(insertResult != 1)
+	            {	            	
+	            	saveResult = false ;	            	
 	            }
 	            
 	            insertQuery.close();
             }
-            else
+            else //updates all columns for a given row
             {
-
-            	queryString.append("UPDATE " + labname + " SET ");
+            	queryString.append("UPDATE " + tableName + " SET ");
             	int count = 0; 
             	String nextColumn = "";
-            	LOGGER.info("token size is " + tokens.length);
-    			
-            	for (int j= 4; j <= rsMeta.getColumnCount(); ++j)
+            	//LOGGER.info("token size is " + tokens.length);
+            	
+            	//read all column names in the table starting at "status"
+            	for(int j = 4; j <= rsMeta.getColumnCount(); ++j)//might need to change this so it doesn't read beyond "data_set"
                 {	 
-                	 nextColumn = rsMeta.getColumnName(j);
-                	 if (nextColumn.contains("GRADE"))
-                	 {
-                		 continue;
-                			 
-                	 }
-                     queryString.append(nextColumn + "= ? ");
-                     
-                     if ( count < tokens.length-1)
-                     {
-                    	  queryString.append(",");
-                	 }
+                	nextColumn = rsMeta.getColumnName(j);
+                	
+                	/*
+                	if(nextColumn.contains("GRADE"))
+                	{
+                		continue;
+                	}
+                    */
+                	queryString.append(nextColumn + " = ?");
+                    /* 
+                    if(count < tokens.length-1)
+                    {
+                    	queryString.append(",");
+                	}
             		else
             		{
             	//		LOGGER.info("query is " + queryString.toString());
             			break;
             		}
-            		++count;
-                     
+            		*/
+                     ++count;                     
                 }
             	
                  //insert where PK1 matches. 
@@ -152,14 +190,15 @@ public class DataPersister {
 	            LOGGER.info("Num data: " + tokens.length);
 	            LOGGER.info("Userid: " + userid);
 	            LOGGER.info("Courseid: " + courseid);
- 	         */
-	          for (int i=0; i < tokens.length; i++) 
+ 	         
+	          for(int i = 0; i < tokens.length; i++) 
 	           {
 	         //       LOGGER.info("index at " + (i+1) + " token " + tokens[i]);   
 	                updateQuery.setString((i + 1), tokens[i].trim());
 
 	            }          
-	            /*updateQuery.setString(tokens.length+1, userid);
+	            
+	            updateQuery.setString(tokens.length+1, userid);
 	            debugString.append(userid+",");
 	            
 	            updateQuery.setString(tokens.length+2, courseid);
@@ -168,26 +207,22 @@ public class DataPersister {
 	            //LOGGER.info(debugString.toString());
 	            int updateResult = updateQuery.executeUpdate();
 	            
-	            if(updateResult != 1){
-	            	
-	            	saveResult = false ;
-	            	
+	            if(updateResult != 1)
+	            {	            	
+	            	saveResult = false ;	            	
 	            }
 	            
 	            updateQuery.close();
             	
             }
-        } catch (java.sql.SQLException sE){
-        	
+        } catch (java.sql.SQLException sE) {        	
         	saveResult = false ;
 
            	LOGGER.error( sE.getMessage());
            	LOGGER.error( debugString.toString());
             
            	sE.printStackTrace();
-
-        } catch (ConnectionNotAvailableException cE){
-        	
+        } catch (ConnectionNotAvailableException cE) {        	
         	saveResult = false ;
         	
         	LOGGER.error( cE.getMessage() );
@@ -200,8 +235,6 @@ public class DataPersister {
         
         return saveResult;
 	}
-	
-
 
 	public boolean submitGrades (String indata) {
         boolean saveResult = true;
@@ -268,13 +301,118 @@ public class DataPersister {
 	}
 
 
-	public void saveGrade(String theString) {
- 		
+	public boolean submitData(String tableName, int labNumber, int userid, String courseid, String inData, String errorMsgs, String scores, String answers)
+	{
+	   	boolean saveResult = true; //flag that keeps track of data was saved or not
+		StringBuilder columns = new StringBuilder();
+ 		StringBuffer queryString = new StringBuffer("");
+        ConnectionManager cManager = null;
+        Connection conn = null;
+        StringBuffer debugString = new StringBuffer("");
+        int status = 2;
+        
+        LOGGER.info("Input is " + inData);
+        
+        try 
+        {
+        	Helper h = new Helper();
+            cManager = BbDatabase.getDefaultInstance().getConnectionManager();
+            conn = cManager.getConnection(); //establish connection to Blackboard database
+            ResultSet rSet = h.exists(conn, labNumber, userid, courseid, tableName);
+			ResultSetMetaData rsMeta = rSet.getMetaData();
+			int columnCount = rsMeta.getColumnCount();
+			
+			if(!(rSet.next())) //creates a new entry
+            {
+            	int pk1 =  h.nextVal(tableName);
+
+            	columns = h.buildColumnString(rsMeta);
+            	queryString.append("INSERT INTO " + tableName + " (" 
+            			+ columns.toString() + ") VALUES (");
+            	String qmarks = h.qMarks(columnCount,0).toString();
+            	queryString.append(qmarks);
+            	
+	            PreparedStatement insertQuery = conn.prepareStatement(queryString.toString());
+	            
+	            if(inData != null)
+	            	status = 1;
+	            
+	            insertQuery.setInt(1, pk1);
+	            insertQuery.setInt(2, labNumber);
+	            insertQuery.setInt(3, userid);
+	            insertQuery.setString(4, courseid);
+	            insertQuery.setInt(5, status);
+	            insertQuery.setString(6, inData);
+	            insertQuery.setString(7, errorMsgs);
+	            insertQuery.setString(8, scores);
+	            insertQuery.setString(9, answers);
+	          	
+	            LOGGER.info(insertQuery.toString());
+	            
+	            int insertResult = insertQuery.executeUpdate();
+	            
+	            if(insertResult != 1)
+	            {	            	
+	            	saveResult = false ;	            	
+	            }
+	            
+	            insertQuery.close();
+            }
+            else //updates all columns for a given row
+            {
+            	queryString.append("UPDATE " + tableName + " SET ");
+            	int count = 0; 
+            	String nextColumn = "";
+            	
+            	//read all column names in the table starting at "status"
+            	for(int j = 4; j <= rsMeta.getColumnCount(); ++j)
+                {	 
+                	nextColumn = rsMeta.getColumnName(j);
+                	
+                	queryString.append(nextColumn + " = ?");
+                    
+                	++count;                     
+                }
+            	
+                 //insert where PK1 matches. 
+ 	            queryString.append(" WHERE " + rsMeta.getColumnName(1) + " = " + rSet.getString(1));
+
+ 	            PreparedStatement updateQuery = conn.prepareStatement(queryString.toString());
+ 	  
+	            int updateResult = updateQuery.executeUpdate();
+	            
+	            if(updateResult != 1)
+	            {	            	
+	            	saveResult = false ;	            	
+	            }
+	            
+	            updateQuery.close();
+            	
+            }
+        } catch (java.sql.SQLException sE) {        	
+        	saveResult = false ;
+
+           	LOGGER.error( sE.getMessage());
+           	LOGGER.error( debugString.toString());
+            
+           	sE.printStackTrace();
+        } catch (ConnectionNotAvailableException cE) {        	
+        	saveResult = false ;
+        	
+        	LOGGER.error( cE.getMessage() );
+            cE.printStackTrace();
+        } finally {
+            if(conn != null){
+                cManager.releaseConnection(conn);
+            }
+        }
+        
+        return saveResult;
 	}
 
 
-	public void submitted( Context ctx, String labname, String jspname) {
- 		
+	public void submitted( Context ctx, String labname, String jspname)
+	{ 		
 		GradeLogistics gl = new GradeLogistics();
 		Lineitem l = gl.getLineItem(labname, ctx.getCourseId());
 		if (l != null)

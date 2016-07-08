@@ -1,3 +1,15 @@
+/*
+ * DataLoader.java
+ * 
+ * This class is responsible for loading data from the database.
+ * It will either load an entire row derived from a given userid,
+ * courseid, and labNumber. Or it will return the saved student
+ * data to repopulate the front end, so that it can be completed
+ * by the student.
+ * 
+ */
+
+
 package Labs;
 
 import java.sql.Connection;
@@ -15,13 +27,25 @@ import blackboard.db.ConnectionNotAvailableException;
  
 public class DataLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class.getName());
-	String labname = null;
-    public DataLoader()
-    {
-     
-    	
+	private String tableName;
+    
+	public DataLoader(String t)
+    {     
+    	setTableName(t);
     }
-	public String loadData(String labname, String userid, String courseid) {
+	
+	public String getTableName()
+	{
+		return tableName;
+	}
+	
+	public void setTableName(String t)
+	{
+		tableName = t;
+	}
+	
+	//returns an entire row using given userid, courseid, and labNumber
+	public String loadData(int userid, String courseid, int labNumber) {
  		StringBuilder sb = new StringBuilder();
 		StringBuffer queryString = new StringBuffer("");
  		ConnectionManager cManager = null;
@@ -34,23 +58,23 @@ public class DataLoader {
 			
 			queryString.append("SELECT * ");
 			queryString.append("FROM ");
-			queryString.append(labname);
-			queryString.append(" WHERE UserId = ? AND CourseId = ?");
+			queryString.append(tableName);
+			queryString.append(" WHERE user_id = ? AND course_id = ? AND lab_number = ?");
 			LOGGER.info(queryString.toString());
-			selectQuery = conn.prepareStatement(queryString.toString(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 			
-			selectQuery.setString(1, userid);
-			selectQuery.setString(2, courseid);
-			  
+			selectQuery = conn.prepareStatement(queryString.toString(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+			selectQuery.setInt(1, userid);
+			selectQuery.setString(2, courseid);		
+			selectQuery.setInt(3, labNumber);
 
 			ResultSet rSet = selectQuery.executeQuery();
+ 			ResultSetMetaData rsMetaData = rSet.getMetaData();
  			
-			ResultSetMetaData rsMetaData = rSet.getMetaData();
- 			LOGGER.info( "column count is: " + rsMetaData.getColumnCount());
+			LOGGER.info( "column count is: " + rsMetaData.getColumnCount());
 
-			if (rSet.next() && userid.equals(rSet.getString(2))){
+			if (rSet.next() && userid == rSet.getInt(3)) {
 				LOGGER.info("user id is " + userid + " rSet string at 1 is: " + rSet.getString(1));
-				sb = labSpecificFix(rSet, rsMetaData,labname);
+				//sb = labSpecificFix(rSet, rsMetaData, tableName);
 			}
 			LOGGER.info("user id is " + userid + " selectQuery is: " + selectQuery.toString());
 			
@@ -73,10 +97,70 @@ public class DataLoader {
 		LOGGER.info("returnData " + returnData);
 		return returnData;
 	}
+
+	//returns the saved data for a student's lab that has not yet been submitted
+	public String restoreLab(int userid, String courseid, int labNumber) {
+ 		StringBuilder sb = new StringBuilder();
+		StringBuffer queryString = new StringBuffer("");
+ 		ConnectionManager cManager = null;
+		Connection conn = null;
+		PreparedStatement selectQuery = null;
+		String columnName = "data_set";
+		
+		try {
+			cManager = BbDatabase.getDefaultInstance().getConnectionManager();
+			conn = cManager.getConnection();
+			
+			queryString.append("SELECT " + columnName);
+			queryString.append(" FROM ");
+			queryString.append(tableName);
+			queryString.append(" WHERE user_id = ? AND course_id = ? AND lab_number = ?");
+			
+			LOGGER.info(queryString.toString());
+			
+			selectQuery = conn.prepareStatement(queryString.toString(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+			selectQuery.setInt(1, userid);
+			selectQuery.setString(2, courseid);		
+			selectQuery.setInt(3, labNumber);
+
+			ResultSet rSet = selectQuery.executeQuery();
+ 			ResultSetMetaData rsMetaData = rSet.getMetaData();
+ 			
+			LOGGER.info( "column count is: " + rsMetaData.getColumnCount());
+
+			if (rSet.next() && userid == rSet.getInt(3)) {
+				LOGGER.info("user id is " + userid + " rSet string at 1 is: " + rSet.getString(1));
+				//sb = labSpecificFix(rSet, rsMetaData, tableName);
+			}
+			LOGGER.info("user id is " + userid + " selectQuery is: " + selectQuery.toString());
+			
+			rSet.close();
+			selectQuery.close();
+		} catch (java.sql.SQLException sE) {
+			
+			LOGGER.error("MARKER 1: " + sE.getMessage());
+			sE.printStackTrace();
+		} catch (ConnectionNotAvailableException cE) {
+			
+			LOGGER.error("MARKER 2" + cE.getMessage());
+		}finally {
+			if (conn != null){
+				cManager.releaseConnection(conn);
+			}
+		}
+		
+		String returnData = sb.toString();
+		
+		LOGGER.info("returnData " + returnData);
+		
+		return returnData;
+	}
 	
+	/*
 	private StringBuilder labSpecificFix(ResultSet rSet,
 		ResultSetMetaData rsMetaData, String labname) throws SQLException {
 		StringBuilder s = new StringBuilder();
+		
 		if(labname.contains("ycdb_chemistrylab1"))
 		{
 			s = lab1Fix(rSet, rsMetaData, labname);
@@ -85,9 +169,11 @@ public class DataLoader {
 		{
 			s = lab2Fix(rSet, rsMetaData, labname);
 		}
+		
 		return s;		
 	}
-	private StringBuilder lab1Fix(ResultSet rSet, ResultSetMetaData rsMeta,   String labname) throws SQLException {
+	
+	private StringBuilder lab1Fix(ResultSet rSet, ResultSetMetaData rsMeta, String labname) throws SQLException {
  		StringBuilder sb = new StringBuilder();
 		int columnCount = rsMeta.getColumnCount();
 		int count = 0;
@@ -116,9 +202,11 @@ public class DataLoader {
 
 			++j;
 		}
+		
 		LOGGER.info("loadData returns this " + sb.toString());
 		return sb;
 	}
+	
 	//- Input is 1,null,1,null,1,null,1,null,1,null,1,1,1,1,1,1,1,1,1,1,1,null,1,null,1,1,1,1,1,1,0,1,1,null
 	private StringBuilder lab2Fix(ResultSet rSet, ResultSetMetaData rsMeta,   String labname) throws SQLException {
  		StringBuilder sb = new StringBuilder();
@@ -155,5 +243,5 @@ public class DataLoader {
 		LOGGER.info("loadData returns this " + sb.toString());
 		return sb;
 	}
-
+	*/
 }
