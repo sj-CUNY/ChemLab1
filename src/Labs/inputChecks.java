@@ -30,11 +30,12 @@ public class inputChecks {
 	private static final Logger LOGGER = LoggerFactory.getLogger(inputChecks.class.getName()); 
     
     //constructor that also calls initData()
-	public inputChecks(Context ctx, int X, int Y, int userid, String courseid, int labNumber)
+	public inputChecks(Context ctx, String tableName, int X, int Y, 
+			int userid, String courseid, int labNumber)
     {
         dataX = X;
         dataY = Y;
-        load = new DataLoader();
+        load = new DataLoader(tableName);
         save = new DataPersister();
         
         data = new String[dataX][dataY]; //stores lab data

@@ -65,7 +65,7 @@ public class DataPersister {
    }*/
    
    //when user selects "save" from the front end, the data is stored in the database   
-   public boolean saveData(int labNumber, int userid, String courseid, String inData) 
+   public boolean saveData(String tableName, int labNumber, int userid, String courseid, String inData) 
    {
 	   	boolean saveResult = true; //flag that keeps track of data was saved or not
         //init(labname, userid, courseid);
@@ -74,7 +74,6 @@ public class DataPersister {
         ConnectionManager cManager = null;
         Connection conn = null;
         StringBuffer debugString = new StringBuffer("");
-        String tableName = "ycdb_lab_data";
         int status = 0;
         
         LOGGER.info("Input is " + inData);
@@ -302,7 +301,7 @@ public class DataPersister {
 	}
 
 
-	public boolean submitData(int labNumber, int userid, String courseid, String inData, String errorMsgs, String scores, String answers)
+	public boolean submitData(String tableName, int labNumber, int userid, String courseid, String inData, String errorMsgs, String scores, String answers)
 	{
 	   	boolean saveResult = true; //flag that keeps track of data was saved or not
 		StringBuilder columns = new StringBuilder();
@@ -310,7 +309,6 @@ public class DataPersister {
         ConnectionManager cManager = null;
         Connection conn = null;
         StringBuffer debugString = new StringBuffer("");
-        String tableName = "ycdb_lab_data";
         int status = 2;
         
         LOGGER.info("Input is " + inData);
@@ -413,8 +411,8 @@ public class DataPersister {
 	}
 
 
-	public void submitted( Context ctx, String labname, String jspname) {
- 		
+	public void submitted( Context ctx, String labname, String jspname)
+	{ 		
 		GradeLogistics gl = new GradeLogistics();
 		Lineitem l = gl.getLineItem(labname, ctx.getCourseId());
 		if (l != null)

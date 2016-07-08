@@ -27,12 +27,22 @@ import blackboard.db.ConnectionNotAvailableException;
  
 public class DataLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class.getName());
-	private String tableName = "ycdb_lab_data";
+	private String tableName;
     
-	public DataLoader()
+	public DataLoader(String t)
     {     
-    	
+    	setTableName(t);
     }
+	
+	public String getTableName()
+	{
+		return tableName;
+	}
+	
+	public void setTableName(String t)
+	{
+		tableName = t;
+	}
 	
 	//returns an entire row using given userid, courseid, and labNumber
 	public String loadData(int userid, String courseid, int labNumber) {
