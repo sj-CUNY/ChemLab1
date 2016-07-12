@@ -6,69 +6,65 @@ import blackboard.platform.context.Context;
 
 public class lab0_1Checks extends inputChecks
 {
-	public lab0_1Checks(Context ctx, int x, int y, String labname, String userid, String courseid)
+	public lab0_1Checks(Context ctx, String tableName, int x, int y, 
+			int userid, String courseid, int labNumber)
 	{
-        super(ctx, x,y, labname, userid, courseid);
+        super(ctx, tableName, x, y, userid, courseid, labNumber);
     }
  
 	@Override
     protected void buildKey()
     {
-        for (int i = 0; i < dataX; i ++)
+		int k = 0; //holds integer values for each answer
+		
+        for(int i = 0; i < dataX; ++i)
         {
-            for (int j = 0; j < dataY; j++)
+            for (int j = 0; j < dataY; ++j)
             {
-                if (data[i][j] != null && !data[i][j].equals(""))
+                if(data[i][j] != null)
                 {
-                    setKey(i,j,"*");
+                    key[i][j] = "*"; //where there is no data to input
                     
-                    //Quadruple beam balance
-                    if ((i > 1 && i < 4) && j == 0)
+                    //Quadruple beam balance (sig figs)
+                    if (i > 1 && i < 4)
                     {
-                        //setKey(i,j,setToDecPlaces(getData(i,j),3));
-                    	setKey(i,j,"3");
+                    	if(j == 0)
+                    	{
+                    		key[i][j] = setDecPlaces(data[i][j], 3);
+                    	}
+                    	else if(j == 2)
+                    	{
+                    		k = countIntegers(data[i][j]) + 3;
+                    		key[i][j] = Integer.toString(k);
+                    	}
                     }
-                    //Analytical balance
-                    if ((i > 3 && i < 10) && j == 0)
+                    
+                    //Analytical balance (sig figs)
+                    if(i > 3 && i < 10)
                     {
-                        //setKey(i,j,setToDecPlaces(getData(i,j),4));
-                        setKey(i,j,"4");
+                        if(j == 0) 
+                    	{
+                    		key[i][j] = setDecPlaces(data[i][j], 4);
+                    	}
+                    	else if(j == 2)
+                    	{
+                    		k = countIntegers(data[i][j]) + 4;
+                    		key[i][j] = Integer.toString(k);
+                    	}
                     }
-                  //Results
-                    /*
-                    if ((i > 9 && i < 12) && j == 0)
+                    
+                    //Number of Sig Fig Column
+                    if ((i > 9 && i < dataX) && j == 2)
                     {
-                        //setKey(i,j,setToDecPlaces(getData(i,j),4));
-                        setKey(i,j,"4");
+                        key[i][j] = "" + getSigFigs(data[i][0]);
                     }
-                    */
+                    
                     //Unit column
                     if ((i > 1 && i < 12) && j == 1)
                     {
-                        setKey(i,j,"g");
+                        key[i][j] = "g";
                     }
-                    //Num of Sig Fig Column
-                    if ((i > 1 && i < 12) && j == 2)
-                    {
-                        setKey(i,j,"" + getSigFigs(i,0));
-                    }
-                    /*
-                    if (i == 8 && j == 0)
-                    {
-                        if (Double.parseDouble(getData(i,j)) >= Double.parseDouble(getData(9,0)))
-                        {
-                            setKey(i,j,"WRONG");
-                        }
-                    }
-
-                    if (i == 9 && j == 0)
-                    {
-                        if (Double.parseDouble(getData(i,j)) <= Double.parseDouble(getData(8,0)))
-                        {
-                            setKey(i,j,"WRONG");
-                        }
-                    }
-					*/
+                    
                     //'Results': first column
                     if (i == 10 && j == 0)
                     {
@@ -77,9 +73,9 @@ public class lab0_1Checks extends inputChecks
                                 Double.parseDouble(getData(6,0)) +
                                 Double.parseDouble(getData(7,0));
                         temp = temp / 3;
-                        String temp1 = setDecimalFormat(Double.toString(temp), 4);              	
-                        //System.out.println("R1: " + temp1);
-                        setKey(i, j, "" + temp1); 
+                        String temp1 = setDecPlaces(Double.toString(temp), 4);              	
+                        
+                       key[i][j] = "" + temp1;
                     }
 
                     if (i == 11 && j == 0)
@@ -87,15 +83,14 @@ public class lab0_1Checks extends inputChecks
                     	Double temp = 0.0;
                         temp = Double.parseDouble(getData(8,0)) - 
                                 Double.parseDouble(getData(9,0));
-                        String temp1 = setDecimalFormat(Double.toString(temp), 4);
-                        //System.out.println("R2: " + temp1);
-                        setKey(i, j, "" + temp1);
-                        //setKey(i, j,setToDecPlaces("" + temp, 4)); 
+                        String temp1 = setDecPlaces(Double.toString(temp), 4);
+                        
+                        key[i][j] = "" + temp1;
                     }
                 }
                 else
                 {
-                    setKey(i,j,"WRONG");
+                    //setKey(i,j,"WRONG");
                 }
                 
                 //for testing only!
@@ -103,4 +98,108 @@ public class lab0_1Checks extends inputChecks
             }
         }
     }
+	
+	protected void labCheck()
+	{
+		double gradeValue = 0.0;
+		
+		//check significant figures of quadruple and analytical balance 
+		for(int i = 2; i < 10; ++i)
+		{
+			//check accuracy of weighed values
+			if(data[i][0] == key[i][0])
+			{
+				isCorrect[i][0] = correctMsg; //input value				
+				grade[i][0] = 4.0;
+				gradeValue += 4.0;
+			}
+			else
+			{
+				isCorrect[i][0] = errorMsg;				
+				error[i][0] = errorTypes[3]; //generic error				
+			}
+			
+			//check significant figures
+			if(data[i][2] == key[i][2])
+			{
+				isCorrect[i][2] = correctMsg; //significant figures
+				grade[i][2] = 5.0;
+				gradeValue += 5.0;
+				
+			}
+			else
+			{
+				isCorrect[i][2] = errorMsg;
+				error[i][2] = errorTypes[0]; //sig fig error
+			}
+		}
+		
+		//check calculation of average metal weight
+		if(data[10][0] == key[10][0])
+		{
+			isCorrect[10][0] = correctMsg;
+			grade[10][0] = 4.0;
+			gradeValue += 4.0;
+		}
+		else
+		{
+			isCorrect[10][0] = errorMsg;
+			error[10][0] = errorTypes[1]; //calculation error
+		}
+		
+		//check significant figures of average metal weight
+		if(data[10][2] == key[10][2])
+		{
+			isCorrect[10][2] = correctMsg;
+			grade[10][2] = 5.0;
+			gradeValue += 5.0;
+		}
+		else
+		{
+			isCorrect[10][2] = errorMsg;
+			error[10][2] = errorTypes[0]; //sig fig error
+		}
+		
+		//check calculation of sodium chloride weight
+		if(data[11][0] == key[11][0])
+		{
+			isCorrect[11][0] = correctMsg;
+			grade[11][0] = 4.0;
+			gradeValue += 5.0;
+		}
+		else
+		{
+			isCorrect[11][0] = errorMsg;
+			error[11][0] = errorTypes[1]; //calculation error
+		}
+		
+		//check significant figures of sodium chloride weight
+		if(data[11][2] == key[11][2])
+		{
+			isCorrect[11][2] = correctMsg;
+			grade[11][2] = 5.0;
+			gradeValue += 5.0;
+		}
+		else
+		{
+			isCorrect[11][2] = errorMsg;
+			error[11][2] = errorTypes[0]; //sig fig error
+		}
+		
+		//check units
+		for(int i = 2; i < dataX; ++i)
+		{
+			if(data[i][1] == key[i][1])
+			{
+				isCorrect[i][1] = correctMsg;
+				grade[i][1] = 1.0;
+				gradeValue += 1.0;
+			}
+			else
+			{
+				isCorrect[i][1] = errorMsg;
+				error[i][1] = errorTypes[2]; //unit error
+			}
+		}		
+	}
 }
