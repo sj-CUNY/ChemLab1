@@ -1,3 +1,13 @@
+/*
+ * inputChecks.java
+ * 
+ * This class contains generic checks used for the various labs
+ * that will need to be graded across the two courses of chemistry.
+ * It also has containers that stores various relevant data and
+ * metadata for the labs.
+ * 
+ */
+
 package Labs;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -12,65 +22,68 @@ import org.slf4j.LoggerFactory;
 
 public class inputChecks {
     
-    protected int dataX;
-    protected int dataY;
-    
-    protected String data[][];
-    protected String type[][];
-    protected String error[][];   
-    protected String isCorrect[][];
-    protected String key[][];
-    protected double grade[][];
+    protected int dataX; //number of rows
+    protected int dataY; //number of columns
+    protected String data[][]; //stores lab data inputed by the student
+    protected String error[][]; //stores error messages
+    protected String isCorrect[][]; //keeps track of correctness of data; stores HTML values for front end
+    protected String key[][]; //stores correct answers for the lab
+    protected double grade[][]; //stores the grade values
+    protected String errorTypes[] = new String[]{"s.f. error", "calculation error", "unit error", "error"}; //container for error types
     protected String errorMsg = "&#10007;"; //✗ (hex: &#x2717; / dec: &#10007;): ballot x
     protected String correctMsg = "&#10004;"; // ✔ (hex: &#x2714; / dec: &#10004;): heavy check mark
     
-    DataLoader load;
-    DataPersister save;
-	private static final Logger LOGGER = LoggerFactory.getLogger(inputChecks.class.getName());
-
- 
+    private DataLoader load;
+    private DataPersister save;
+	private static final Logger LOGGER = LoggerFactory.getLogger(inputChecks.class.getName()); 
     
-    public inputChecks(Context ctx, int X, int Y, String labname, String userid, String courseid)
+    //constructor that also calls initData()
+	public inputChecks(Context ctx, String tableName, int X, int Y, 
+			int userid, String courseid, int labNumber)
     {
         dataX = X;
         dataY = Y;
-        load = new DataLoader();
+        load = new DataLoader(tableName);
         save = new DataPersister();
         
-        data = new String[dataX][dataY];
-        type = new String[dataX][dataY];
-        error = new String[dataX][dataY];
-        isCorrect = new String[dataX][dataY];
-        key = new String[dataX][dataY];
-        grade = new double[dataX][dataY];
+        data = new String[dataX][dataY]; //stores lab data
+        error = new String[dataX][dataY]; //stores error messages
+        isCorrect = new String[dataX][dataY]; //keeps track of correct answers
+        key = new String[dataX][dataY]; //answer key
+        grade = new double[dataX][dataY]; //the grade given for each correct answer
 
          
         String tempData;
-        tempData = load.loadData(labname, userid, courseid);
-        LOGGER.info("tempData " + tempData + " labname " + labname);
+        tempData = load.restoreLab(userid, courseid, labNumber); //get lab data
+        
+        LOGGER.info("tempData " + tempData + ", lab number " + labNumber);
+        
         initData(tempData);
     }
 
-    
+    //parses string of submitted user data and stores it within data[][] array
     private void initData(String tempData)
     {
-        for (int i = 0; i < dataX; i++)
+    	String temp = "";
+    	
+        for(int i = 0; i < dataX; ++i)
         {
-            for (int j = 0; j < dataY; j++)
+            for(int j = 0; j < dataY; ++j)
             {
-                //get first data and remove
-                String temp = "";
-                while (tempData.length() > 0 && !tempData.substring(0,1).equals(","))
+                //get substring
+            	while(tempData.length() > 0 && !tempData.substring(0,1).equals(","))
                 {
                     temp += "" + tempData.substring(0,1);
                     tempData = tempData.substring(1);
                 }
-                if (tempData.length() > 0 && tempData.substring(0,1).equals(","))
+                
+            	//remove comma
+                if(tempData.length() > 0 && tempData.substring(0,1).equals(","))
                 {
-                    //remove the ,
                     tempData = tempData.substring(1);
                 }
-                if (temp.length() > 0)
+                
+                if(temp.length() > 0)
                 {
                     data[i][j] = temp;
                 }
@@ -79,7 +92,7 @@ public class inputChecks {
                     data[i][j] = "";
                 }
                 
-                type[i][j] = "";
+                //type[i][j] = "";
                 error[i][j] = "";
                 isCorrect[i][j] = "";
                 key[i][j] = "";
@@ -93,11 +106,12 @@ public class inputChecks {
         data[x][y] = info;
     }
     
-    public String getData (int x, int y)
+    public String getData(int x, int y)
     {
         return data[x][y];
     }
     
+    /*
     public void setType(int x, int y, String info)
     {
         type[x][y] = info;
@@ -107,6 +121,7 @@ public class inputChecks {
     {
         return type[x][y];
     }
+    */
     
     public void setError(int x, int y, String info)
     {
@@ -138,6 +153,7 @@ public class inputChecks {
         return key[x][y];
     }
     
+    //checks if the input is a standard unit
     protected void unitStandard (int x, int y)
     {
         String temp;
@@ -216,23 +232,23 @@ public class inputChecks {
         }
     }
     
-    protected void doubleStandard (int x, int y)
+    //checks if there are multiple decimal points
+    protected void doubleStandard(int x, int y)
     {
         String temp = data[x][y];
         boolean hasDot = false;
         
         //check for numbers and . only
-        //check for multiple .
-        
+        //check for multiple .        
         for(int i = 0; i < temp.length(); i++)
         {
-            if (temp.charAt(i) == '.')
+            if(temp.charAt(i) == '.')
             {
-                if (hasDot)
+                if(hasDot)
                 {
-                error[x][y] = "Invalid character: '.'";
-                data[x][y] = "";
-                return;
+                	error[x][y] = "Invalid character: '.'";
+                	data[x][y] = "";
+                	return;
                 }
                 else
                 {
@@ -240,6 +256,7 @@ public class inputChecks {
                 }
             }
             
+            //check if there is a non-number character
             if (temp.charAt(i) != '.' && (int)temp.charAt(i) < 48 || (int)temp.charAt(i) > 57)
             {
                 error[x][y] = "Invalid character: '" + temp.charAt(i) + "'";
@@ -249,14 +266,14 @@ public class inputChecks {
         }
     }
     
+    //checks for invalid characters
     protected void integerStandard (int x, int y)
     {
-        String temp = data[x][y];
-        
+        String temp = data[x][y];        
                 
         for(int i = 0; i < temp.length(); i++)
         {
-            if ((int)temp.charAt(i) < 48 || (int)temp.charAt(i) > 57)
+            if((int)temp.charAt(i) < 48 || (int)temp.charAt(i) > 57)
             {
                 error[x][y] = "Invalid character: '" + temp.charAt(i) + "'";
                 data[x][y] = "";
@@ -265,33 +282,40 @@ public class inputChecks {
         }
     }
     
-    protected int getSigFigs (int x, int y)
+    //not used
+    /*
+    protected int getSigFigs(int x, int y)
     {
         return getSigFigs(getData(x,y));
     }
-
-    protected int getSigFigs (String in)
+    */
+    
+    //returns the number of significant figures in a number
+    //returns -1 if there is an error
+    protected int getSigFigs(String in)
     {
         int sigFigs = 0;
         String num = in;
         int length;
         
-        if (num != null && num.length() != 0)
+        if(num != null && num.length() != 0)
         {
             length = num.length();
 
             //remove leading zeros
             int i = 0;
-            while (num.charAt(i) == '0')
+            
+            while(num.charAt(i) == '0')
             {
                i++;
             }
-            //check to see if there is a .
-            //inc sig figs
+            
+            //check to see if there is a '.' in sig figs
             boolean flag = false;
-            while ( i < length)
+            
+            while( i < length)
             {
-                if (num.charAt(i) == '.')
+                if(num.charAt(i) == '.')
                 {
                     flag = true;
                     i++;
@@ -302,11 +326,13 @@ public class inputChecks {
                     sigFigs++;
                 }
             }
+            
             //remove trailing zero's if not a decimal
-            if (!flag)
+            if(!flag)
             {
                 i = length;
-                while (i < length && num.charAt(i) == '0')
+                
+                while(i < length && num.charAt(i) == '0')
                 {
                     sigFigs --;
                 }
@@ -320,12 +346,16 @@ public class inputChecks {
         }
     }
     
-    protected int getDecPlaces (int x, int y)
+    //not used
+    /*
+    protected int getDecPlaces(int x, int y)
     {
         return getDecPlaces(x, getData(x,y));
     }
-    
-    protected int getDecPlaces (String in)
+    */
+
+    //returns the number of digits after the decimal point
+    protected int getDecPlaces(String in)
     {
     	int decPlace = 0;
     	String num = in;
@@ -333,15 +363,20 @@ public class inputChecks {
         if (num != null && num.length() != 0)
         {
         	//get the decPlace
-            decPlace = (num.length() - num.indexOf(".")) -1;
+            decPlace = (num.length() - num.indexOf(".")) - 1;
         }
-    	return decPlace;
+    	
+        return decPlace;
     }
-    //get check and compare decimal places
-    protected int getDecPlaces (int x, String in)
+    
+    //not used
+    //check and compare decimal places
+    /*
+    protected int getDecPlaces(int x, String in)
     {
         int decPlace = 0; 
         String num = in;
+        
         if (num != null && num.length() != 0)
         {
             //get the decPlace
@@ -389,7 +424,7 @@ public class inputChecks {
             {
                 decPlace ++;
             }
-            */
+            
             return decPlace;   
         }
         else
@@ -397,50 +432,37 @@ public class inputChecks {
         	return (-1);
         }
     }
+    */
     
-    protected String setToDecPlaces(String in, int places)
+    //formats decimal value into a given number of places
+    protected String setDecPlaces(String in, int places)
     {
-        /*int i = 0;
-        
-        //find .
-        while (i < in.length() && in.charAt(i) != '.')
-        {
-            i++;
-        }
-        
-        //shorten it
-        while (getDecPlaces(in) > places)
-        {
-            in = in.substring(0,in.length() - 2);
-        }
-        
-        //pad it
-        while(getDecPlaces(in) < places)
-        {
-            in += "0";
-        }
-        
-        return in;
-        */
         String format = "%." + places + "f";
-        String.format( format, Double.parseDouble(in));
+        String.format(format, Double.parseDouble(in));
         return in;
     }
-    //check and set the decimal format for 3 or 4
+    
+    //not used    
+    //check and set the decimal format for 1 to 4 places
+    /*
     protected String setDecimalFormat(String in, int places)
     {
     	String format = "#.";
-    	for(int i=0; i < places; i++)
+    	
+    	for(int i = 0; i < places; ++i)
     	{
     		format = format + "#";
     	}
+    	
     	DecimalFormat df = new DecimalFormat(format);
     	df.setRoundingMode(RoundingMode.HALF_UP);
+    	
     	Double temp = Double.parseDouble(in);
     	Double temp1 = temp.doubleValue(); 
     	String s = df.format(temp1);
     	StringBuilder s1 = new StringBuilder(s);
     	int decimalPlace = getDecPlaces(s);
+    	
     	//for lab:1 result part only (apply with only 4 decimal values)
     	if (decimalPlace == 3)
     	{
@@ -464,10 +486,34 @@ public class inputChecks {
     	}
     	return s;
     }
+    */
+    
+    //counts the number of integers before a decimal point
+    //returns -1 if there exists an error
+    protected int countIntegers(String in)
+    {
+    	String temp = in;
+    	
+    	if(temp != null && temp.length() != 0)
+    	{
+	    	if(temp.contains("."))
+	    	{    	
+	    		int i = temp.indexOf('.');
+	    		temp = temp.substring(0, i);
+	    	}
+    	}
+    	else
+    	{
+    		return -1;
+    	}
+    	
+    	return temp.length();
+    }
+    
     protected void gradeLab()
     {
         //compare data to key
-        for (int i = 0; i < dataX; i ++)
+        for (int i = 0; i < dataX; i++)
         {
             for (int j = 0; j < dataY; j++)
             {
@@ -647,10 +693,11 @@ public class inputChecks {
 
     protected void buildKey()
     {
+    	
     }
+    
     public void clearAttempt(Context ctx, String uid, String labname)
     {
     	save.clearAttempt(ctx, uid, labname);
     }
 }
-    
