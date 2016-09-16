@@ -1,0 +1,912 @@
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="Labs.lab1_9Checks" %>
+<%@ page import="Labs.GradeLogistics" %>
+<%@ page import="Labs.Helper" %>
+<%@ page import="blackboard.platform.context.Context" %>
+<%@ page import="blackboard.platform.context.ContextManager" %>
+<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
+<%@ page import="blackboard.data.user.User" %>
+<%@ page import="blackboard.data.course.*" %>
+<%@ page import="blackboard.persist.course.*" %>
+<%@ page import="blackboard.platform.persistence.PersistenceService" %>
+<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
+<%@ page import="blackboard.persist.BbPersistenceManager"%>
+ <%@ page import="blackboard.persist.*"%>
+ 
+<%@ page import="blackboard.data.gradebook.Lineitem" %>
+<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
+ 
+ <%@ taglib uri="/bbUI" prefix="bbUI" %> 
+ <%@ taglib uri="/bbData" prefix="bbData"%> 
+ <%@ taglib uri="/bbNG" prefix="bbNG"%>
+ <bbNG:learningSystemPage 
+	title="LAB 9"
+	ctxId="ctx">
+
+	<bbNG:pageHeader>
+		<bbNG:breadcrumbBar environment="COURSE"
+			navItem="ycdb-chem109-nav-LabDebug" >
+				<bbNG:breadcrumb title="Home" href="lab0_1.jsp?course_id=@X@course.pk_string@X@&user_id=@X@user.pk_string@X@" />
+			<bbNG:breadcrumb> Lab 1 </bbNG:breadcrumb>
+		</bbNG:breadcrumbBar>
+		<bbNG:pageTitleBar>
+			Welcome to Chem 112 Lab 9
+		</bbNG:pageTitleBar>
+	</bbNG:pageHeader>
+
+<!DOCTYPE html>
+ <%
+	 int dataX = 30;
+ 	 int dataY = 3;
+ 	
+ 	User u = ctx.getUser();
+ 	String userid = "";
+	lab0_1Checks checks;
+  	String courseid = request.getParameter("course_id");
+  	String button = null;
+	
+  	CourseMembership crsMembership = null;
+	CourseMembershipDbLoader crsMembershipLoader = null;
+	PersistenceService bbPm = PersistenceServiceFactory.getInstance() ;
+    BbPersistenceManager bpManager = bbPm.getDbPersistenceManager();
+ 
+	String errMsg = null;
+	crsMembershipLoader = (CourseMembershipDbLoader)bpManager.getLoader(CourseMembershipDbLoader.TYPE);
+	
+	try {
+		crsMembership = crsMembershipLoader.loadByCourseAndUserId(ctx.getCourse().getId(), u.getId());
+	} catch (KeyNotFoundException e) {
+			// There is no membership record.
+			errMsg = "There is no membership record. Better check this out:" + e;
+	} catch (PersistenceException pe) {
+			// There is no membership record.
+			errMsg = "An error occured while loading the User. Better check this out:" + pe;
+	}
+	CourseMembership.Role crsMembershipRole = crsMembership.getRole();
+	 
+ 	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR)
+	{
+ 		String cid = request.getParameter("courseMembershipId");
+ 		Helper h = new Helper();
+ 		userid = h.getUserIdFromCourseMembershipId(ctx, cid);	 	
+	}
+	else
+	{
+		userid = u.getId().toExternalString();
+    }
+ 	
+	checks = new lab1_9Checks(ctx, dataX, dataY, "ycdb_chemistrylab1_9",  userid, courseid);
+	 
+ 	button = request.getParameter("button");
+	
+ 	if (button == null)
+    {
+        button = "";
+	    //set types
+        checks.setType(0, 0, "String");
+        
+        for (int i = 1; i < dataX; i++)
+        {
+            for (int j = 1; j < dataY; j++)
+            {
+                checks.setType(i, j, "Double");
+                
+            }
+        }
+     }
+     
+     else
+    {
+    	if(button.equals("Save") || button.equals("Check") || button.equals("Submit"))
+    	{
+    		for (int i = 0; i < dataX; i++)
+            {
+                for (int j = 0; j < dataY; j++)
+                {  
+                    checks.setData(i, j, request.getParameter("" + i + j));
+                 }
+            }
+    		
+    	}
+        if (button.equals("Clear"))
+        {  
+            checks.clear();
+        }
+        else if (button.equals("Save"))
+        {
+              
+            //perform save
+            checks.save("ycdb_chemistrylab1_9",userid,courseid);
+        }
+        else if (button.equals("Check"))
+        {
+              
+            //perform checks
+            checks.check();
+        }
+        else if (button.equals("Submit"))
+        {
+              
+            //perform save
+            checks.save("ycdb_chemistrylab1_9",userid,courseid);
+            
+            //perform submit
+            checks.submit(ctx,"ycdb_chemistrylab1_9","lab1_9i.jsp");
+        }
+        else if (button.equals("ClearAttempt"))
+        {
+         	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR)
+         	{
+    			GradeLogistics gl = new GradeLogistics();
+        		checks.clearAttempt(ctx, userid,"ycdb_chemistrylab1_9");
+         	}
+        }
+        else
+        {
+            button = "";
+        }
+        button="";
+    }
+ 
+ %>
+ 
+<html>
+    <head>
+    	<title>
+Lab 9: Acid- Base Titrations II: Potentiometric and Indicator Titrations			
+    	</title>
+    	<link rel="stylesheet" href="labs_css.css">
+    
+        <script>
+     	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR) 
+     		{
+     			var d = document.getElementById("btns");
+     			var b = document.createElement("BUTTON");
+      		    var t = document.createTextNode("ClearAttempt");
+     		    
+				b.appendChild(t);
+				d.appendChild(b);
+     		}
+        </script>
+    </head>
+    <body>
+    	<p>User Information</p>  
+  		<p style="margin-left:10px">
+  		Name: <%= u.getGivenName() + " " + u.getFamilyName() %><br />   
+  		Student Id: <%= u.getId().toExternalString()%> <br /> <br />   
+ 		</p>   
+
+    	<fieldset class="fieldset-auto-width">
+            <legend>Lab 9: Acid- Base Titrations II: Potentiometric and Indicator Titrations			</legend>
+            
+			<form method="POST">
+        
+            <fieldset>
+                <legend>Basic info</legend>
+                <table>
+                    <tr>
+                        <th>
+                            Partner's name:
+                        </th>
+                      
+                </table>
+            </fieldset>
+            <br>
+            <fieldset>
+              
+			<table>
+                    <tr>
+			Hydrochloric Acid
+		</tr>
+		<tr>
+                        <th>
+			mL NaOH
+                        </th>
+                        <th>
+                            ph
+                        </th>
+                        <th>
+                            mLNaOH
+                        </th>
+                        <th>
+                            ph
+                        </th>
+			<th>
+                            mLNaOH
+                        </th>
+                        <th>
+                            ph
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                        0
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="10" <% if (checks.getData(1,0) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> />
+                        </td>
+                        <td>
+			23
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="11" <% if (checks.getData(1,1) != null){out.print("value=\"" + checks.getData(1,1) + "\"");}%> />
+                        </td>
+			<td>
+			30
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="12" <% if (checks.getData(1,2) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> />
+                        </td>
+		<tr>
+			<td>
+                        5
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="20" <% if (checks.getData(2,0) != null){out.print("value=\"" + checks.getData(2,0) + "\"");}%> />
+                        </td>
+                        <td>
+			24
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="21" <% if (checks.getData(2,1) != null){out.print("value=\"" + checks.getData(2,1) + "\"");}%> />
+                        </td>
+			<td>
+			35
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="22" <% if (checks.getData(2,2) != null){out.print("value=\"" + checks.getData(2,2) + "\"");}%> />
+			</td>
+                    </tr>
+		<tr>
+			<td>
+                        10
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="30" <% if (checks.getData(3,0) != null){out.print("value=\"" + checks.getData(3,0) + "\"");}%> />
+                        </td>
+                        <td>
+			25
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="31" <% if (checks.getData(3,1) != null){out.print("value=\"" + checks.getData(3,1) + "\"");}%> />
+                        </td>
+			<td>
+			40
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="32" <% if (checks.getData(3,2) != null){out.print("value=\"" + checks.getData(3,2) + "\"");}%> />
+			</td>
+                    </tr>
+
+
+		<tr>	
+			<td>
+                        15
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="40" <% if (checks.getData(4,0) != null){out.print("value=\"" + checks.getData(4,0) + "\"");}%> />
+                        </td>
+                        <td>
+			26
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="41" <% if (checks.getData(4,1) != null){out.print("value=\"" + checks.getData(4,1) + "\"");}%> />
+                        </td>
+			<td>
+			45
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="42" <% if (checks.getData(4,2) != null){out.print("value=\"" + checks.getData(4,2) + "\"");}%> />
+			</td>
+                    </tr>
+
+		<tr>
+			<td>
+                        20
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="50" <% if (checks.getData(5,0) != null){out.print("value=\"" + checks.getData(5,0) + "\"");}%> />
+                        </td>
+                        <td>
+			27
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="51" <% if (checks.getData(5,1) != null){out.print("value=\"" + checks.getData(5,1) + "\"");}%> />
+                        </td>
+			<td>
+			50
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="52" <% if (checks.getData(5,2) != null){out.print("value=\"" + checks.getData(5,2) + "\"");}%> />
+			</td>
+                    </tr>
+
+
+		<tr>
+			<td>
+                        22
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="60" <% if (checks.getData(6,0) != null){out.print("value=\"" + checks.getData(6,0) + "\"");}%> />
+                        </td>
+                        <td>
+			28
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="61" <% if (checks.getData(6,1) != null){out.print("value=\"" + checks.getData(6,1) + "\"");}%> />
+                        </td>
+                    </tr>
+	
+			<tr>
+			</tr>
+                    <tr>
+                        <th>
+			Acetic Acid
+                        </th>
+		    </tr>
+		    <tr>
+			<th>
+			mL NaOH
+                        </th>
+                        <th>
+                            ph
+                        </th>
+                        <th>
+                            mLNaOH
+                        </th>
+                        <th>
+                            ph
+                        </th>
+			<th>
+                            mLNaOH
+                        </th>
+                        <th>
+                            ph
+                        </th>
+                    </tr>
+                   <tr>
+                        <td>
+                        0
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="70" <% if (checks.getData(7,0) != null){out.print("value=\"" + checks.getData(7,0) + "\"");}%> />
+                        </td>
+                        <td>
+			24
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="71" <% if (checks.getData(7,1) != null){out.print("value=\"" + checks.getData(7,1) + "\"");}%> />
+                        </td>
+			<td>
+			32
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="72" <% if (checks.getData(7,2) != null){out.print("value=\"" + checks.getData(7,2) + "\"");}%> />
+                        </td>
+		</tr>
+		<tr>
+			<td>
+                        5
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="80" <% if (checks.getData(8,0) != null){out.print("value=\"" + checks.getData(8,0) + "\"");}%> />
+                        </td>
+                        <td>
+			25
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="81" <% if (checks.getData(8,1) != null){out.print("value=\"" + checks.getData(8,1) + "\"");}%> />
+                        </td>
+			<td>
+			33
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="82" <% if (checks.getData(8,2) != null){out.print("value=\"" + checks.getData(8,2) + "\"");}%> />
+			</td>
+                    </tr>
+		<tr>
+			<td>
+                        10
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="90" <% if (checks.getData(9,0) != null){out.print("value=\"" + checks.getData(9,0) + "\"");}%> />
+                        </td>
+                        <td>
+			26
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="91" <% if (checks.getData(9,1) != null){out.print("value=\"" + checks.getData(9,1) + "\"");}%> />
+                        </td>
+			<td>
+			34
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="92" <% if (checks.getData(9,2) != null){out.print("value=\"" + checks.getData(9,2) + "\"");}%> />
+			</td>
+                    </tr>
+
+
+		<tr>	
+			<td>
+                        15
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="100" <% if (checks.getData(10,0) != null){out.print("value=\"" + checks.getData(10,0) + "\"");}%> />
+                        </td>
+                        <td>
+			27
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="101" <% if (checks.getData(10,1) != null){out.print("value=\"" + checks.getData(10,1) + "\"");}%> />
+                        </td>
+			<td>
+			35
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="102" <% if (checks.getData(10,2) != null){out.print("value=\"" + checks.getData(10,2) + "\"");}%> />
+			</td>
+                    </tr>
+
+		<tr>
+			<td>
+                        20
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="110" <% if (checks.getData(11,0) != null){out.print("value=\"" + checks.getData(11,0) + "\"");}%> />
+                        </td>
+                        <td>
+			28
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="111" <% if (checks.getData(11,1) != null){out.print("value=\"" + checks.getData(11,1) + "\"");}%> />
+                        </td>
+			<td>
+			40
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="112" <% if (checks.getData(11,2) != null){out.print("value=\"" + checks.getData(11,2) + "\"");}%> />
+			</td>
+                    </tr>
+
+
+		<tr>
+			<td>
+                        21
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="120" <% if (checks.getData(12,0) != null){out.print("value=\"" + checks.getData(12,0) + "\"");}%> />
+                        </td>
+                        <td>
+			29
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="121" <% if (checks.getData(12,1) != null){out.print("value=\"" + checks.getData(12,1) + "\"");}%> />
+                        </td>
+                        </td>
+			<td>
+			45
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="122" <% if (checks.getData(12,2) != null){out.print("value=\"" + checks.getData(12,2) + "\"");}%> />
+			</td>
+
+                    </tr>
+
+		<tr>
+			<td>
+                        22
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="130" <% if (checks.getData(13,0) != null){out.print("value=\"" + checks.getData(13,0) + "\"");}%> />
+                        </td>
+                        <td>
+			30
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="131" <% if (checks.getData(13,1) != null){out.print("value=\"" + checks.getData(13,1) + "\"");}%> />
+                        </td>
+                        </td>
+			<td>
+			50
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="132" <% if (checks.getData(13,2) != null){out.print("value=\"" + checks.getData(13,2) + "\"");}%> />
+			</td>
+
+                    </tr>
+
+		<tr>
+			<td>
+                        23
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="140" <% if (checks.getData(14,0) != null){out.print("value=\"" + checks.getData(14,0) + "\"");}%> />
+                        </td>
+                        <td>
+			31
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="141" <% if (checks.getData(14,1) != null){out.print("value=\"" + checks.getData(14,1) + "\"");}%> />
+                        </td>
+
+                    </tr>
+		<tr>
+		</tr>
+		<tr>
+			<td>
+			Acetic acid: Indicator titration: Indicator used:	
+			</td>
+			<td>		
+			<input type="string" step="any" step="any" name="150" <% if (checks.getData(15,0) != null){out.print("value=\"" + checks.getData(15,0) + "\"");}%> />
+                        </td>
+		</tr>
+		<tr>
+			<td>
+			Initial buret reading :		
+			</td>
+			<td>
+			<input type="number" step="any" step="any" name="160" <% if (checks.getData(16,0) != null){out.print("value=\"" + checks.getData(16,0) + "\"");}%> />
+                        </td>
+			
+			<td>
+			Final buret reading :		
+			</td>
+			<td>
+			<input type="number" step="any" step="any" name="161" <% if (checks.getData(16,1) != null){out.print("value=\"" + checks.getData(16,1) + "\"");}%> />
+                        </td>
+			<td>
+			mL if NaOH used :		
+			</td>
+			<td>
+			<input type="number" step="any" step="any" name="162" <% if (checks.getData(16,2) != null){out.print("value=\"" + checks.getData(16,2) + "\"");}%> />
+                        </td>
+		</tr>
+
+			<tr>
+			</tr>
+                    <tr>
+                        <th>
+			Phosphoric Acid
+                        </th>
+		    </tr>
+		    <tr>
+			<th>
+			mL NaOH
+                        </th>
+                        <th>
+                            ph
+                        </th>
+                        <th>
+                            mLNaOH
+                        </th>
+                        <th>
+                            ph
+                        </th>
+			<th>
+                            mLNaOH
+                        </th>
+                        <th>
+                            ph
+                        </th>
+                    </tr>
+                   <tr>
+                        <td>
+                        0
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="170" <% if (checks.getData(17,0) != null){out.print("value=\"" + checks.getData(17,0) + "\"");}%> />
+                        </td>
+                        <td>
+			17
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="171" <% if (checks.getData(17,1) != null){out.print("value=\"" + checks.getData(17,1) + "\"");}%> />
+                        </td>
+			<td>
+			26
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="172" <% if (checks.getData(17,2) != null){out.print("value=\"" + checks.getData(17,2) + "\"");}%> />
+                        </td>
+		</tr>
+		<tr>
+			<td>
+                        5
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="180" <% if (checks.getData(18,0) != null){out.print("value=\"" + checks.getData(18,0) + "\"");}%> />
+                        </td>
+                        <td>
+			18
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="181" <% if (checks.getData(18,1) != null){out.print("value=\"" + checks.getData(18,1) + "\"");}%> />
+                        </td>
+			<td>
+			27
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="182" <% if (checks.getData(18,2) != null){out.print("value=\"" + checks.getData(18,2) + "\"");}%> />
+			</td>
+                    </tr>
+		<tr>
+			<td>
+                        10
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="190" <% if (checks.getData(19,0) != null){out.print("value=\"" + checks.getData(19,0) + "\"");}%> />
+                        </td>
+                        <td>
+			19
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="191" <% if (checks.getData(19,1) != null){out.print("value=\"" + checks.getData(19,1) + "\"");}%> />
+                        </td>
+			<td>
+			28
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="192" <% if (checks.getData(19,2) != null){out.print("value=\"" + checks.getData(19,2) + "\"");}%> />
+			</td>
+                    </tr>
+
+
+		<tr>	
+			<td>
+                        11
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="200" <% if (checks.getData(20,0) != null){out.print("value=\"" + checks.getData(20,0) + "\"");}%> />
+                        </td>
+                        <td>
+			20
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="201" <% if (checks.getData(20,1) != null){out.print("value=\"" + checks.getData(20,1) + "\"");}%> />
+                        </td>
+			<td>
+			29
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="202" <% if (checks.getData(20,2) != null){out.print("value=\"" + checks.getData(20,2) + "\"");}%> />
+			</td>
+                    </tr>
+
+		<tr>
+			<td>
+                        12
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="210" <% if (checks.getData(21,0) != null){out.print("value=\"" + checks.getData(21,0) + "\"");}%> />
+                        </td>
+                        <td>
+			29
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="211" <% if (checks.getData(21,1) != null){out.print("value=\"" + checks.getData(21,1) + "\"");}%> />
+                        </td>
+			<td>
+			30
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="212" <% if (checks.getData(21,2) != null){out.print("value=\"" + checks.getData(21,2) + "\"");}%> />
+			</td>
+                    </tr>
+
+
+		<tr>
+			<td>
+                        13
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="220" <% if (checks.getData(22,0) != null){out.print("value=\"" + checks.getData(22,0) + "\"");}%> />
+                        </td>
+                        <td>
+			22
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="221" <% if (checks.getData(22,1) != null){out.print("value=\"" + checks.getData(22,1) + "\"");}%> />
+                        </td>
+                        </td>
+			<td>
+			35
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="222" <% if (checks.getData(22,2) != null){out.print("value=\"" + checks.getData(22,2) + "\"");}%> />
+			</td>
+
+                    </tr>
+
+		<tr>
+			<td>
+                        14
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="230" <% if (checks.getData(23,0) != null){out.print("value=\"" + checks.getData(23,0) + "\"");}%> />
+                        </td>
+                        <td>
+			23
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="231" <% if (checks.getData(23,1) != null){out.print("value=\"" + checks.getData(23,1) + "\"");}%> />
+                        </td>
+                        </td>
+			<td>
+			40
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="232" <% if (checks.getData(23,2) != null){out.print("value=\"" + checks.getData(23,2) + "\"");}%> />
+			</td>
+
+                    </tr>
+
+		<tr>
+			<td>
+                        15
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="240" <% if (checks.getData(24,0) != null){out.print("value=\"" + checks.getData(24,0) + "\"");}%> />
+                        </td>
+                        <td>
+			24
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="241" <% if (checks.getData(24,1) != null){out.print("value=\"" + checks.getData(24,1) + "\"");}%> />
+                        </td>
+                        <td>
+			45
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="242" <% if (checks.getData(24,2) != null){out.print("value=\"" + checks.getData(24,2) + "\"");}%> />
+                        </td>
+
+                    </tr>
+
+
+		<tr>
+			<td>
+                        23
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="250" <% if (checks.getData(25,0) != null){out.print("value=\"" + checks.getData(25,0) + "\"");}%> />
+                        </td>
+                        <td>
+			31
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="251" <% if (checks.getData(25,1) != null){out.print("value=\"" + checks.getData(25,1) + "\"");}%> />
+                        </td>
+                        
+
+                    </tr>
+
+
+
+
+			</table>
+            </fieldset>
+            <br>
+            <fieldset>
+                <table>
+                    <tr>
+                        <th>
+			Acid
+                        </th>
+                        <th>
+                           pH @ Equivalence Point
+                        </th>
+                        <th>
+                            Vol Base @ Equivalence Point
+                        </th>
+                        <th>
+                            Units
+                        </th>
+                    	</tr>
+                        <tr>
+                        <td>
+                           HCl
+                        </td>
+                        <td>
+                            <input type="number" step="any" name="260" <% if (checks.getData(26,0) != null){out.print("value=\"" + checks.getData(26,0) + "\"");}%> />
+                        </td>
+                        <td>
+                            <input type="number" name="261" <% if (checks.getData(26,1) != null){out.print("value=\"" + checks.getData(26,1) + "\"");}%> />
+                        </td>
+                        <td>
+                            <input list="units" name="262" <% if (checks.getData(26,2) != null){out.print("value=\"" + checks.getData(26,2) + "\"");}%> />
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+			Acetic Acid
+                        </td>
+                        <td>
+                            <input type="number" step="any" name="270" <% if (checks.getData(27,0) != null){out.print("value=\"" + checks.getData(27,0) + "\"");}%> />
+                        </td>
+                        <td>
+                            <input type="number" name="271" <% if (checks.getData(27,1) != null){out.print("value=\"" + checks.getData(27,1) + "\"");}%> />
+                        </td>
+                        <td>
+                            <input list="units" name="272" <% if (checks.getData(26,2) != null){out.print("value=\"" + checks.getData(26,2) + "\"");}%> />
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            1st Equivalence Point
+                        </td>
+                        <td>
+                            <input type="number" step="any" name="280" <% if (checks.getData(28,0) != null){out.print("value=\"" + checks.getData(28,0) + "\"");}%> />
+                        </td>
+                        <td>
+                            <input type="number" name="281" <% if (checks.getData(28,1) != null){out.print("value=\"" + checks.getData(28,1) + "\"");}%> >
+                        </td>
+                        <td>
+                            <input list="units" name="282" <% if (checks.getData(26,2) != null){out.print("value=\"" + checks.getData(26,2) + "\"");}%> />
+                        </td>
+
+                    </tr>
+		<tr>
+                        <td>
+                            2nd Equivalence Point
+                        </td>
+                        <td>
+                            <input type="number" step="any" name="290" <% if (checks.getData(29,0) != null){out.print("value=\"" + checks.getData(29,0) + "\"");}%> />
+                        </td>
+                        <td>
+                            <input type="number" name="291" <% if (checks.getData(29,1) != null){out.print("value=\"" + checks.getData(29,1) + "\"");}%> >
+                        </td>
+                        <td>
+                            <input list="units" name="292" <% if (checks.getData(26,2) != null){out.print("value=\"" + checks.getData(26,2) + "\"");}%> />
+                        </td>
+
+                    </tr>
+ 			</table>
+            </fieldset>
+            <br>
+            <table>
+	            <tr>
+	            	<td></td>
+		            <td style="width:50%">
+		            	<div style="text-align: center" id="btns">
+                			<input type="submit" name="button" value="Clear" />
+                			<input type="submit" name="button" value="Save" />
+                			<input type="submit" name="button" value="Submit" />
+							<p>Student View [Test Page]</p>
+            			</div>
+		            </td>
+		            <td></td>
+	            </tr>     
+            </table>
+            <br>
+            </form>
+        </fieldset>
+    <br>
+    </body>
+</html>
+</bbNG:learningSystemPage>
+

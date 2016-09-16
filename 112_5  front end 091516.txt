@@ -1,0 +1,864 @@
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="Labs.lab1_5Checks" %>
+<%@ page import="Labs.GradeLogistics" %>
+<%@ page import="Labs.Helper" %>
+<%@ page import="blackboard.platform.context.Context" %>
+<%@ page import="blackboard.platform.context.ContextManager" %>
+<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
+<%@ page import="blackboard.data.user.User" %>
+<%@ page import="blackboard.data.course.*" %>
+<%@ page import="blackboard.persist.course.*" %>
+<%@ page import="blackboard.platform.persistence.PersistenceService" %>
+<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
+<%@ page import="blackboard.persist.BbPersistenceManager"%>
+ <%@ page import="blackboard.persist.*"%>
+ 
+<%@ page import="blackboard.data.gradebook.Lineitem" %>
+<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
+ 
+ <%@ taglib uri="/bbUI" prefix="bbUI" %> 
+ <%@ taglib uri="/bbData" prefix="bbData"%> 
+ <%@ taglib uri="/bbNG" prefix="bbNG"%>
+ <bbNG:learningSystemPage 
+	title="LAB 5"
+	ctxId="ctx">
+
+	<bbNG:pageHeader>
+		<bbNG:breadcrumbBar environment="COURSE"
+			navItem="ycdb-chem109-nav-LabDebug" >
+				<bbNG:breadcrumb title="Home" href="lab1_5.jsp?course_id=@X@course.pk_string@X@&user_id=@X@user.pk_string@X@" />
+			<bbNG:breadcrumb> Lab 1 </bbNG:breadcrumb>
+		</bbNG:breadcrumbBar>
+		<bbNG:pageTitleBar>
+			Welcome to Chem 112 Lab 5
+		</bbNG:pageTitleBar>
+	</bbNG:pageHeader>
+
+<!DOCTYPE html>
+ <%
+	 int dataX = 31;
+ 	 int dataY = 10;
+ 	
+ 	User u = ctx.getUser();
+ 	String userid = "";
+	lab1_5Checks checks;
+  	String courseid = request.getParameter("course_id");
+  	String button = null;
+	
+  	CourseMembership crsMembership = null;
+	CourseMembershipDbLoader crsMembershipLoader = null;
+	PersistenceService bbPm = PersistenceServiceFactory.getInstance() ;
+    BbPersistenceManager bpManager = bbPm.getDbPersistenceManager();
+ 
+	String errMsg = null;
+	crsMembershipLoader = (CourseMembershipDbLoader)bpManager.getLoader(CourseMembershipDbLoader.TYPE);
+	
+	try {
+		crsMembership = crsMembershipLoader.loadByCourseAndUserId(ctx.getCourse().getId(), u.getId());
+	} catch (KeyNotFoundException e) {
+			// There is no membership record.
+			errMsg = "There is no membership record. Better check this out:" + e;
+	} catch (PersistenceException pe) {
+			// There is no membership record.
+			errMsg = "An error occured while loading the User. Better check this out:" + pe;
+	}
+	CourseMembership.Role crsMembershipRole = crsMembership.getRole();
+	 
+ 	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR)
+	{
+ 		String cid = request.getParameter("courseMembershipId");
+ 		Helper h = new Helper();
+ 		userid = h.getUserIdFromCourseMembershipId(ctx, cid);	 	
+	}
+	else
+	{
+		userid = u.getId().toExternalString();
+    }
+ 	
+	checks = new lab1_8Checks(ctx, tablename, dataX, dataY, userid, courseid, labNumber);
+	 
+ 	button = request.getParameter("button");
+	
+ 	if (button == null)
+    {
+        button = "";
+	    //set types
+        
+        for (int i = 0; i < dataX; i++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {
+                if(i<18)
+                {
+                    checks.setType(i,j, "Integer")
+                }
+
+               else
+				{
+					if(j==0 || j%2 == 0)  //even numbered columns
+                    {
+                        checks.setType(i, j, "Double");
+                    }
+                    else
+                    {
+                        checks.setType(i,j, "String")
+                    }               
+                }
+		    }
+        }
+    else
+    {
+    	if(button.equals("Save") || button.equals("Check") || button.equals("Submit"))
+    	{
+    		for (int i = 0; i < dataX; i++)
+            {
+                for (int j = 0; j < dataY; j++)
+                {  
+                    checks.setData(i, j, request.getParameter("" + i + j));
+                 }
+            }
+    		
+    	}
+        if (button.equals("Clear"))
+        {  
+            checks.clear();
+        }
+        else if (button.equals("Save"))
+        {
+              
+            //perform save
+            checks.save("ycdb_chemistrylab1_5",userid,courseid);
+        }
+        else if (button.equals("Check"))
+        {
+              
+            //perform checks
+            checks.check();
+        }
+        else if (button.equals("Submit"))
+        {
+              
+            //perform save
+            checks.save("ycdb_chemistrylab1_5",userid,courseid);
+            
+            //perform submit
+            checks.submit(ctx,"ycdb_chemistrylab1_5","lab1_5i.jsp");
+        }
+        else if (button.equals("ClearAttempt"))
+        {
+         	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR)
+         	{
+    			GradeLogistics gl = new GradeLogistics();
+        		checks.clearAttempt(ctx, userid,"ycdb_chemistrylab1_5");
+         	}
+        }
+        else
+        {
+            button = "";
+        }
+        button="";
+    }
+ 
+ %>
+ 
+<html>
+    <head>
+    	<title>
+Lab 5: Chemical Kinetics: An Iodine Clock Reaction					
+    	</title>
+    	<link rel="stylesheet" href="labs_css.css">
+    <datalist id="units" >
+            <option value="g" >g</option>	
+            <option value="mg" >mg</option>
+            <option value="kg" >kg</option>
+            <option value="L" >L</option>
+            <option value="mL" >mL</option>
+            <option value="cm" >cm</option>
+            <option value="m" >m</option>
+            <option value="km" >km</option>
+            <option value="lb" >lb</option>
+            <option value="oz" >oz</option>
+            <option value="cm3" >cm3</option>
+            <option value="s" >s</option>
+            <option value="in" >in</option>
+            <option value="ft" >ft</option>
+			<option value="mol" >mol</option>
+			<option value="M>M</option>
+			<option value="mol/L">mol/L</option>
+            <option value = "M" + <super> "-1" </super> + "s" + <super> "-1" </super></option>
+
+        </datalist>	
+        <script>
+     	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR) 
+     		{
+     			var d = document.getElementById("btns");
+     			var b = document.createElement("BUTTON");
+      		    var t = document.createTextNode("ClearAttempt");
+     		    
+				b.appendChild(t);
+				d.appendChild(b);
+     		}
+        </script>
+    </head>
+    <body>
+    	<p>User Information</p>  
+  		<p style="margin-left:10px">
+  		Name: <%= u.getGivenName() + " " + u.getFamilyName() %><br />   
+  		Student Id: <%= u.getId().toExternalString()%> <br /> <br />   
+ 		</p>   
+
+    	<fieldset class="fieldset-auto-width">
+            <legend>Lab 8: Lab 5: Chemical Kinetics: An Iodine Clock Reaction</legend>
+            
+			<form method="POST">
+        
+            <fieldset>
+                <legend>Basic info</legend>
+                <table>
+                    
+                    <tr>
+                        <th>
+                        </th>
+                        <th>
+                    
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </table>
+            </fieldset>
+            <br>
+            <fieldset>
+                <legend>DATA</legend>
+				<legend> Chemical Kinetics: Iodine Clock Reaction</legend>
+			<table>
+                    
+		<tr>
+                        <th>
+                        A. Determination of Effect of S <sub> 2 </sub> O  <sub> 8 </sub> <super> 2- </super> on rate
+                        </th>
+        </tr>
+        <tr>
+                        <th>
+                            Run
+                        </th>
+                        <th>
+                            Time
+                        </th>
+                         <th>
+                            Units
+                        </th>
+
+        </tr>
+        <tr>
+                        <td>
+                        1A (1 <super> st </super> trial)
+                        </td>
+        </tr>
+        <tr>
+                        <td>
+			<input type="integer" step="any" step="any" name="00" <% if (checks.getData(0,0) != null){out.print("value=\"" + checks.getData(0,0) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="units" step="any" step="any" name="01" <% if (checks.getData(0,1) != null){out.print("value=\"" + checks.getData(0,1) + "\"");}%> />
+                        </td>
+        </tr>
+        <tr>
+                        <td>
+                        1A (2 <super> nd </super> trial)
+                        </td>
+                        
+                        <td>
+			<input type="integer" step="any" step="any" name="10" <% if (checks.getData(1,0) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> />
+                        </td>
+
+                        <td>
+            <input type="units" step="any" step="any" name="11" <% if (checks.getData(1,1) != null){out.print("value=\"" + checks.getData(1,1) + "\"");}%> />
+                        </td>
+         </tr>
+        <tr>
+                        <td>
+                        1A (3 <super> rd </super> trial)
+                        </td>
+        
+                        <td>
+			<input type="integer" step="any" step="any" name="20" <% if (checks.getData(2,0) != null){out.print("value=\"" + checks.getData(2,0) + "\"");}%> />
+                        </td>
+                         <td>
+            <input type="units" step="any" step="any" name="21" <% if (checks.getData(2,1) != null){out.print("value=\"" + checks.getData(2,1) + "\"");}%> />
+                        </td>
+                      
+                        </tr>
+        <tr>
+                        <td>
+                        2A (1 <super> st </super> trial)
+                        </td>
+			<td>
+			  <input list="integer" name="30" <% if (checks.getData(3,0) != null){out.print("value=\"" + checks.getData(3,0) + "\"");}%> size="3" />
+                        </td>
+                        <td>
+              <input list="units" name="31" <% if (checks.getData(3,1) != null){out.print("value=\"" + checks.getData(3,1) + "\"");}%> size="3" />
+                        </td>
+         
+
+				</tr>
+        <tr>
+                        <td>
+                        2A (2 <super> nd </super> trial)
+                        </td>
+            <td>
+              <input list="integer" name="40" <% if (checks.getData(4,0) != null){out.print("value=\"" + checks.getData(4,0) + "\"");}%> size="3" />
+                        </td>
+                                    <td>
+              <input list="units" name="41" <% if (checks.getData(4,1) != null){out.print("value=\"" + checks.getData(4,1) + "\"");}%> size="3" />
+                        </td>
+                </tr>
+        </tr>
+        <tr>
+                        <td>
+                        2A (3 <super> rd </super> trial)
+                        </td>
+            <td>
+              <input list="integer" name="50" <% if (checks.getData(5,0) != null){out.print("value=\"" + checks.getData(5,0) + "\"");}%> size="3" />
+                        </td>
+            <td>
+              <input list="units" name="51" <% if (checks.getData(5,1) != null){out.print("value=\"" + checks.getData(5,1) + "\"");}%> size="3" />
+                        </td>
+                </tr>
+        </tr>
+        <tr>
+                        <td>
+                        3A (1 <super> st </super> trial)
+                        </td>
+        
+            <td>
+              <input list="integer" name="60" <% if (checks.getData(6,0) != null){out.print("value=\"" + checks.getData(6,0) + "\"");}%> size="3" />
+                        </td>
+
+            <td>
+              <input list="units" name="61" <% if (checks.getData(6,1) != null){out.print("value=\"" + checks.getData(6,1) + "\"");}%> size="3" />
+                        </td>
+                </tr>
+        <tr>
+                        <td>
+                        3A (2 <super> nd </super> trial)
+                        </td>
+            <td>
+              <input list="integer" name="70" <% if (checks.getData(7,0) != null){out.print("value=\"" + checks.getData(7,0) + "\"");}%> size="3" />
+                        </td>
+                                    <td>
+              <input list="units" name="71" <% if (checks.getData(7,1) != null){out.print("value=\"" + checks.getData(7,1) + "\"");}%> size="3" />
+                        </td>
+                </tr>
+        </tr>
+        <tr>
+                        <td>
+                        3A (3 <super> rd </super> trial)
+                        </td>
+            <td>
+              <input list="integer" name="80" <% if (checks.getData(8,0) != null){out.print("value=\"" + checks.getData(8,0) + "\"");}%> size="3" />
+                        </td>
+                                    <td>
+              <input list="units" name="81" <% if (checks.getData(8,1) != null){out.print("value=\"" + checks.getData(8,1) + "\"");}%> size="3" />
+                        </td>
+                </tr>
+
+            <tr>
+            </tr>
+            </table>
+            <table>
+            <tr>
+                                <th>
+                        B. Determination of Effect of I <super> - </super> on rate
+                        </th>
+        </tr>
+        <tr>
+                        <th>
+                            Run
+                        </th>
+                        <th>
+                            Time
+                        </th>
+                        <th>
+                            Units
+                            </th>
+
+        </tr>
+    
+                        <tr>
+                        <td>
+                        1B (1 <super> st </super> trial)
+                        </td>
+
+            <td>
+              <input list="integer" name="90" <% if (checks.getData(9,0) != null){out.print("value=\"" + checks.getData(9,0) + "\"");}%> size="3" />
+                        </td>
+            <td>
+              <input list="units" name="91" <% if (checks.getData(9,1) != null){out.print("value=\"" + checks.getData(9,1) + "\"");}%> size="3" />
+                        </td>
+
+                </tr>
+        <tr>
+                        <td>
+                        1B (2 <super> nd </super> trial)
+                        </td>
+            <td>
+              <input list="integer" name="100" <% if (checks.getData(10,0) != null){out.print("value=\"" + checks.getData(10,0) + "\"");}%> size="3" />
+                        </td>
+            <td>
+              <input list="units" name="101" <% if (checks.getData(10,1) != null){out.print("value=\"" + checks.getData(10,1) + "\"");}%> size="3" />
+                        </td>
+
+                </tr>
+        </tr>
+        <tr>
+                        <td>
+                        1B (3 <super> rd </super> trial)
+                        </td>
+            <td>
+              <input list="integer" name="110" <% if (checks.getData(11,0) != null){out.print("value=\"" + checks.getData(11,0) + "\"");}%> size="3" />
+                        </td>
+                                    <td>
+              <input list="units" name="111" <% if (checks.getData(11,1) != null){out.print("value=\"" + checks.getData(11,1) + "\"");}%> size="3" />
+                        </td>
+
+                </tr>
+                        <tr>
+                        <td>
+                        2B (1 <super> st </super> trial)
+                        </td>
+
+            <td>
+              <input list="integer" name="120" <% if (checks.getData(12,0) != null){out.print("value=\"" + checks.getData(12,0) + "\"");}%> size="3" />
+                        </td>
+            <td>
+              <input list="units" name="121" <% if (checks.getData(12,1) != null){out.print("value=\"" + checks.getData(12,1) + "\"");}%> size="3" />
+                        </td>
+
+                </tr>
+        <tr>
+                        <td>
+                        2B (2 <super> nd </super> trial)
+                        </td>
+            <td>
+              <input list="integer" name="130" <% if (checks.getData(13,0) != null){out.print("value=\"" + checks.getData(13,0) + "\"");}%> size="3" />
+                        </td>
+            <td>
+              <input list="units" name="131" <% if (checks.getData(13,1) != null){out.print("value=\"" + checks.getData(13,1) + "\"");}%> size="3" />
+                        </td>
+
+                </tr>
+        </tr>
+        <tr>
+                        <td>
+                        2B (3 <super> rd </super> trial)
+                        </td>
+            <td>
+              <input list="integer" name="140" <% if (checks.getData(14,0) != null){out.print("value=\"" + checks.getData(14,0) + "\"");}%> size="3" />
+                        </td>
+            <td>
+              <input list="units" name="141" <% if (checks.getData(14,1) != null){out.print("value=\"" + checks.getData(14,1) + "\"");}%> size="3" />
+                        </td>
+
+                </tr>
+                        <tr>
+                        <td>
+                        3B (1 <super> st </super> trial)
+                        </td>
+
+            <td>
+              <input list="integer" name="150" <% if (checks.getData(15,0) != null){out.print("value=\"" + checks.getData(15,0) + "\"");}%> size="3" />
+                        </td>
+                                    <td>
+              <input list="units" name="151" <% if (checks.getData(15,1) != null){out.print("value=\"" + checks.getData(15,1) + "\"");}%> size="3" />
+                        </td>
+                </tr>
+        <tr>
+                        <td>
+                        3B (2 <super> nd </super> trial)
+                        </td>
+            <td>
+              <input list="integer" name="160" <% if (checks.getData(16,0) != null){out.print("value=\"" + checks.getData(16,0) + "\"");}%> size="3" />
+                        </td>
+                            <td>
+              <input list="units" name="161" <% if (checks.getData(16,1) != null){out.print("value=\"" + checks.getData(16,1) + "\"");}%> size="3" />
+                        </td>
+                </tr>
+
+        </tr>
+        <tr>
+                        <td>
+                        3B (3 <super> rd </super> trial)
+                        </td>
+            <td>
+              <input list="integer" name="170" <% if (checks.getData(17,0) != null){out.print("value=\"" + checks.getData(17,0) + "\"");}%> size="3" />
+                        </td>
+                            <td>
+              <input list="units" name="171" <% if (checks.getData(17,1) != null){out.print("value=\"" + checks.getData(17,1) + "\"");}%> size="3" />
+                        </td>
+                </tr>
+                </table>
+
+    <p> *A third trial is only conducted when the first two trials do not agree to within 5%.</p>
+    <p> <b> RESULTS </b> <b>
+    <p> Calculations:</p>
+    <p>I. Calculating the reaction rate (see steps 14 – 18 above)</p>
+
+
+    <table>
+
+    <tr>
+    <legend> A. Determination of Effect of S <sub> 2 </sub> O  <sub> 8 </sub> <super> 2- </super> on rate </legend>
+    </tr>
+    		<tr>
+                        <th>
+                        Run
+                        </th>
+                       <th>
+                        Initial [I <super> - </super>]
+                        </th>
+                       <th>
+                        Initial[ S <sub> 2 </sub> O  <sub> 8 </sub> <super> 2- </super>]
+                        </th>
+                       <th>
+                        &Delta[ S <sub> 2 </sub> O  <sub> 8 </sub> <super> 2- </super>]
+                        </th>
+                        <th>
+                        Average Reaction Time
+                        </th>
+                        <th>
+                        Reaction Rate (M/s)
+                        </th>
+            </tr>
+            <tr>
+            <td>
+            1A
+            </td>
+            <td>
+            <input type="number" step="any" step="any" name="180" <% if (checks.getData(18,0) != null){out.print("value=\"" + checks.getData(18,0) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="units" step="any" step="any" name="181" <% if (checks.getData(18,1) != null){out.print("value=\"" + checks.getData(18,1) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="182" <% if (checks.getData(18,2) != null){out.print("value=\"" + checks.getData(18,2) + "\"");}%> />
+                        </td>
+			<td>
+			  <input list="units" name="183" <% if (checks.getData(18,3) != null){out.print("value=\"" + checks.getData(18,3) + "\"");}%> size="3" />
+                        </td>
+                                    <td>
+            <input type="number" step="any" step="any" name="184" <% if (checks.getData(18,4) != null){out.print("value=\"" + checks.getData(18,4) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="units" step="any" step="any" name="185" <% if (checks.getData(18,5) != null){out.print("value=\"" + checks.getData(18,5) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="number" step="any" step="any" name="186" <% if (checks.getData(18,6) != null){out.print("value=\"" + checks.getData(18,6) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name="187" <% if (checks.getData(18,7) != null){out.print("value=\"" + checks.getData(18,7) + "\"");}%> size="3" />
+                        </td>
+                   <td>
+            <input type="number" step="any" step="any" name="188" <% if (checks.getData(18,8) != null){out.print("value=\"" + checks.getData(18,8) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name="189" <% if (checks.getData(18,9) != null){out.print("value=\"" + checks.getData(18,9) + "\"");}%> size="3" />
+                        </td>
+				</tr>
+				<tr>
+                            <td>
+            2A
+            </td>
+            <td>
+            <input type="number" step="any" step="any" name="190" <% if (checks.getData(19,0) != null){out.print("value=\"" + checks.getData(19,0) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="units" step="any" step="any" name="191" <% if (checks.getData(19,1) != null){out.print("value=\"" + checks.getData(19,1) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="number" step="any" step="any" name="192" <% if (checks.getData(19,2) != null){out.print("value=\"" + checks.getData(19,2) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name="193" <% if (checks.getData(19,3) != null){out.print("value=\"" + checks.getData(19,3) + "\"");}%> size="3" />
+                        </td>
+                                    <td>
+            <input type="number" step="any" step="any" name="194" <% if (checks.getData(19,4) != null){out.print("value=\"" + checks.getData(19,4) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="units" step="any" step="any" name="195" <% if (checks.getData(19,5) != null){out.print("value=\"" + checks.getData(19,5) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="number" step="any" step="any" name="196" <% if (checks.getData(19,6) != null){out.print("value=\"" + checks.getData(19,6) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name="197" <% if (checks.getData(19,7) != null){out.print("value=\"" + checks.getData(19,7) + "\"");}%> size="3" />
+                        </td>
+                   <td>
+            <input type="number" step="any" step="any" name="198" <% if (checks.getData(19,8) != null){out.print("value=\"" + checks.getData(19,8) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name="199" <% if (checks.getData(19,9) != null){out.print("value=\"" + checks.getData(19,9) + "\"");}%> size="3" />
+                        </td>   
+				</tr>
+				<tr>            
+                <td>
+            3A
+            </td>
+            <td>
+            <input type="number" step="any" step="any" name="200" <% if (checks.getData(20,0) != null){out.print("value=\"" + checks.getData(20,0) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="units" step="any" step="any" name="201" <% if (checks.getData(20,1) != null){out.print("value=\"" + checks.getData(20,1) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="number" step="any" step="any" name="202" <% if (checks.getData(20,2) != null){out.print("value=\"" + checks.getData(20,2) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name= "203" <% if (checks.getData(20,3) != null){out.print("value=\"" + checks.getData(20,3) + "\"");}%> size="3" />
+                        </td>
+                                    <td>
+            <input type="number" step="any" step="any" name="204" <% if (checks.getData(20,4) != null){out.print("value=\"" + checks.getData(20,4) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="units" step="any" step="any" name="205" <% if (checks.getData(20,5) != null){out.print("value=\"" + checks.getData(20,5) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="number" step="any" step="any" name="206" <% if (checks.getData(20,6) != null){out.print("value=\"" + checks.getData(20,6) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name="207" <% if (checks.getData(20,7) != null){out.print("value=\"" + checks.getData(20,7) + "\"");}%> size="3" />
+                        </td>
+                   <td>
+            <input type="number" step="any" step="any" name="208" <% if (checks.getData(20,8) != null){out.print("value=\"" + checks.getData(20,8) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name="209" <% if (checks.getData(20,9) != null){out.print("value=\"" + checks.getData(20,9) + "\"");}%> size="3" />
+                        </td>
+		</tr>
+        <tr>
+            <td>
+            1B
+            </td>
+            <td>
+            <input type="number" step="any" step="any" name="210" <% if (checks.getData(21,0) != null){out.print("value=\"" + checks.getData(21,0) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="units" step="any" step="any" name="211" <% if (checks.getData(21,1) != null){out.print("value=\"" + checks.getData(21,1) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="number" step="any" step="any" name="212" <% if (checks.getData(21,2) != null){out.print("value=\"" + checks.getData(21,2) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name="213" <% if (checks.getData(21,3) != null){out.print("value=\"" + checks.getData(21,3) + "\"");}%> size="3" />
+                        </td>
+                                    <td>
+            <input type="number" step="any" step="any" name="214" <% if (checks.getData(21,4) != null){out.print("value=\"" + checks.getData(21,4) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="units" step="any" step="any" name="215" <% if (checks.getData(21,5) != null){out.print("value=\"" + checks.getData(21,5) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="number" step="any" step="any" name="216" <% if (checks.getData(21,6) != null){out.print("value=\"" + checks.getData(21,6) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name="217" <% if (checks.getData(21,7) != null){out.print("value=\"" + checks.getData(21,7) + "\"");}%> size="3" />
+                        </td>
+                   <td>
+            <input type="number" step="any" step="any" name="218" <% if (checks.getData(21,8) != null){out.print("value=\"" + checks.getData(21,8) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name="219" <% if (checks.getData(21,9) != null){out.print("value=\"" + checks.getData(21,9) + "\"");}%> size="3" />
+                        </td>
+                </tr>
+                <tr>
+                            <td>
+            2B
+            </td>
+            <td>
+            <input type="number" step="any" step="any" name="220" <% if (checks.getData(22,0) != null){out.print("value=\"" + checks.getData(22,0) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="units" step="any" step="any" name="221" <% if (checks.getData(22,1) != null){out.print("value=\"" + checks.getData(22,1) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="number" step="any" step="any" name="222" <% if (checks.getData(22,2) != null){out.print("value=\"" + checks.getData(22,2) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name="223" <% if (checks.getData(22,3) != null){out.print("value=\"" + checks.getData(22,3) + "\"");}%> size="3" />
+                        </td>
+                                    <td>
+            <input type="number" step="any" step="any" name="224" <% if (checks.getData(22,4) != null){out.print("value=\"" + checks.getData(22,4) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="units" step="any" step="any" name="225" <% if (checks.getData(22,5) != null){out.print("value=\"" + checks.getData(22,5) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="number" step="any" step="any" name="226" <% if (checks.getData(22,6) != null){out.print("value=\"" + checks.getData(22,6) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name="227" <% if (checks.getData(22,7) != null){out.print("value=\"" + checks.getData(22,7) + "\"");}%> size="3" />
+                        </td>
+                   <td>
+            <input type="number" step="any" step="any" name="228" <% if (checks.getData(22,8) != null){out.print("value=\"" + checks.getData(22,8) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name="229" <% if (checks.getData(22,9) != null){out.print("value=\"" + checks.getData(22,9) + "\"");}%> size="3" />
+                        </td>   
+                </tr>
+                <tr>            
+                <td>
+            3B
+            </td>
+            <td>
+            <input type="number" step="any" step="any" name="230" <% if (checks.getData(23,0) != null){out.print("value=\"" + checks.getData(23,0) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="units" step="any" step="any" name="231" <% if (checks.getData(23,1) != null){out.print("value=\"" + checks.getData(23,1) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="number" step="any" step="any" name="232" <% if (checks.getData(23,2) != null){out.print("value=\"" + checks.getData(23,2) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name= "233" <% if (checks.getData(23,3) != null){out.print("value=\"" + checks.getData(23,3) + "\"");}%> size="3" />
+                        </td>
+                                    <td>
+            <input type="number" step="any" step="any" name="234" <% if (checks.getData(23,4) != null){out.print("value=\"" + checks.getData(23,4) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="units" step="any" step="any" name="235" <% if (checks.getData(23,5) != null){out.print("value=\"" + checks.getData(23,5) + "\"");}%> />
+                        </td>
+                        <td>
+            <input type="number" step="any" step="any" name="236" <% if (checks.getData(23,6) != null){out.print("value=\"" + checks.getData(23,6) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name="237" <% if (checks.getData(23,7) != null){out.print("value=\"" + checks.getData(23,7) + "\"");}%> size="3" />
+                        </td>
+                   <td>
+            <input type="number" step="any" step="any" name="238" <% if (checks.getData(23,8) != null){out.print("value=\"" + checks.getData(23,8) + "\"");}%> />
+                        </td>
+            <td>
+              <input list="units" name="239" <% if (checks.getData(23,9) != null){out.print("value=\"" + checks.getData(23,9) + "\"");}%> size="3" />
+                        </td>
+        </tr>
+        </table>
+        <p> III. Calculating the rate constant: (see step 21) </p>
+
+        <table>
+
+        <tr>
+            <th>
+            Run
+            </th>
+            <th>
+            Rate Constant, k
+            </th>
+            <th>
+            Unit
+            </th>
+        </tr>
+        <tr>
+            <td>
+            1A
+            </td>
+            <td>
+             <input type="number" step="any" step="any" name="240" <% if (checks.getData(24,0) != null){out.print("value=\"" + checks.getData(24,0) + "\"");}%> />
+            </td>
+            <td>
+               <input list="units" name="241" <% if (checks.getData(24,1) != null){out.print("value=\"" + checks.getData(24,1) + "\"");}%> size="3" />
+               </td>
+        </tr>
+        <tr>
+            <td>
+            2A
+            </td>
+            <td>
+             <input type="number" step="any" step="any" name="250" <% if (checks.getData(25,0) != null){out.print("value=\"" + checks.getData(25,0) + "\"");}%> />
+            </td>
+            <td>
+               <input list="units" name="251" <% if (checks.getData(25,1) != null){out.print("value=\"" + checks.getData(25,1) + "\"");}%> size="3" />
+               </td>
+        </tr>
+                <tr>
+            <td>
+            3A
+            </td>
+            <td>
+             <input type="number" step="any" step="any" name="260" <% if (checks.getData(26,0) != null){out.print("value=\"" + checks.getData(26,0) + "\"");}%> />
+            </td>
+            <td>
+               <input list="units" name="261" <% if (checks.getData(26,1) != null){out.print("value=\"" + checks.getData(26,1) + "\"");}%> size="3" />
+               </td>
+        </tr>
+                <tr>
+            <td>
+            1B
+            </td>
+            <td>
+             <input type="number" step="any" step="any" name="270" <% if (checks.getData(27,0) != null){out.print("value=\"" + checks.getData(27,0) + "\"");}%> />
+            </td>
+            <td>
+               <input list="units" name="271" <% if (checks.getData(27,1) != null){out.print("value=\"" + checks.getData(27,1) + "\"");}%> size="3" />
+               </td>
+        </tr>
+        <tr>
+            <td>
+            2B
+            </td>
+            <td>
+             <input type="number" step="any" step="any" name="280" <% if (checks.getData(28,0) != null){out.print("value=\"" + checks.getData(28,0) + "\"");}%> />
+            </td>
+            <td>
+               <input list="units" name="281" <% if (checks.getData(28,1) != null){out.print("value=\"" + checks.getData(28,1) + "\"");}%> size="3" />
+               </td>
+        </tr>
+                <tr>
+            <td>
+            3B
+            </td>
+            <td>
+             <input type="number" step="any" step="any" name="290" <% if (checks.getData(29,0) != null){out.print("value=\"" + checks.getData(29,0) + "\"");}%> />
+            </td>
+            <td>
+               <input list="units" name="291" <% if (checks.getData(29,1) != null){out.print("value=\"" + checks.getData(29,1) + "\"");}%> size="3" />
+               </td>
+        </tr>
+        <tr>
+            <td>
+            Average Value of k
+            </td>
+            <td>
+             <input type="number" step="any" step="any" name="300" <% if (checks.getData(30,0) != null){out.print("value=\"" + checks.getData(30,0) + "\"");}%> />
+            </td>
+            <td>
+               <input list="units" name="301" <% if (checks.getData(30,1) != null){out.print("value=\"" + checks.getData(30,1) + "\"");}%> size="3" />
+               </td>
+        </tr>
+        </table>
+
+            </fieldset>
+            <br>
+            <table>
+	            <tr>
+	            	<td></td>
+		            <td style="width:50%">
+		            	<div style="text-align: center" id="btns">
+                			<input type="submit" name="button" value="Clear" />
+                			<input type="submit" name="button" value="Save" />
+                			<input type="submit" name="button" value="Submit" />
+							<p>Student View [Test Page]</p>
+            			</div>
+		            </td>
+		            <td></td>
+	            </tr>     
+            </table>
+            <br>
+            </form>
+        </fieldset>
+    <br>
+    </body>
+</html>
+</bbNG:learningSystemPage>

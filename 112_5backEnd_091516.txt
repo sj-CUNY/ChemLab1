@@ -1,0 +1,317 @@
+package Labs;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
+//import blackboard.platform.context.Context;
+
+
+
+public class lab1_5Checks extends inputChecks
+{
+	public lab112_5Checks(Context ctx, int x, int y, int userid, String courseid, int labNumber)
+	{
+        super(ctx, x, y, userid, courseid, labNumber);
+    }
+ 
+	@Override
+
+int gradeValue = 0;
+int gradeUnit = 1; //value for correct unit
+int gradeSF = 1; //value for correct sig figs
+int gradeCalc= 4; //value for correct calculation
+
+
+    protected void buildKey()
+    {
+        for (int i = 0; i < dataX; ++i)
+        {
+            for (int j = 0; j < dataY; ++j)
+            {
+				if(i<18)
+				{
+	                if(j<1)
+	                {
+	                    key[i][j]=data[i][j];
+					}
+					else
+					{					
+						setKey(i,j,"*"); //set all key values to *
+	                }
+				else if(i>17 && i<24)
+				{
+					if(j==0||j==2||j==4)
+					{
+						key[i][j]=setSigFigs(data[i][j], 3);
+					}
+					else if(j==1 || j == 3||j==5)
+					{
+						key[i][j]="M";
+					}
+					else if(j==6)
+					{
+						if(i==18)
+						{
+							Double temp = ((Double.parseDouble(getData(0,0))+Double.parseDouble(getData(0,1))+Double.parseDouble(getData(0,2)))/3);
+							String temp1 = Double.toString(temp);              
+							key[i][j] = temp1;
+						}
+						else if(i==19)
+						{
+							Double temp = ((Double.parseDouble(getData(0,3))+Double.parseDouble(getData(0,4))+Double.parseDouble(getData(0,5)))/3);
+							String temp1 = Double.toString(temp);              
+							key[i][j] = temp1;
+						}
+						else if(i==20)
+						{
+							Double temp = ((Double.parseDouble(getData(0,6))+Double.parseDouble(getData(0,7))+Double.parseDouble(getData(0,8)))/3);
+							String temp1 = Double.toString(temp);              
+							key[i][j] = temp1;
+						}
+						else if(i==21)
+						{
+							Double temp = ((Double.parseDouble(getData(0,9))+Double.parseDouble(getData(0,10))+Double.parseDouble(getData(0,11)))/3);
+							String temp1 = Double.toString(temp);              
+							key[i][j] = temp1;
+						}
+						else if(i==22)
+						{
+							Double temp = ((Double.parseDouble(getData(0,12))+Double.parseDouble(getData(0,13))+Double.parseDouble(getData(0,14)))/3);
+							String temp1 = Double.toString(temp);              
+							key[i][j] = temp1;
+						}
+						else if(i==23)
+						{
+							Double temp = ((Double.parseDouble(getData(0,15))+Double.parseDouble(getData(0,16))+Double.parseDouble(getData(0,17)))/3);
+							String temp1 = Double.toString(temp);              
+							key[i][j] = temp1;
+						}
+					}
+					else if(j==7)
+					{
+						key[i][j] = "s";
+					}
+					else if(j==8)
+					{
+						Double temp = Double.parseDouble(getData(i,4))/Double.parseDouble(getData(i,6));
+						int sf = min(getSigFigs(data[i][4]), getSigFigs(data[i][6]));
+						String temp1 = Double.toString(setSigFigs(temp, sf));
+						key[i][j] = temp1;
+					}
+					else if(j==9)
+					{
+						key[i][j] = "M/s";
+					}
+				}
+				else if(i>23 && i<30)
+				{
+					if(j==0)
+					{
+						Double temp = Double.parseDouble(getDat(i-6, 8))/(Double.parseDouble(getData(i-6, 1))*Double.parseDouble(i-6, 3))
+						int sf - min(getSigFigs(data[i-6][8]), 3);
+						String temp1 = Double.toString(setSigFigs(temp, sf));
+						key[i][j] = temp1;
+					}
+					else if(j==1)
+					{
+						String exp = "-1";
+						key[i][j] = "M" + exp.sup() + "s" + exp.sup();
+					}
+					else
+					{
+						key[i][j] = "*";
+					}
+				}
+				else  	//i=30
+				{
+					if(j==0)
+					{
+						Double temp = ((Double.parseDouble(getData(0,24))+Double.parseDouble(getData(0,25))+Double.parseDouble(getData(0,26))+Double.parseDouble(getData(0,27))+Double.parseDouble(getData(0,28))+Double.parseDouble(getData(0,29)))/6);
+						int sf = min(getSigFigs(data[0][24]), getSigFigs(data[0][25]), getSigFigs(data[0][26]), getSigFigs(data[0][27]), getSigFigs(data[0][28]), getSigFigs(data[0][29]))
+						String temp1 = Double.toString(setSigFigs(temp, sf));              
+						key[i][j] = temp1;
+					}
+					else
+					{
+						key[i][j] = "*"
+					}
+				}
+
+			}
+		}
+	}
+			
+
+	protected void gradeLab()
+	{
+		for(int i = 0 ; i < dataX; ++i)
+		{
+			for(int j = 0; j<dataY; ++j)
+			{
+				if(i<18)	 
+				{
+					isCorrect[i][j] = correctMsg;  	//no mistakes possible, no points for this section 
+				}
+				else if(i>17 && i<24)
+				{
+					if(j==0||j==2||j==4)
+					{
+						if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 
+							grade[i][j] = gradeCorrect;
+							gradeValue +=gradeCalc+gradeSF;
+						}
+						else 
+						{
+							isCorrect[i][j]=errorMsg;
+							if(Double.parseDouble(getData(i,j)) == Double.parseDouble(key[i][j]) && getSigFigs(data[i][j])!=3); //calc correct, sf error
+							{
+								error[i][j] = errorTypes[0]; //sigfigs error
+								grade[i][j] = "" -gradeSF;
+								gradeValue += gradeCalc;
+							}
+							else if (getSigFigs(data[[i][j])==3 && Double.parseDouble(getData(i,j)) != Double.parseDouble(key[i][j]) //sf correct, cal error
+							{
+								error[i][j] = errorTypes[1]; //calculation error
+								grade[i][j] = "" -gradeCalc;
+								gradeValue+=gradeSF;
+							}
+							else
+							{
+								error[i][j] = errorTypes[0] + ", " + errorTypes[1];  //both sf and calc incorrect
+								grade[i][j] = "" -gradeCalc + ", " -gradeSF;
+							}
+						}
+					}
+					else if(j==1||j==3||j==5||j==7||j==9)
+					{
+						if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 
+							grade[i][j] = gradeUnit;
+							gradeValue +=gradeUnit;
+						}
+						else 
+						{
+							isCorrect[i][j]=errorMsg;
+							error[i][j] = errorTypes[2]; //unit error
+							grade[i][j] = "" -gradeUnit;
+						}
+					}
+					else if(j==6||j==8)
+					{
+						if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 
+							grade[i][j] = gradeCorrect;
+							gradeValue +=gradeCalc+gradeSF;
+						}
+						else 
+						{
+							isCorrect[i][j]=errorMsg;
+							if(Double.parseDouble(getData(i,j)) == Double.parseDouble(key[i][j]) && getSigFigs(data[i][j])!= getSigFigs(key[i][j])); //calc correct, sf error
+							{
+								error[i][j] = errorTypes[0]; //sigfigs error
+								grade[i][j] = "" -gradeSF;
+								gradeValue += gradeCalc;
+							}
+							else if (getSigFigs(data[[i][j])==getSigFigs(key[i][j]) && Double.parseDouble(getData(i,j)) != Double.parseDouble(key[i][j]) //sf correct, cal error
+							{
+								error[i][j] = errorTypes[1]; //calculation error									
+								grade[i][j] = "" -gradeCalc;
+								gradeValue+=gradeSF;
+							}
+							else
+							{
+								error[i][j] = errorTypes[0] + ", " + errorTypes[1];  //both sf and calc incorrect
+								grade[i][j] = "" -gradeCalc + ", " -gradeSF;
+							}
+						}
+					}
+				else if(i>23 && i<30)
+				{
+					if(j==0)
+					{
+						if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 
+							grade[i][j] = gradeCorrect;
+							gradeValue +=gradeCalc+gradeSF;
+						}
+						else 
+						{
+							isCorrect[i][j]=errorMsg;
+							if(Double.parseDouble(getData(i,j)) == Double.parseDouble(key[i][j]) && getSigFigs(data[i][j])!= getSigFigs(key[i][j])); //calc correct, sf error
+							{
+								error[i][j] = errorTypes[0]; //sigfigs error
+								grade[i][j] = "" -gradeSF;
+								gradeValue += gradeCalc;
+							}
+							else if (getSigFigs(data[[i][j])==getSigFigs(key[i][j]) && Double.parseDouble(getData(i,j)) != Double.parseDouble(key[i][j]) //sf correct, cal error
+							{
+								error[i][j] = errorTypes[1]; //calculation error									
+								grade[i][j] = "" -gradeCalc;
+								gradeValue+=gradeSF;
+							}
+							else
+							{
+								error[i][j] = errorTypes[0] + ", " + errorTypes[1];  //both sf and calc incorrect
+								grade[i][j] = "" -gradeCalc + ", " -gradeSF;
+							}
+						}
+					
+					}
+
+					else if(j==1)
+					{
+						if(data[i][j]) == key[i][j])
+						{	
+							isCorrect[i][j] = correctMsg; 
+							grade[i][j] = gradeUnit;
+							gradeValue +=gradeUnit;
+						}
+						else 
+						{
+							isCorrect[i][j]=errorMsg;
+							error[i][j] = errorTypes[2]; //unit error
+							grade[i][j] = "" -gradeUnit;
+						}
+					}
+				}
+				else		//i==30
+				{
+					if(j==0)
+					{
+						if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 
+							grade[i][j] = gradeCorrect;
+							gradeValue +=gradeCalc+gradeSF;
+						}
+						else 
+						{
+							isCorrect[i][j]=errorMsg;
+							if(Double.parseDouble(getData(i,j)) == Double.parseDouble(key[i][j]) && getSigFigs(data[i][j])!= getSigFigs(key[i][j])); //calc correct, sf error
+							{
+								error[i][j] = errorTypes[0]; //sigfigs error
+								grade[i][j] = "" -gradeSF;
+								gradeValue += gradeCalc;
+							}
+							else if (getSigFigs(data[[i][j])==getSigFigs(key[i][j]) && Double.parseDouble(getData(i,j)) != Double.parseDouble(key[i][j]) //sf correct, cal error
+							{
+								error[i][j] = errorTypes[1]; //calculation error									
+								grade[i][j] = "" -gradeCalc;
+								gradeValue+=gradeSF;
+							}
+							else
+							{
+								error[i][j] = errorTypes[0] + ", " + errorTypes[1];  //both sf and calc incorrect
+								grade[i][j] = "" -gradeCalc + ", " -gradeSF;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	

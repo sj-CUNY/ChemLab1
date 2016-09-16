@@ -1,0 +1,419 @@
+package Labs;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
+import blackboard.platform.context.Context;
+
+public class lab1_8Checks extends inputChecks
+{
+	public lab1_8Checks(Context ctx, string tablename, int x, int y, int userid, String courseid, int labNumber)
+	{
+        super(ctx, x, y, userid, courseid, labNumber);
+    }
+ 
+	@Override
+
+int gradeValue = 0;
+int gradeUnit = 1; //value for correct unit
+int gradeSF = 1; //value for correct sig figs
+int gradeCalc= 4; //value for correct calculation
+
+    protected void buildKey()
+    {
+        for(i=0; i<dataX; i++)
+		{
+				for(j=0; j<dataY; j++)
+				{
+					setKey(i,j,"*"); //set all key values to *
+					if(i<3) 						//the following checks the first three rows 
+					{
+						for(j=0; j<4; j++)
+							{
+								if(j!=3)
+								{
+									if (data[i][j] != "")							//if the fields are null, they will be left as "*"
+									{
+										if(i<2)
+										{
+											setKey(i,j, setToDecPlaces(getData(i,j), 4));
+										}
+										else
+										{
+											Double temp = Double.parseDouble(getData(0,j)-getData(1,j));
+											String temp1 = setDecPlaces(Double.toString(temp), 4);
+											key[i][j] = temp1;
+										}
+								}
+								else
+								{
+									key[i][j] = "g";
+								}
+					}						
+					else if (j!=3) 
+					{
+						if(i==2||i==6) //rows with weight KHC8H4O4
+						{
+							setKey(i,j,setDecPlaces(getData(2,j),4)); 	
+						}
+						else if(i>2 && i<5 )
+						{
+							setKey(i,j,setDecPlaces(getData(i,j),2)); 	
+						}
+						else if(i==5)
+						{
+							Double temp = Double.parseDouble(getData(3,j))-Double.parseDouble(getData(4,j));
+							String temp1 = setDecPlaces(Double.toString(temp), 2);
+							key[i][j] = temp1;
+						
+						}
+						else if(i==7)
+						{
+							Double temp = Double.parseDouble(getData(6,j))/204.22);
+							String temp1 = setSigFigs(Double.toString(temp), 4);
+							key[i][j] = temp1;
+						}
+						else if(i==8)
+						{
+							key[i][j]==key[7][j];
+						}
+						else if(i==9)
+						{
+							Double temp = Double.parseDouble(getData(5,j)/1000);
+							String temp1 = Double.toString(temp);
+							setSigFigs(temp1, getSigFigs(getData(5,j)));
+							key[i][j] =  temp1;
+						}
+						else if(i==10)
+						{
+							Double temp = Double.parseDouble(getData(8,j)/Double.parseDouble(getData(9,j)));
+							String temp1 = Double.toString(temp);
+							setSigFigs(temp1, Math.min(getSigFigs(getData(8,j), getSigfigs(getData(9,j)))));		//sets the SF of result to the lower # of SF 
+							key[i][j] = temp1;
+						}
+						else if(i==11)
+						{
+							if(j==0)
+							{
+								Double temp = (Double.parseDouble(getData(10,0))+Double.parseDouble(getData(10,1))+Double.parseDouble(getData(10,2)))/3);
+								String temp1 = Double.toString(temp);
+								setSigFigs(temp1, Math.min(getSigFigs(getData(10, 0), getSigFigs(getData(10, 1)), getSigFigs(getData(10,2)))))
+								key[i][j] = temp1;
+							}
+							else
+							{
+								key[i][j]="*";
+							}
+						}
+					}
+					else 		//j=3, units column
+					{
+						if((i>=0 && i< 3) || i==6)
+						{
+							key[i][j] = "g";
+						}
+						else if(i>2 && i<6)
+						{
+							key[i][j]= "ml";
+						}
+						else if(i==7 || i==8)
+						{
+							key[i][j]="mol";
+						}
+						else if(i==9)
+						{
+							key[i][j]="L";
+						}
+						else if(i==10 || i==11)
+						{
+							key[i][j]="M, mol/L";
+						}
+					}
+				}
+		}
+	}
+		
+
+ 
+	protected void gradeLab()
+	{
+		for(int i = 0; i <3 ; ++i)
+		{	
+			for(int j = 0; j<3; ++j)
+			{
+				if(data[i][j]!=NULL) 		//Null entries will not be graded
+				{
+					if(i<2)
+					{
+						if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 
+							grade[i][j] = gradeSF;
+							gradeValue += gradeSF;
+						}
+						else 
+						{
+							isCorrect[i][j] = errorMsg;
+							error[i][j] = errorTypes[0]; 	//sigfigs error
+						}
+					}
+					else 		//i=2
+					{
+						if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 		//correct answer
+							grade[i][j] = gradeCalc + ", " gradeSF;
+							gradeValue += (gradeCalc + gradeSF);
+						}
+						else 
+						{
+							isCorrect[i][j] = errorMsg;
+							if(data[0][j]==NULL || data[1][j] == NULL) 			//if the first 2 rows are null, only sf error is possible, no cred for calc
+							{
+								error[i][j] = errorTypes[0];	//sf error
+								grade[i][j] = "" -gradeSF;
+							}
+							else if(Double.parseDouble(getData(i,j)) == Double.parseDouble(key[i][j])) 	//first 2 rows not null
+							{
+								error[i][j] = errorTypes[0]; 	//sf error with correct calc
+								grade[i][j] = "" -gradeSF;
+								gradeValue += gradeCalc;
+							}
+							else if(getDecPlaces(data[i][j]) == 4)
+							{
+								error[i][j] = errorTypes[1]; 	//correct sf, incorrect calc
+								grade[i][j] = "" -gradeCalc;
+								gradeValue += gradeSF;
+							}
+							else
+							{
+								error[i][j] = errorTypes[0] + ", " + errorTypes[1]; 	/sf and calc both incorrect
+								grade[i][j] = "" -gradeSF + ", " + -gradeCalc;
+							}
+						}
+					}
+				}
+			}
+		}
+		for(int i=3; i<12; i++)
+		{
+			for(j=0; j<3; j++)
+			{
+				if(i==3||i==4)
+				{
+					if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 
+							grade[i][j] = "" gradeSF;
+							gradeValue += gradeSF;
+						}
+						else 
+						{
+							isCorrect[i][j] = errorMsg;
+							error[i][j] = errorTypes[0]; //sigfigs error
+							grade[i][j] = "" -gradeSF;
+						}
+				}
+				else if(i==5)
+				{
+					if(data[i][j]) == key[i][j]) 	//correct answer
+						{
+							isCorrect[i][j] = correctMsg; 
+							grade[i][j] = "" gradeSF + ", " + gradeCalc;
+							gradeValue += (gradeCalc + gradeSF);
+						}
+						else 
+						{
+							isCorrect[i][j] = errorMsg;
+							if(Double.parseDouble(getData(i,j)) == Double.parseDouble(key[i][j]));
+							{
+								error[i][j] = errorTypes[0]; 	//sf error, correct calc
+								grade[i][j] = "" -gradeSF;
+								gradeValue+=gradeCalc;
+							}
+							else if(getDecPlaces(getData(i,j))==2)
+							{
+								error[i][j] = errorTypes[1]; 	//calculation error, correct sf
+								grade[i][j] = "" -gradeCalc;
+								gradeValue += gradeSF;
+							}
+							else
+							{
+								error[i][j] = errorTypes[0] + ", " errorTypes[1];		//calc and sf, both incorrect
+								grade[i][j] = "" -gradeSF + ", " + -gradeCalc;
+							}
+						}
+				}
+				else if(i==6||i==8)
+				{
+					if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 
+							grade[i][j] = gradeSF;
+							gradeValue += gradeSF;
+						}
+						else 
+						{
+							isCorrect[i][j] = errorMsg;
+							error[i][j] = errorTypes[0]; //sigfigs error
+							grade[i][j] = "" - gradeSF;
+						}
+				}
+				else if(i==7)
+				{
+					if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 	//correct answer
+							grade[i][j] = "" gradeSF + ", " gradeCalc;
+							gradeValue += (gradeSF + gradeCalc);
+						}
+						else 
+						{
+							isCorrect[i][j] = errorMsg;
+							if(Double.parseDouble(getData(i,j)) == Double.parseDouble(key[i][j]));	//correct calc, incorrect sf
+							{
+								error[i][j] = errorTypes[0];	 //sigfigs
+								grade[i][j] = "" -gradeSF;
+								gradeValue += gradeCalc;
+							}
+							else if(getSigFigs(getData(i,j))== 4)	//correct sf, incorrect calc
+							{
+								error[i][j] = errorTypes[1]; 	//calc
+								grade[i][j] = "" -gradeCalc;
+								gradeValue += gradeSF;
+							}
+							else
+							{
+								error[i][j] = errorTypes[0] + ", " errorTypes[1]; 	//calculation and sf both incorrect
+								grade[i][j] = "" -gradeSF + ", " + gradeCalc;
+							}
+						}
+				}
+				else if(i==9)
+				{
+					if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 	//correct answer
+							grade[i][j] = "" gradeSF + ", " gradeCalc;
+							gradeValue += (gradeSF + gradeCalc);
+						}
+						else 
+						{
+							isCorrect[i][j] = errorMsg;
+							if(Double.parseDouble(getData(i,j)) == Double.parseDouble(key[i][j]));	//correct calc, incorrect sf
+							{
+								error[i][j] = errorTypes[0];	 //sigfigs
+								grade[i][j] = "" -gradeSF;
+								gradeValue += gradeCalc;
+							}
+							else if(getSigFigs(getData(i,j))== getSigFigs(getData(5,j)))	//correct sf based on previous entry, incorrect calc
+							{
+								error[i][j] = errorTypes[1]; 	//calc
+								grade[i][j] = "" -gradeCalc;
+								gradeValue += gradeSF;
+							}
+							else
+							{
+								error[i][j] = errorTypes[0] + ", " errorTypes[1]; 	//calculation and sf both incorrect
+								grade[i][j] = "" -gradeSF + ", " + gradeCalc;
+							}
+						}
+				}
+				else if(i==10)
+				{
+					if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 	//correct answer
+							grade[i][j] = "" gradeSF + ", " gradeCalc;
+							gradeValue += (gradeSF + gradeCalc);
+						}
+						else 
+						{
+							isCorrect[i][j] = errorMsg;
+							if(Double.parseDouble(getData(i,j)) == Double.parseDouble(key[i][j]));	//correct calc, incorrect sf
+							{
+								error[i][j] = errorTypes[0];	 //sigfigs
+								grade[i][j] = "" -gradeSF;
+								gradeValue += gradeCalc;
+							}
+							else if(getSigFigs(getData(i,j))== Math.min(getSigFigs(getData(8,j)), getSigFigs(getData(9,j)))	
+																						//correct sf based on previous entries, incorrect calc
+							{
+								error[i][j] = errorTypes[1]; 	//calc
+								grade[i][j] = "" -gradeCalc;
+								gradeValue += gradeSF;
+							}
+							else
+							{
+								error[i][j] = errorTypes[0] + ", " errorTypes[1]; 	//calculation and sf both incorrect
+								grade[i][j] = "" -gradeSF + ", " + gradeCalc;
+							}
+						}
+				}
+				else if(i==11)
+				{
+					if(j==0)
+					{
+						if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 	//correct answer
+							grade[i][j] = "" gradeSF + ", " gradeCalc;
+							gradeValue += (gradeSF + gradeCalc);
+						}
+						else 
+						{
+							isCorrect[i][j] = errorMsg;
+							if(Double.parseDouble(getData(i,j)) == Double.parseDouble(key[i][j]));	//correct calc, incorrect sf
+							{
+								error[i][j] = errorTypes[0];	 //sigfigs
+								grade[i][j] = "" -gradeSF;
+								gradeValue += gradeCalc;
+							}
+							else if(getSigFigs(getData(i,j))== Math.min(getSigFigs(getData(10,0)), getSigFigs(getData(10,1)), getSigFigs(getData(10,2)))	
+																								//correct sf based on previous entry, incorrect calc
+							{
+								error[i][j] = errorTypes[1]; 	//calc
+								grade[i][j] = "" -gradeCalc;
+								gradeValue += gradeSF;
+							}
+							else
+							{
+								error[i][j] = errorTypes[0] + ", " errorTypes[1]; 	//calculation and sf both incorrect
+								grade[i][j] = "" -gradeSF + ", " + gradeCalc;
+							}
+						}
+					}
+				}
+			}
+	
+		}
+		for(int i=0; i<10;i++)
+		{
+			if(data[i][3]) == key[i][3])
+			{
+				isCorrect[i][j] = correctMsg; 	//correct answer
+				grade[i][j] = "" gradeUnit;
+				gradeValue += gradeUnit;			}
+			else 
+			{
+				isCorrect[i][3] = errorMsg;
+				error[i][3] = errorTypes[2]; //unit error
+				grade[i][3] = "" - gradeUnit;
+			}
+		}
+		for(int i=10; i<12; i++)
+		{
+			if(data[i][3] == key[i][3].substring(0,1) || data[i][3] == key[i][3].substring(3, 5)) 	//unit = M or mol/L
+			{
+				isCorrect[i][j] = correctMsg; 	//correct answer
+				grade[i][j] = "" gradeUnit;
+				gradeValue += gradeUnit;
+			}
+			else 
+			{
+				isCorrect[i][3] = errorMsg;
+				error[i][3] = errorTypes[2]; //unit error
+				grade[i][3] = "" - gradeUnit;
+			}
+		}
+	}
+	

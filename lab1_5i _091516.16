@@ -1,0 +1,1936 @@
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="Labs.lab1_5Checks" %>
+<%@ page import="Labs.GradeLogistics" %>
+<%@ page import="Labs.Helper" %>
+<%@ page import="Labs.DataLoader" %>>
+<%@ page import="blackboard.platform.context.Context" %>
+<%@ page import="blackboard.platform.context.ContextManager" %>
+<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
+<%@ page import="blackboard.data.user.User" %>
+<%@ page import="blackboard.data.course.*" %>
+<%@ page import="blackboard.persist.course.*" %>
+<%@ page import="blackboard.platform.persistence.PersistenceService" %>
+<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
+<%@ page import="blackboard.persist.BbPersistenceManager"%>
+ <%@ page import="blackboard.persist.*"%>
+ 
+<%@ page import="blackboard.data.gradebook.Lineitem" %>
+<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
+ 
+ <%@ taglib uri="/bbUI" prefix="bbUI" %> 
+ <%@ taglib uri="/bbData" prefix="bbData"%> 
+ <%@ taglib uri="/bbNG" prefix="bbNG"%>
+ <bbNG:learningSystemPage 
+	title="LAB 5"
+	ctxId="ctx">
+
+	<bbNG:pageHeader>
+		<bbNG:breadcrumbBar environment="COURSE"
+			navItem="ycdb-chem112-nav-LabDebug" >
+				<bbNG:breadcrumb title="Home" href="lab1_5i.jsp?course_id=@X@course.pk_string@X@&user_id=@X@user.pk_string@X@" />
+			<bbNG:breadcrumb> Lab 5 </bbNG:breadcrumb>
+		</bbNG:breadcrumbBar>
+		<bbNG:pageTitleBar>
+			Welcome to Chem 112 Lab 5
+		</bbNG:pageTitleBar>
+	</bbNG:pageHeader>
+
+
+<!DOCTYPE html>
+
+ <%
+	int dataX = 31;
+ 	int dataY = 10;
+  	User u = ctx.getUser();
+ 	String userid = "";
+ 	DataLoader loader = new DataLoader();
+	lab1_5Checks checks;
+	Helper h = new Helper();
+  	String courseid = request.getParameter("course_id");
+  	String button = null;
+  	String tableName = "ycdb_lab_data";
+	
+  	CourseMembership crsMembership = null;
+	CourseMembershipDbLoader crsMembershipLoader = null;
+	PersistenceService bbPm = PersistenceServiceFactory.getInstance() ;
+    BbPersistenceManager bpManager = bbPm.getDbPersistenceManager();
+ 
+	String errMsg = null;
+	crsMembershipLoader = (CourseMembershipDbLoader)bpManager.getLoader(CourseMembershipDbLoader.TYPE);
+	
+	try {
+		crsMembership = crsMembershipLoader.loadByCourseAndUserId(ctx.getCourse().getId(), u.getId());
+	} catch (KeyNotFoundException e) {
+			// There is no membership record.
+			errMsg = "There is no membership record. Better check this out:" + e;
+	} catch (PersistenceException pe) {
+			// There is no membership record.
+			errMsg = "An error occured while loading the User. Better check this out:" + pe;
+	}
+	
+	CourseMembership.Role crsMembershipRole = crsMembership.getRole();
+	 
+ 	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR)
+	{
+ 		String cid = request.getParameter("courseMembershipId");
+ 		userid = h.getUserIdFromCourseMembershipId(ctx, cid);	 	
+	}
+	else
+	{
+		userid = u.getId().toExternalString();
+    }
+ 	
+ 	//load lab data to be used to populate the form
+ 	String[] labData = loader.loadData(tableName, 12, userid, courseid);
+ 	String[][] data = h.convertTo2DArray(dataX, dataY, labData[0]);
+ 	String[][] isCorrect = h.convertTo2DArray(dataX, dataY, labData[1]);
+ 	String[][] error = h.convertTo2DArray(dataX, dataY, labData[2]);
+ 	String[][] scores = h.convertTo2DArray(dataX + 1, dataY, labData[3]); //dataX + 1 is used in order to include the total score
+ 	String[][] key = h.convertTo2DArray(dataX, dataY, labData[4]);
+ %>
+ 
+<html>
+    <head>
+    	<title>
+            Lab 5: Chemical Kinetics: An Iodine Clock Reaction
+    	</title>
+    	<link rel="stylesheet" href="labs_css.css">
+    </head>
+    <body>
+    <p>User Information</p>  
+  	<p style="margin-left:10px">
+   			Student Id: <%= userid%> <br />   
+   	</p>    
+    	<fieldset class="fieldset-auto-width">
+            <legend>Lab 5: Chemical Kinetics: An Iodine Clock Reaction</legend>
+            <%
+	            
+            %>
+        
+            <fieldset>
+              
+                <legend>DATA: Chemical Kinetics: Iodine Clock Reaction</legend>
+              
+		<table>
+                   <tr>
+                        <th>
+                        A. Determination of Effect of S <sub> 2 </sub> O  <sub> 8 </sub> <super> 2- </super> on rate
+                        </th>
+        </tr>
+        <tr>
+                        <th>
+                            Run
+                        </th>
+                        <th>
+                            Time
+                        </th>
+                         <th>
+                            Units
+                        </th>
+
+        </tr>
+                    <tr>
+                        <td>
+                        1A (1 <super> st </super> trial)
+                        </td>
+                        <td>
+                        <%=data[0][0]%>
+                        </td>
+                        <td>
+                        <%=data[0][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[0][1] != "") 
+                                    {
+                                        out.print(error[0][1] + " " + scores[0][1] + " " + isCorrect[0][1]);
+                                    } 
+                                %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        1A (2 <super> nd </super> trial)
+                        </td>
+                        <td>
+                        <%=data[1][0]%>
+                        </td>
+                        <td>
+                        <%=data[1][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[1][1] != "") 
+                                    {
+                                        out.print(error[1][1] + " " + scores[1][1] + " " + isCorrect[1][1]);
+                                    } 
+                                %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>    
+                        <td>
+                         1A (3 <super> rd </super> trial)
+                        </td>
+                        <td>
+                        <%=data[2][0]%>
+                        </td>
+                        <td>
+                        <%=data[2][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[2][1] != "") 
+                                    {
+                                        out.print(error[2][1] + " " + scores[2][1] + " " + isCorrect[2][1]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        2A (1 <super> st </super> trial)
+                        </td>
+                        <td>
+                        <%=data[3][0]%>
+                        </td>
+                        <td>
+                        <%=data[3][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[3][1] != "") 
+                                    {
+                                        out.print(error[3][1] + " " + scores[3][1] + " " + isCorrect[3][1]);
+                                    } 
+                                %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        2A (2 <super> nd </super> trial)
+                        </td>
+                        <td>
+                        <%=data[4][0]%>
+                        </td>
+                        <td>
+                        <%=data[4][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[4][1] != "") 
+                                    {
+                                        out.print(error[4][1] + " " + scores[4][1] + " " + isCorrect[4][1]);
+                                    } 
+                                %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>    
+                        <td>
+                         2A (3 <super> rd </super> trial)
+                        </td>
+                        <td>
+                        <%=data[5][0]%>
+                        </td>
+                        <td>
+                        <%=data[5][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[5][1] != "") 
+                                    {
+                                        out.print(error[5][1] + " " + scores[5][1] + " " + isCorrect[5][1]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                    </tr>
+<tr>
+                        <td>
+                        3A (1 <super> st </super> trial)
+                        </td>
+                        <td>
+                        <%=data[6][0]%>
+                        </td>
+                        <td>
+                        <%=data[6][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[6][1] != "") 
+                                    {
+                                        out.print(error[6][1] + " " + scores[6][1] + " " + isCorrect[6][1]);
+                                    } 
+                                %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        3A (2 <super> nd </super> trial)
+                        </td>
+                        <td>
+                        <%=data[7][0]%>
+                        </td>
+                        <td>
+                        <%=data[7][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[7][1] != "") 
+                                    {
+                                        out.print(error[7][1] + " " + scores[7][1] + " " + isCorrect[7][1]);
+                                    } 
+                                %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>    
+                        <td>
+                         3A (3 <super> rd </super> trial)
+                        </td>
+                        <td>
+                        <%=data[8][0]%>
+                        </td>
+                        <td>
+                        <%=data[8][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[8][1] != "") 
+                                    {
+                                        out.print(error[8][1] + " " + scores[8][1] + " " + isCorrect[8][1]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        1B (1 <super> st </super> trial)
+                        </td>
+                        <td>
+                        <%=data[9][0]%>
+                        </td>
+                        <td>
+                        <%=data[9][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[9][1] != "") 
+                                    {
+                                        out.print(error[9][1] + " " + scores[9][1] + " " + isCorrect[9][1]);
+                                    } 
+                                %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        1B (2 <super> nd </super> trial)
+                        </td>
+                        <td>
+                        <%=data[10][0]%>
+                        </td>
+                        <td>
+                        <%=data[10][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[10][1] != "") 
+                                    {
+                                        out.print(error[10][1] + " " + scores[10][1] + " " + isCorrect[10][1]);
+                                    } 
+                                %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>    
+                        <td>
+                         1B (3 <super> rd </super> trial)
+                        </td>
+                        <td>
+                        <%=data[11][0]%>
+                        </td>
+                        <td>
+                        <%=data[11][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[11][1] != "") 
+                                    {
+                                        out.print(error[11][1] + " " + scores[11][1] + " " + isCorrect[11][1]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        2B (1 <super> st </super> trial)
+                        </td>
+                        <td>
+                        <%=data[12][0]%>
+                        </td>
+                        <td>
+                        <%=data[12][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[12][1] != "") 
+                                    {
+                                        out.print(error[12][1] + " " + scores[12][1] + " " + isCorrect[12][1]);
+                                    } 
+                                %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        2B (2 <super> nd </super> trial)
+                        </td>
+                        <td>
+                        <%=data[13][0]%>
+                        </td>
+                        <td>
+                        <%=data[13][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[13][1] != "") 
+                                    {
+                                        out.print(error[13][1] + " " + scores[13][1] + " " + isCorrect[13][1]);
+                                    } 
+                                %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>    
+                        <td>
+                         2B (3 <super> rd </super> trial)
+                        </td>
+                        <td>
+                        <%=data[14][0]%>
+                        </td>
+                        <td>
+                        <%=data[14][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[14][1] != "") 
+                                    {
+                                        out.print(error[14][1] + " " + scores[14][1] + " " + isCorrect[14][1]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        3B (1 <super> st </super> trial)
+                        </td>
+                        <td>
+                        <%=data[15][0]%>
+                        </td>
+                        <td>
+                        <%=data[15][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[0][1] != "") 
+                                    {
+                                        out.print(error[15][1] + " " + scores[15][1] + " " + isCorrect[15][1]);
+                                    } 
+                                %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        3B (2 <super> nd </super> trial)
+                        </td>
+                        <td>
+                        <%=data[16][0]%>
+                        </td>
+                        <td>
+                        <%=data[16][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[16][1] != "") 
+                                    {
+                                        out.print(error[16][1] + " " + scores[16][1] + " " + isCorrect[16][1]);
+                                    } 
+                                %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>    
+                        <td>
+                         3B (3 <super> rd </super> trial)
+                        </td>
+                        <td>
+                        <%=data[17][0]%>
+                        </td>
+                        <td>
+                        <%=data[17][1]%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[17][1] != "") 
+                                    {
+                                        out.print(error[17][1] + " " + scores[17][1] + " " + isCorrect[17][1]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                    </tr>
+                    </table>
+
+    <p> *A third trial is only conducted when the first two trials do not agree to within 5%.</p>
+    <p> <b> RESULTS </b> <b>
+    <p> Calculations:</p>
+    <p>I. Calculating the reaction rate (see steps 14 – 18 above)</p>
+
+
+
+        <table>
+        <tr>
+            <legend> A. Determination of Effect of S <sub> 2 </sub> O  <sub> 8 </sub> <super> 2- </super> on rate </legend>
+        </tr>
+           <tr>
+                        <th>
+                        Run
+                        </th>
+                       <th>
+                        Initial [I <super> - </super>]
+                        </th>
+                       <th>
+                        Initial[ S <sub> 2 </sub> O  <sub> 8 </sub> <super> 2- </super>]
+                        </th>
+                       <th>
+                        &Delta[ S <sub> 2 </sub> O  <sub> 8 </sub> <super> 2- </super>]
+                        </th>
+                        <th>
+                        Average Reaction Time
+                        </th>
+                        <th>
+                        Reaction Rate (M/s)
+                        </th>
+            </tr>
+                 <tr>
+                <td>
+                1A
+                </td>
+                <td>
+                    <%=data[18][0]%>
+                    </td>
+                    <td>
+                   <%=data[18][1]%>
+                    </td>
+                    <td>
+                    <%=data[18][2]%>
+                       </td>
+                       <td>
+                       <%=data[18][3]%>
+                       </td>
+                 <td>
+                    <%=data[18][4]%>
+                    </td>
+                    <td>
+                   <%=data[18][5]%>
+                    </td>
+                    <td>
+                    <%=data[18][6]%>
+                       </td>
+                       <td>
+                       <%=data[18][7]%>
+                       </td>
+                       <%=data[18][8]%>
+                       </td>
+                       <td>
+                       <%=data[18][9]%>
+                       </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[18][0] != "") 
+                                    {
+                                        out.print(error[18][0] + " " + scores[18][0] + " " + isCorrect[18][0]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[18][1] != "") 
+                                    {
+                                        out.print(error[18][1] + " " + scores[18][1] + " " + isCorrect[18][1]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[18][1] != "") 
+                                    {
+                                        out.print(error[18][2] + " " + scores[18][2] + " " + isCorrect[18][2]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[18][3] != "") 
+                                    {
+                                        out.print(error[18][3] + " " + scores[18][3] + " " + isCorrect[18][3]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[18][4] != "") 
+                                    {
+                                        out.print(error[18][4] + " " + scores[18][4] + " " + isCorrect[18][4]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[18][5] != "") 
+                                    {
+                                        out.print(error[18][5] + " " + scores[18][5] + " " + isCorrect[18][5]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[18][6] != "") 
+                                    {
+                                        out.print(error[18][6] + " " + scores[18][6] + " " + isCorrect[18][6]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[18][7] != "") 
+                                    {
+                                        out.print(error[18][7] + " " + scores[18][7] + " " + isCorrect[18][7]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[18][8] != "") 
+                                    {
+                                        out.print(error[18][8] + " " + scores[18][8] + " " + isCorrect[18][8]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[18][9] != "") 
+                                    {
+                                        out.print(error[18][9] + " " + scores[18][9] + " " + isCorrect[18][9]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                    </tr>
+                                     <tr>
+                <td>
+                2A
+                </td>
+                <td>
+                    <%=data[19][0]%>
+                    </td>
+                    <td>
+                   <%=data[19][1]%>
+                    </td>
+                    <td>
+                    <%=data[19][2]%>
+                       </td>
+                       <td>
+                       <%=data[19][3]%>
+                       </td>
+                 <td>
+                    <%=data[19][4]%>
+                    </td>
+                    <td>
+                   <%=data[19][5]%>
+                    </td>
+                    <td>
+                    <%=data[19][6]%>
+                       </td>
+                       <td>
+                       <%=data[19][7]%>
+                       </td>
+                       <%=data[19][8]%>
+                       </td>
+                       <td>
+                       <%=data[19][9]%>
+                       </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[19][0] != "") 
+                                    {
+                                        out.print(error[19][0] + " " + scores[19][0] + " " + isCorrect[19][0]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[19][1] != "") 
+                                    {
+                                        out.print(error[19][1] + " " + scores[19][1] + " " + isCorrect[19][1]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[19][1] != "") 
+                                    {
+                                        out.print(error[19][2] + " " + scores[19][2] + " " + isCorrect[19][2]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[19][3] != "") 
+                                    {
+                                        out.print(error[19][3] + " " + scores[19][3] + " " + isCorrect[19][3]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[19][4] != "") 
+                                    {
+                                        out.print(error[19][4] + " " + scores[19][4] + " " + isCorrect[19][4]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[19][5] != "") 
+                                    {
+                                        out.print(error[19][5] + " " + scores[19][5] + " " + isCorrect[19][5]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[19][6] != "") 
+                                    {
+                                        out.print(error[19][6] + " " + scores[19][6] + " " + isCorrect[19][6]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[19][7] != "") 
+                                    {
+                                        out.print(error[19][7] + " " + scores[19][7] + " " + isCorrect[19][7]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[19][8] != "") 
+                                    {
+                                        out.print(error[19][8] + " " + scores[19][8] + " " + isCorrect[19][8]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[19][9] != "") 
+                                    {
+                                        out.print(error[19][9] + " " + scores[19][9] + " " + isCorrect[19][9]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                    </tr>
+                                     <tr>
+                <td>
+                3A
+                </td>
+                <td>
+                    <%=data[][0]%>
+                    </td>
+                    <td>
+                   <%=data[20][1]%>
+                    </td>
+                    <td>
+                    <%=data[20][2]%>
+                       </td>
+                       <td>
+                       <%=data[20][3]%>
+                       </td>
+                 <td>
+                    <%=data[20][4]%>
+                    </td>
+                    <td>
+                   <%=data[20][5]%>
+                    </td>
+                    <td>
+                    <%=data[20][6]%>
+                       </td>
+                       <td>
+                       <%=data[20][7]%>
+                       </td>
+                       <%=data[20][8]%>
+                       </td>
+                       <td>
+                       <%=data[20][9]%>
+                       </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[20][0] != "") 
+                                    {
+                                        out.print(error[20][0] + " " + scores[20][0] + " " + isCorrect[20][0]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[20][1] != "") 
+                                    {
+                                        out.print(error[20][1] + " " + scores[20][1] + " " + isCorrect[20][1]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[20][1] != "") 
+                                    {
+                                        out.print(error[20][2] + " " + scores[20][2] + " " + isCorrect[20][2]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[20][3] != "") 
+                                    {
+                                        out.print(error[20][3] + " " + scores[20][3] + " " + isCorrect[20][3]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[20][4] != "") 
+                                    {
+                                        out.print(error[20][4] + " " + scores[20][4] + " " + isCorrect[20][4]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[20][5] != "") 
+                                    {
+                                        out.print(error[20][5] + " " + scores[20][5] + " " + isCorrect[20][5]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[20][6] != "") 
+                                    {
+                                        out.print(error[20][6] + " " + scores[20][6] + " " + isCorrect[20][6]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[20][7] != "") 
+                                    {
+                                        out.print(error[20][7] + " " + scores[20][7] + " " + isCorrect[20][7]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[20][8] != "") 
+                                    {
+                                        out.print(error[20][8] + " " + scores[20][8] + " " + isCorrect[20][8]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[20][9] != "") 
+                                    {
+                                        out.print(error[20][9] + " " + scores[20][9] + " " + isCorrect[20][9]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                    </tr>
+                                     <tr>
+                <td>
+                1B
+                </td>
+                <td>
+                    <%=data[21][0]%>
+                    </td>
+                    <td>
+                   <%=data[21][1]%>
+                    </td>
+                    <td>
+                    <%=data[21][2]%>
+                       </td>
+                       <td>
+                       <%=data[21][3]%>
+                       </td>
+                 <td>
+                    <%=data[21][4]%>
+                    </td>
+                    <td>
+                   <%=data[21][5]%>
+                    </td>
+                    <td>
+                    <%=data[21][6]%>
+                       </td>
+                       <td>
+                       <%=data[21][7]%>
+                       </td>
+                       <%=data[21][8]%>
+                       </td>
+                       <td>
+                       <%=data[21][9]%>
+                       </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[21][0] != "") 
+                                    {
+                                        out.print(error[21][0] + " " + scores[21][0] + " " + isCorrect[21][0]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[21][1] != "") 
+                                    {
+                                        out.print(error[21][1] + " " + scores[21][1] + " " + isCorrect[21][1]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[21][1] != "") 
+                                    {
+                                        out.print(error[21][2] + " " + scores[21][2] + " " + isCorrect[21][2]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[21][3] != "") 
+                                    {
+                                        out.print(error[21][3] + " " + scores[21][3] + " " + isCorrect[21][3]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[21][4] != "") 
+                                    {
+                                        out.print(error[21][4] + " " + scores[21][4] + " " + isCorrect[21][4]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[21][5] != "") 
+                                    {
+                                        out.print(error[21][5] + " " + scores[21][5] + " " + isCorrect[21][5]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[21][6] != "") 
+                                    {
+                                        out.print(error[21][6] + " " + scores[21][6] + " " + isCorrect[21][6]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[21][7] != "") 
+                                    {
+                                        out.print(error[21][7] + " " + scores[21][7] + " " + isCorrect[21][7]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[21][8] != "") 
+                                    {
+                                        out.print(error[21][8] + " " + scores[21][8] + " " + isCorrect[21][8]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[21][9] != "") 
+                                    {
+                                        out.print(error[21][9] + " " + scores[21][9] + " " + isCorrect[21][9]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                    </tr>
+                                     <tr>
+                <td>
+                2B
+                </td>
+                <td>
+                    <%=data[22][0]%>
+                    </td>
+                    <td>
+                   <%=data[22][1]%>
+                    </td>
+                    <td>
+                    <%=data[22][2]%>
+                       </td>
+                       <td>
+                       <%=data[22][3]%>
+                       </td>
+                 <td>
+                    <%=data[22][4]%>
+                    </td>
+                    <td>
+                   <%=data[22][5]%>
+                    </td>
+                    <td>
+                    <%=data[22][6]%>
+                       </td>
+                       <td>
+                       <%=data[22][7]%>
+                       </td>
+                       <%=data[22][8]%>
+                       </td>
+                       <td>
+                       <%=data[22][9]%>
+                       </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[22][0] != "") 
+                                    {
+                                        out.print(error[22][0] + " " + scores[22][0] + " " + isCorrect[22][0]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[22][1] != "") 
+                                    {
+                                        out.print(error[22][1] + " " + scores[22][1] + " " + isCorrect[22][1]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[22][1] != "") 
+                                    {
+                                        out.print(error[22][2] + " " + scores[22][2] + " " + isCorrect[22][2]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[22][3] != "") 
+                                    {
+                                        out.print(error[22][3] + " " + scores[22][3] + " " + isCorrect[22][3]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[22][4] != "") 
+                                    {
+                                        out.print(error[22][4] + " " + scores[22][4] + " " + isCorrect[22][4]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[22][5] != "") 
+                                    {
+                                        out.print(error[22][5] + " " + scores[22][5] + " " + isCorrect[22][5]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[22][6] != "") 
+                                    {
+                                        out.print(error[22][6] + " " + scores[22][6] + " " + isCorrect[22][6]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[22][7] != "") 
+                                    {
+                                        out.print(error[22][7] + " " + scores[22][7] + " " + isCorrect[22][7]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[22][8] != "") 
+                                    {
+                                        out.print(error[22][8] + " " + scores[22][8] + " " + isCorrect[22][8]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[22][9] != "") 
+                                    {
+                                        out.print(error[22][9] + " " + scores[22][9] + " " + isCorrect[22][9]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                    </tr>
+                                     <tr>
+                <td>
+                3B
+                </td>
+                <td>
+                    <%=data[23][0]%>
+                    </td>
+                    <td>
+                   <%=data[23][1]%>
+                    </td>
+                    <td>
+                    <%=data[23][2]%>
+                       </td>
+                       <td>
+                       <%=data[23][3]%>
+                       </td>
+                 <td>
+                    <%=data[23][4]%>
+                    </td>
+                    <td>
+                   <%=data[23][5]%>
+                    </td>
+                    <td>
+                    <%=data[23][6]%>
+                       </td>
+                       <td>
+                       <%=data[23][7]%>
+                       </td>
+                       <%=data[23][8]%>
+                       </td>
+                       <td>
+                       <%=data[23][9]%>
+                       </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[23][0] != "") 
+                                    {
+                                        out.print(error[23][0] + " " + scores[23][0] + " " + isCorrect[23][0]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[23][1] != "") 
+                                    {
+                                        out.print(error[23][1] + " " + scores[23][1] + " " + isCorrect[23][1]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[23][1] != "") 
+                                    {
+                                        out.print(error[23][2] + " " + scores[23][2] + " " + isCorrect[23][2]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[23][3] != "") 
+                                    {
+                                        out.print(error[23][3] + " " + scores[23][3] + " " + isCorrect[23][3]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[23][4] != "") 
+                                    {
+                                        out.print(error[23][4] + " " + scores[23][4] + " " + isCorrect[23][4]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[23][5] != "") 
+                                    {
+                                        out.print(error[23][5] + " " + scores[23][5] + " " + isCorrect[23][5]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[23][6] != "") 
+                                    {
+                                        out.print(error[23][6] + " " + scores[23][6] + " " + isCorrect[23][6]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[23][7] != "") 
+                                    {
+                                        out.print(error[23][7] + " " + scores[23][7] + " " + isCorrect[23][7]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[23][8] != "") 
+                                    {
+                                        out.print(error[23][8] + " " + scores[23][8] + " " + isCorrect[23][8]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: red" >
+                                <% 
+                                    if (error[23][9] != "") 
+                                    {
+                                        out.print(error[23][9] + " " + scores[23][9] + " " + isCorrect[23][9]);
+                                    } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+                        </td>
+                    </tr>
+</table>
+
+ <p> III. Calculating the rate constant: (see step 21) </p>
+
+  <table>
+
+        <tr>
+            <th>
+            Run
+            </th>
+            <th>
+            Rate Constant, k
+            </th>
+            <th>
+            Unit
+            </th>
+        </tr>
+        <tr>
+            <td>
+            1A
+            </td>
+              <td>
+                    <%=data[24][0]%>
+                    </td>
+                    <td>
+                   <%=data[24][1]%>
+                    </td>
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <td>
+             <div style="color: red" >
+                        <% 
+                        if (error[24][0] != "") 
+                        {
+                            out.print(error[24][0] + " " + scores[24][0] + "" + isCorrect[23][0]);
+                        } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+            </td>
+                        <td>
+             <div style="color: red" >
+                        <% 
+                        if (error[24][1] != "") 
+                        {
+                            out.print(error[24][1] + " " + scores[24][1] + "" + isCorrect[24][1]);
+                        } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            2A
+            </td>
+              <td>
+                    <%=data[25][0]%>
+                    </td>
+                    <td>
+                   <%=data[25][1]%>
+                    </td>
+        </tr>
+
+                <tr>
+            <td>
+            </td>
+            <td>
+             <div style="color: red" >
+                        <% 
+                        if (error[25][0] != "") 
+                        {
+                            out.print(error[25][0] + " " + scores[25][0] + "" + isCorrect[25][0]);
+                        } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+            </td>
+                        <td>
+             <div style="color: red" >
+                        <% 
+                        if (error[24][1] != "") 
+                        {
+                            out.print(error[25][1] + " " + scores[25][1] + "" + isCorrect[25][1]);
+                        } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+            </td>
+        </tr>
+                <tr>
+            <td>
+            3A
+            </td>
+              <td>
+                    <%=data[26][0]%>
+                    </td>
+                    <td>
+                   <%=data[26][1]%>
+                    </td>
+        </tr>
+
+                <tr>
+            <td>
+            </td>
+            <td>
+             <div style="color: red" >
+                        <% 
+                        if (error[26][0] != "") 
+                        {
+                            out.print(error[26][0] + " " + scores[26][0] + "" + isCorrect[26][0]);
+                        } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+            </td>
+                        <td>
+             <div style="color: red" >
+                        <% 
+                        if (error[26][1] != "") 
+                        {
+                            out.print(error[26][1] + " " + scores[26][1] + "" + isCorrect[26][1]);
+                        } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+            </td>
+        </tr>
+                <tr>
+            <td>
+            1B
+            </td>
+              <td>
+                    <%=data[27][0]%>
+                    </td>
+                    <td>
+                   <%=data[27][1]%>
+                    </td>
+        </tr>
+
+                <tr>
+            <td>
+            </td>
+            <td>
+             <div style="color: red" >
+                        <% 
+                        if (error[27][0] != "") 
+                        {
+                            out.print(error[27][0] + " " + scores[27][0] + "" + isCorrect[27][0]);
+                        } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+            </td>
+                        <td>
+             <div style="color: red" >
+                        <% 
+                        if (error[27][1] != "") 
+                        {
+                            out.print(error[27][1] + " " + scores[27][1] + "" + isCorrect[27][1]);
+                        } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+            </td>
+        </tr>
+                <tr>
+            <td>
+            2B
+            </td>
+              <td>
+                    <%=data[28][0]%>
+                    </td>
+                    <td>
+                   <%=data[28][1]%>
+                    </td>
+        </tr>
+
+                <tr>
+            <td>
+            </td>
+            <td>
+             <div style="color: red" >
+                        <% 
+                        if (error[28][0] != "") 
+                        {
+                            out.print(error[28][0] + " " + scores[28][0] + "" + isCorrect[28][0]);
+                        } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+            </td>
+                        <td>
+             <div style="color: red" >
+                        <% 
+                        if (error[27][1] != "") 
+                        {
+                            out.print(error[28][1] + " " + scores[28][1] + "" + isCorrect[28][1]);
+                        } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+            </td>
+        </tr>
+                <tr>
+            <td>
+            3B
+            </td>
+              <td>
+                    <%=data[29][0]%>
+                    </td>
+                    <td>
+                   <%=data[29][1]%>
+                    </td>
+        </tr>
+
+                <tr>
+            <td>
+            </td>
+            <td>
+             <div style="color: red" >
+                        <% 
+                        if (error[29][0] != "") 
+                        {
+                            out.print(error[29][0] + " " + scores[29][0] + "" + isCorrect[29][0]);
+                        } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+            </td>
+                        <td>
+             <div style="color: red" >
+                        <% 
+                        if (error[29][1] != "") 
+                        {
+                            out.print(error[29][1] + " " + scores[29][1] + "" + isCorrect[29][1]);
+                        } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+            </td>
+        </tr>
+                <tr>
+            <td>
+            Average Value of k
+            </td>
+              <td>
+                    <%=data[30][0]%>
+                    </td>
+                    <td>
+                   <%=data[30][1]%>
+                    </td>
+        </tr>
+
+                <tr>
+            <td>
+            </td>
+            <td>
+             <div style="color: red" >
+                        <% 
+                        if (error[30][0] != "") 
+                        {
+                            out.print(error[30][0] + " " + scores[30][0] + "" + isCorrect[30][0]);
+                        } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+            </td>
+                        <td>
+             <div style="color: red" >
+                        <% 
+                        if (error[24][1] != "") 
+                        {
+                            out.print(error[30][1] + " " + scores[30][1] + "" + isCorrect[30][1]);
+                        } 
+                                %>
+                            </div>
+                            <div style="color: green" >
+                            </div>
+            </td>
+        </tr>
+        </table>
+
+</fieldset>
+    </body>
+</html>
+</bbNG:learningSystemPage>

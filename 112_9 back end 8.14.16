@@ -1,0 +1,103 @@
+ package Labs;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
+import blackboard.platform.context.Context;
+
+public class lab1_9Checks extends inputChecks
+{
+	public lab1_9Checks(Context ctx, string tableName, int x, int y, int userid, String courseid, int labNumber)
+	{
+        super(ctx, x, y, userid, courseid, labNumber);
+    }
+ 
+	@Override
+
+int gradeValue = 0;
+int gradeUnit = 1; //value for correct unit
+int gradeSF = 1; //value for correct sig figs
+int gradeCalc= 4; //value for correct calculation
+
+
+   protected void buildKey()
+    {
+        for (int i = 0; i < dataX; i++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {
+		if(i!=16 && j!=2)	//This code will run for all cases except for data[16][2]
+		{
+	                if(data[i][j] != NULL)
+	                {
+	                    setKey(i,j,"*"); //set all key values to *
+	                    if (i > 0 && i < dataX)
+	                    {
+	                    	if(j >= 0 && j<dataY)
+	                    	{
+	                    		setKey(i,j,setToDecPlaces(getData(i,j),2)); 	//setKey(i,j,"2");
+                    		}
+                    	}
+		}
+		else
+		{
+			Double temp = Double.parseDouble(getData(16,1)) - Double.parseDouble(getData(16,0));
+            String temp1 = setDecPlaces(Double.toString(temp), 2);              	
+            key[i][j] = temp1;
+		}
+	}
+    }
+
+
+		
+	protected void gradeLab()
+	{
+		for(int i = 1; i < dataX; i++)
+		{
+			
+			for(int j = 1; j<dataY; j++)
+			{
+				if(i!=16 &&  j!=2)				//This code will run for all cases except data[16][2]
+				{
+					if(data[i][j]) == key[i][j])
+					{
+						isCorrect[i][j] = correctMsg; 
+						grade[i][j] = gradeSF;
+						gradeValue += gradeSF;
+					}
+					else 
+					{
+						isCorrect[i][j] = errorMsg;
+						error[i][j] = errorTypes[0]; 	//sigfigs error
+						grade[i][j] = "" - gradeSF;
+					}
+					
+				}
+				else if(data[i][j]) == key[i][j])				//data[16][2]
+					{
+						isCorrect[i][j] = correctMsg; 			//correct answer
+						grade[i][j] = gradeCalc + ", " + gradeSF;
+						gradeValue += (gradeCalc + gradeSF);
+					}
+					else 
+					{
+						isCorrect[i][j]=errorMsg;
+						if(Double.parseDouble(getData(i,j)) == Double.parseDouble(key[i][j]));		//incorrect sf, correct calc
+						{
+							error[i][j] = errorTypes[0]; 	//sf error
+							grade[i][j] = "" -gradeSF;
+							gradeValue+= gradeCalc;
+						}
+						else if (getDecPlaces(data[[i][j])==2) 	//correct sf, incorrect calc
+						{
+							error[i][j] = errorTypes[1]; 	//calculation error
+							grade[i][j] = "" -gradeCalc;
+							gradeValue += gradeSF;
+						}
+						else
+						{
+							error[i][j] = errorTypes[0]+ ", " + errorTypes[1];	//sf and calc both incorrect
+							grade[i][j] = "" -gradeCalcError + ", " + gradeSF;
+						}
+			}
+		}
+	}

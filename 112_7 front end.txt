@@ -1,0 +1,474 @@
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="Labs.lab1_7Checks" %>
+<%@ page import="Labs.GradeLogistics" %>
+<%@ page import="Labs.Helper" %>
+<%@ page import="blackboard.platform.context.Context" %>
+<%@ page import="blackboard.platform.context.ContextManager" %>
+<%@ page import="blackboard.platform.context.ContextManagerFactory" %>
+<%@ page import="blackboard.data.user.User" %>
+<%@ page import="blackboard.data.course.*" %>
+<%@ page import="blackboard.persist.course.*" %>
+<%@ page import="blackboard.platform.persistence.PersistenceService" %>
+<%@ page import="blackboard.platform.persistence.PersistenceServiceFactory" %>
+<%@ page import="blackboard.persist.BbPersistenceManager"%>
+ <%@ page import="blackboard.persist.*"%>
+ 
+<%@ page import="blackboard.data.gradebook.Lineitem" %>
+<%@ page import="blackboard.persist.gradebook.LineitemDbPersister" %>
+ 
+ <%@ taglib uri="/bbUI" prefix="bbUI" %> 
+ <%@ taglib uri="/bbData" prefix="bbData"%> 
+ <%@ taglib uri="/bbNG" prefix="bbNG"%>
+ <bbNG:learningSystemPage 
+	title="LAB 7"
+	ctxId="ctx">
+
+	<bbNG:pageHeader>
+		<bbNG:breadcrumbBar environment="COURSE"
+			navItem="ycdb-chem112-nav-LabDebug" >
+				<bbNG:breadcrumb title="Home" href="lab1_7.jsp?course_id=@X@course.pk_string@X@&user_id=@X@user.pk_string@X@" />
+			<bbNG:breadcrumb> Lab 1 </bbNG:breadcrumb>
+		</bbNG:breadcrumbBar>
+		<bbNG:pageTitleBar>
+			Welcome to Chem 112 Lab 7
+		</bbNG:pageTitleBar>
+	</bbNG:pageHeader>
+
+<!DOCTYPE html>
+ <%
+	 int dataX = 11;
+ 	 int dataY = 6;
+ 	
+ 	User u = ctx.getUser();
+ 	String userid = "";
+	lab1_7Checks checks;
+  	String courseid = request.getParameter("course_id");
+  	String button = null;
+	
+  	CourseMembership crsMembership = null;
+	CourseMembershipDbLoader crsMembershipLoader = null;
+	PersistenceService bbPm = PersistenceServiceFactory.getInstance() ;
+    BbPersistenceManager bpManager = bbPm.getDbPersistenceManager();
+ 
+	String errMsg = null;
+	crsMembershipLoader = (CourseMembershipDbLoader)bpManager.getLoader(CourseMembershipDbLoader.TYPE);
+	
+	try {
+		crsMembership = crsMembershipLoader.loadByCourseAndUserId(ctx.getCourse().getId(), u.getId());
+	} catch (KeyNotFoundException e) {
+			// There is no membership record.
+			errMsg = "There is no membership record. Better check this out:" + e;
+	} catch (PersistenceException pe) {
+			// There is no membership record.
+			errMsg = "An error occured while loading the User. Better check this out:" + pe;
+	}
+	CourseMembership.Role crsMembershipRole = crsMembership.getRole();
+	 
+ 	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR)
+	{
+ 		String cid = request.getParameter("courseMembershipId");
+ 		Helper h = new Helper();
+ 		userid = h.getUserIdFromCourseMembershipId(ctx, cid);	 	
+	}
+	else
+	{
+		userid = u.getId().toExternalString();
+    }
+ 	
+	checks = new lab1_7Checks(ctx, tablename, dataX, dataY, userid, courseid, labNumber);
+	 
+ 	button = request.getParameter("button");
+	
+ 	if (button == null)
+    {
+        button = "";
+	    //set types
+        
+        for (int i = 0; i < dataX; i++)
+        {
+            for (int j = 0; j < dataY; j++)
+            {
+                if(i<2 || i>7)
+                {
+                    checks.setType(i,j,"String");
+                }
+                else if(j==0 || j==1 || j==3)          
+                {
+					checks.setType(i, j, "Double");
+                }                
+				}
+				else
+				{
+					checks.setType(i,j, "String")
+				}
+        }
+		}
+     }
+    else
+    {
+    	if(button.equals("Save") || button.equals("Check") || button.equals("Submit"))
+    	{
+    		for (int i = 0; i < dataX; i++)
+            {
+                for (int j = 0; j < dataY; j++)
+                {  
+                    checks.setData(i, j, request.getParameter("" + i + j));
+                 }
+            }
+    		
+    	}
+        if (button.equals("Clear"))
+        {  
+            checks.clear();
+        }
+        else if (button.equals("Save"))
+        {
+              
+            //perform save
+            checks.save("ycdb_chemistrylab1_7",userid,courseid);
+        }
+        else if (button.equals("Check"))
+        {
+              
+            //perform checks
+            checks.check();
+        }
+        else if (button.equals("Submit"))
+        {
+              
+            //perform save
+            checks.save("ycdb_chemistrylab1_7",userid,courseid);
+            
+            //perform submit
+            checks.submit(ctx,"ycdb_chemistrylab1_7","lab1_7i.jsp");
+        }
+        else if (button.equals("ClearAttempt"))
+        {
+         	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR)
+         	{
+    			GradeLogistics gl = new GradeLogistics();
+        		checks.clearAttempt(ctx, userid,"ycdb_chemistrylab1_7");
+         	}
+        }
+        else
+        {
+            button = "";
+        }
+        button="";
+    }
+ 
+ %>
+ 
+<html>
+    <head>
+    	<title>
+        Lab 7: Paper and Ion Exchange Chromatography						
+    	</title>
+    	<link rel="stylesheet" href="labs_css.css">
+    <datalist id="units" >
+            <option value="g" >g</option>	
+            <option value="mg" >mg</option>
+            <option value="kg" >kg</option>
+            <option value="L" >L</option>
+            <option value="mL" >mL</option>
+            <option value="cm" >cm</option>
+            <option value="m" >m</option>
+            <option value="km" >km</option>
+            <option value="lb" >lb</option>
+            <option value="oz" >oz</option>
+            <option value="cm3" >cm3</option>
+            <option value="s" >s</option>
+            <option value="in" >in</option>
+            <option value="ft" >ft</option>
+			<option value="mol" >mol</option>
+			<option value="M>M</option>
+			<option value="mol/L">mol/L</option>
+            
+
+        </datalist>	
+        <script>
+     	if (crsMembershipRole == CourseMembership.Role.INSTRUCTOR) 
+     		{
+     			var d = document.getElementById("btns");
+     			var b = document.createElement("BUTTON");
+      		    var t = document.createTextNode("ClearAttempt");
+     		    
+				b.appendChild(t);
+				d.appendChild(b);
+     		}
+        </script>
+    </head>
+    <body>
+    	<p>User Information</p>  
+  		<p style="margin-left:10px">
+  		Name: <%= u.getGivenName() + " " + u.getFamilyName() %><br />   
+  		Student Id: <%= u.getId().toExternalString()%> <br /> <br />   
+ 		</p>   
+
+    	<fieldset class="fieldset-auto-width">
+            <legend>Lab 7: Paper and Ion Exchange Chromatography</legend>
+            
+			<form method="POST">
+        
+            <fieldset>
+                <legend>Basic info</legend>
+              
+            </fieldset>
+            <br>
+            <fieldset>
+                <legend>Partner Name(s):</legend>
+				<input type="string" step="any" step="any" name="00" <% if (checks.getData(0,0) != null){out.print("value=\"" + checks.getData(0,0) + "\"");}%> />
+				<legend> Unknown Number:				</legend>
+				<input type="number" step="any" step="any" name="10" <% if (checks.getData(1,0) != null){out.print("value=\"" + checks.getData(1,0) + "\"");}%> />
+
+				<table>
+                    
+					<tr>
+					<th>
+                        </th>
+                        <th>
+                            Distance Solvent Traveled
+                        </th>
+                        <th>
+                            Distance Sample Traveled
+                        </th>
+						<th>
+							Units
+						</th>
+                        <th>
+						</th>
+						<th>
+                            Color
+                        </th>
+						<th>
+                            Indicator(s) present in Unknown
+                        </th>
+					</tr>
+                    <tr>
+                        <td>
+                        Bromthymol blue
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="20" <% if (checks.getData(2,0) != null){out.print("value=\"" + checks.getData(2,0) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="21" <% if (checks.getData(2,1) != null){out.print("value=\"" + checks.getData(2,1) + "\"");}%> />
+                        </td>
+                       	<td>
+			  <input list="units" name="22" <% if (checks.getData(2,2) != null){out.print("value=\"" + checks.getData(2,2) + "\"");}%> size="3" />
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="23" <% if (checks.getData(2,3) != null){out.print("value=\"" + checks.getData(2,3) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="string" step="any" step="any" name="24" <% if (checks.getData(2,4) != null){out.print("value=\"" + checks.getData(2,4) + "\"");}%> />
+                        </td>
+                       	<td>
+			  <input type="string" name="25" <% if (checks.getData(2,5) != null){out.print("value=\"" + checks.getData(2,5) + "\"");}%>  />
+                        </td>
+				</tr>
+                    <tr>
+                        <td>
+                        Alizarin yellow
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="30" <% if (checks.getData(3,0) != null){out.print("value=\"" + checks.getData(3,0) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="31" <% if (checks.getData(3,1) != null){out.print("value=\"" + checks.getData(3,1) + "\"");}%> />
+                        </td>
+                       	<td>
+			  <input list="units" name="32" <% if (checks.getData(3,2) != null){out.print("value=\"" + checks.getData(3,2) + "\"");}%> size="3" />
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="33" <% if (checks.getData(3,3) != null){out.print("value=\"" + checks.getData(3,3) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="string" step="any" step="any" name="34" <% if (checks.getData(3,4) != null){out.print("value=\"" + checks.getData(3,4) + "\"");}%> />
+                        </td>
+                       	<td>
+			  <input type="string" name="35" <% if (checks.getData(3,5) != null){out.print("value=\"" + checks.getData(3,5) + "\"");}%>/>
+                        </td>
+				</tr>
+                    <tr>
+                        <td>
+                        Phenol red
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="40" <% if (checks.getData(4,0) != null){out.print("value=\"" + checks.getData(4,0) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="41" <% if (checks.getData(4,1) != null){out.print("value=\"" + checks.getData(4,1) + "\"");}%> />
+                        </td>
+                       	<td>
+			  <input list="units" name="42" <% if (checks.getData(4,2) != null){out.print("value=\"" + checks.getData(4,2) + "\"");}%> size="3" />
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="43" <% if (checks.getData(4,3) != null){out.print("value=\"" + checks.getData(4,3) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="string" step="any" step="any" name="44" <% if (checks.getData(4,4) != null){out.print("value=\"" + checks.getData(4,4) + "\"");}%> />
+                        </td>
+                       	<td>
+			  <input type="string" name="45" <% if (checks.getData(4,5) != null){out.print("value=\"" + checks.getData(4,5) + "\"");}%> />
+                        </td>
+				</tr>				
+                    <tr>
+                        <td>
+                        Unknown
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="50" <% if (checks.getData(5,0) != null){out.print("value=\"" + checks.getData(5,0) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="51" <% if (checks.getData(5,1) != null){out.print("value=\"" + checks.getData(5,1) + "\"");}%> />
+                        </td>
+                       	<td>
+			  <input list="units" name="52" <% if (checks.getData(5,2) != null){out.print("value=\"" + checks.getData(5,2) + "\"");}%> size="3" />
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="53" <% if (checks.getData(5,3) != null){out.print("value=\"" + checks.getData(5,3) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="string" step="any" step="any" name="54" <% if (checks.getData(5,4) != null){out.print("value=\"" + checks.getData(5,4) + "\"");}%> />
+                        </td>
+                       	<td>
+			  <input type="string" name="55" <% if (checks.getData(5,5) != null){out.print("value=\"" + checks.getData(5,5) + "\"");}%> />
+                        </td>
+				</tr>				
+                    <tr>
+                        <td>
+                     
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="60" <% if (checks.getData(6,0) != null){out.print("value=\"" + checks.getData(6,0) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="61" <% if (checks.getData(6,1) != null){out.print("value=\"" + checks.getData(6,1) + "\"");}%> />
+                        </td>
+                       	<td>
+			  <input list="units" name="62" <% if (checks.getData(6,2) != null){out.print("value=\"" + checks.getData(6,2) + "\"");}%> size="3" />
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="63" <% if (checks.getData(6,3) != null){out.print("value=\"" + checks.getData(6,3) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="string" step="any" step="any" name="64" <% if (checks.getData(6,4) != null){out.print("value=\"" + checks.getData(6,4) + "\"");}%> />
+                        </td>
+                       	<td>
+			  <input type="string" name="65" <% if (checks.getData(6,5) != null){out.print("value=\"" + checks.getData(6,5) + "\"");}%> />
+                        </td>
+				</tr>				
+								
+                    <tr>
+                        <td>
+                     
+                        </td>
+
+                        <td>
+			<input type="number" step="any" step="any" name="70" <% if (checks.getData(7,0) != null){out.print("value=\"" + checks.getData(7,0) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="71" <% if (checks.getData(7,1) != null){out.print("value=\"" + checks.getData(7,1) + "\"");}%> />
+                        </td>
+                       	<td>
+			  <input list="units" name="72" <% if (checks.getData(7,2) != null){out.print("value=\"" + checks.getData(7,2) + "\"");}%> size="3" />
+                        </td>
+                        <td>
+			<input type="number" step="any" step="any" name="73" <% if (checks.getData(7,3) != null){out.print("value=\"" + checks.getData(7,3) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="string" step="any" step="any" name="74" <% if (checks.getData(7,4) != null){out.print("value=\"" + checks.getData(7,4) + "\"");}%> />
+                        </td>
+                       	<td>
+			  <input type="string" name="75" <% if (checks.getData(7,5) != null){out.print("value=\"" + checks.getData(7,5) + "\"");}%> />
+                        </td>
+				</tr>				
+											
+</table>											
+				
+				  <br>
+        
+                <legend>Technique #2: Ion Exchange Chromatography </legend>
+				<legend> Complete the following Table by describing the results observed when the following tests were conducted. Indicated whether or ions were present in each solution	</legend>
+				
+				
+				
+				
+				
+<table>				
+					<tr>
+					<th>
+                        </th>
+                        <th>
+                           Eluant- Beaker 1
+                        </th>
+                        <th>
+                            Eluant- Beaker 2
+                        </th>
+						<th>
+							HCl Eluant- Beaker 3
+						</th>
+					</tr>
+                    <tr>
+                        <td>
+                        Test For
+                        </td>
+
+                        <td>
+			<input type="string" step="any" step="any" name="80" <% if (checks.getData(8,0) != null){out.print("value=\"" + checks.getData(8,0) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="string" step="any" step="any" name="81" <% if (checks.getData(8,1) != null){out.print("value=\"" + checks.getData(8,1) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="string" step="any" step="any" name="82" <% if (checks.getData(8,2) != null){out.print("value=\"" + checks.getData(8,2) + "\"");}%> />
+                        </td>
+				</tr>
+
+                    <tr>
+                        <td>
+                        Test For
+                        </td>
+
+                        <td>
+			<input type="string" step="any" step="any" name="90" <% if (checks.getData(9,0) != null){out.print("value=\"" + checks.getData(9,0) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="string" step="any" step="any" name="91" <% if (checks.getData(9,1) != null){out.print("value=\"" + checks.getData(9,1) + "\"");}%> />
+                        </td>
+                        <td>
+			<input type="string" step="any" step="any" name="92" <% if (checks.getData(9,2) != null){out.print("value=\"" + checks.getData(9,2) + "\"");}%> />
+                        </td>
+				</tr>
+				
+				</table>
+				
+            </fieldset>
+            <br>
+            <table>
+	            <tr>
+	            	<td></td>
+		            <td style="width:50%">
+		            	<div style="text-align: center" id="btns">
+                			<input type="submit" name="button" value="Clear" />
+                			<input type="submit" name="button" value="Save" />
+                			<input type="submit" name="button" value="Submit" />
+							<p>Student View [Test Page]</p>
+            			</div>
+		            </td>
+		            <td></td>
+	            </tr>     
+            </table>
+            <br>
+            </form>
+        </fieldset>
+    <br>
+    </body>
+</html>
+</bbNG:learningSystemPage>

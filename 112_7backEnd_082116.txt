@@ -1,0 +1,151 @@
+package Labs;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
+//import blackboard.platform.context.Context;
+
+
+
+public class lab1_7Checks extends inputChecks
+{
+	public lab112_7Checks(Context ctx, int x, int y, int userid, String courseid, int labNumber)
+	{
+        super(ctx, x, y, userid, courseid, labNumber);
+    }
+ 
+	@Override
+
+int gradeValue = 0;
+int gradeUnit = 1; //value for correct unit
+int gradeSF = 1; //value for correct sig figs
+int gradeCalc= 4; //value for correct calculation
+
+
+    protected void buildKey()
+    {
+        for (int i = 0; i < dataX; ++i)
+        {
+            for (int j = 0; j < dataY; ++j)
+            {
+				if(i<2)
+				{
+	                if(j==0)
+	                {
+	                    key[i][j]=data[i][j];
+					}
+					else
+					{					
+						setKey(i,j,"*"); //set all key values to *
+	                }
+				else if(i>1 && i<8)
+				{
+					if(data[i][j]==NULL)
+					{
+						setKey(i,j,"*");
+					}
+					if(j==0 || j == 1)
+					{
+						Double temp = Double.parseDouble(getData(i,j));
+                        String temp1 = setDecPlaces(Double.toString(temp), 2);              	
+						key[i][j] = temp1;
+					}
+					else if(j==2)
+					{
+						key[i][j] = "cm";
+					}
+					else if(j==3)
+					{
+						Double temp = Double.parseDouble(getData(i,1))/Double.parseDouble(getData(i,0));
+                        String temp1 = setSigFigs(Double.toString(temp), 3);              	
+						key[i][j] =  temp1;
+					}
+					else 
+					{
+						key[i][j]=data[i][j]; 			//for all values where 1<i<8 and j>3
+					}
+				}
+				else
+				{
+					key[i][j]=data[i][j];			//for all values where i>=8
+				}
+			}
+		}
+	}
+			
+
+	protected void gradeLab()
+	{
+		for(int i = 2; i < dataX; ++i)
+		{
+			for(int j = 0; j<dataY; ++j)
+			{
+				if(data[i][j]!=NULL)	
+				{
+					if(j==0 ||  j==1)
+					{
+						if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 
+							grade[i][j] = gradeSF;
+							gradeValue += gradeSF;
+						}
+						else 
+						{
+							isCorrect[i][j] = errorMsg;
+							error[i][j] = errorTypes[0]; 	//sigfigs error
+							grade[i][j] = "" - gradeSF;
+						}
+					}
+					else if(j==2)
+					{
+						if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 
+							grade[i][j] = gradeUnit;
+							gradeValue +=gradeUnit;
+						}
+						else 
+						{
+							isCorrect[i][j]=errorMsg;
+							error[i][j] = errorTypes[2]; //unit error
+							grade[i][j] = "" -gradeUnit;
+						}
+					}
+					else
+					{
+						if(data[i][j]) == key[i][j])
+						{
+							isCorrect[i][j] = correctMsg; 
+							grade[i][j] = gradeCorrect;
+							gradeValue +=gradeCalc+gradeSF;
+						}
+						else 
+						{
+							isCorrect[i][j]=errorMsg;
+							if(Double.parseDouble(getData(i,j)) == Double.parseDouble(key[i][j]) && getSigFigs(data[i][j])!=3); //calc correct, sf error
+							{
+								error[i][j] = errorTypes[0]; //sigfigs error
+								grade[i][j] = "" -gradeSF;
+								gradeValue += gradeCalc;
+							}
+							else if (getSigFigs(data[[i][j])==3 && Double.parseDouble(getData(i,j)) != Double.parseDouble(key[i][j]) //sf correct, cal error
+							{
+								error[i][j] = errorTypes[1]; //calculation error
+								grade[i][j] = "" -gradeCalc;
+								gradeValue+=gradeSF;
+							}
+							else
+							{
+								error[i][j] = errorTypes[0] + ", " + errorTypes[1];  //both sf and calc incorrect
+								grade[i][j] = "" -gradeCalc + ", " -gradeSF;
+
+								//all other fields are not graded
+								
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	

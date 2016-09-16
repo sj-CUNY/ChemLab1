@@ -1,0 +1,69 @@
+public static String setSigFigs(String x, int numberSF)
+{
+	int a = 0;
+	int b = 0;
+        int lastDigit;
+	int L =  x.length();
+        boolean roundUp;
+        String roundedLast;
+	
+	for(int  i = 0; i< L; i++) //counts all chars except decimal
+	{
+		if(x.charAt(i) == '.')
+		{
+			a=i;					//a = position of decimal
+		}
+		else
+		{
+			b++;
+		}
+	}
+	
+	if(a==1 && x.charAt(0)=='0')		//removes zeroes between dec and 1st non-zero digit in cases starting with "0."
+	{
+		int c = 2;
+		b--;
+		while(x.charAt(c) == '0')
+		{
+			b--;
+			c++;
+		}
+	}
+
+	while(b!=numberSF)
+	{
+		if(b<numberSF)
+		{
+			x += '0';			//adds a '0' to end of string
+			b++;
+		}
+		else
+		{
+                    lastDigit = Character.getNumericValue(x.charAt(x.length()-1));
+                    
+                    if(lastDigit > 4)
+                    {
+                       roundUp = true;
+                    }
+                    else
+                        {
+                            roundUp = false;
+                        }
+                    x= x.substring(0, x.length()-1);	//deletes last char in string
+                    L--;
+                    b--;
+                        
+                    if(roundUp==true)
+                    {
+                        lastDigit = Character.getNumericValue(x.charAt(x.length()-1));
+                        lastDigit++;
+                        x= x.substring(0, x.length()-1);	//deletes last char in string
+                        roundedLast = Integer.toString(lastDigit);
+                        x=x+roundedLast;
+
+                        }
+		}
+	}
+		
+	return x;
+}
